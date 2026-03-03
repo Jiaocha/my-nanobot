@@ -64,7 +64,11 @@ class VectorMemoryStore:
                 self._client = await asyncio.to_thread(_sync_init)
                 logger.info("🚀 Vector DB Warmup Complete: Qdrant ready at {}", self.db_path)
             except Exception as e:
-                logger.error("Vector DB initialization failed: {}", e)
+                # Handle database lock gracefully (e.g. concurrent access from another instance)
+                if "already accessed by another instance" in str(e) or "lock" in str(e).lower():
+                    logger.debug("Vector DB is locked by another process. Vector search will be disabled for this instance.")
+                else:
+                    logger.error("Vector DB initialization failed: {}", e)
 
     async def get_embedding(self, text: str) -> List[float] | None:
         client = self._get_http_client()

@@ -76,10 +76,14 @@ class SessionDatabase:
                 core = {k: m[k] for k in ("role", "content", "timestamp") if k in m}
                 extra = {k: v for k, v in m.items() if k not in ("role", "content", "timestamp")}
                 
+                content = core.get("content", "")
+                if not isinstance(content, str):
+                    content = json.dumps(content, ensure_ascii=False)
+
                 msg_data.append((
                     key,
                     core.get("role", "user"),
-                    core.get("content", ""),
+                    content,
                     core.get("timestamp", datetime.now().isoformat()),
                     json.dumps(extra, ensure_ascii=False)
                 ))
@@ -103,9 +107,16 @@ class SessionDatabase:
             ).fetchall()
             
             for mr in msg_rows:
+                content = mr["content"]
+                if content and (content.startswith("[") or content.startswith("{")):
+                    try:
+                        content = json.loads(content)
+                    except json.JSONDecodeError:
+                        pass # Keep as string if not valid JSON
+
                 msg = {
                     "role": mr["role"],
-                    "content": mr["content"],
+                    "content": content,
                     "timestamp": mr["timestamp"]
                 }
                 if mr["extra_data"]:

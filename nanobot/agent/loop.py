@@ -281,11 +281,23 @@ class AgentLoop:
 
     async def close_mcp(self) -> None:
         if self._mcp_stack:
-            try: await self._mcp_stack.aclose()
-            except Exception: pass
+            try:
+                await self._mcp_stack.aclose()
+            except Exception:
+                pass
             self._mcp_stack = None
 
-    def stop(self) -> None: self._running = False; logger.info("智能体循环停止")
+    async def stop(self) -> None:
+        self._running = False
+        # Gracefully cleanup MCP stack
+        if self._mcp_stack:
+            try:
+                await self._mcp_stack.__aexit__(None, None, None)
+                self._mcp_connected = False
+                logger.debug("MCP stack cleaned up successfully.")
+            except Exception as e:
+                logger.warning("Error during MCP stack cleanup: {}", e)
+        logger.info("智能体循环停止")
 
     async def _process_message(self, msg: InboundMessage, session_key: str | None = None, on_progress: Callable[[str], Awaitable[None]] | None = None) -> OutboundMessage | None:
         if msg.channel == "system":
