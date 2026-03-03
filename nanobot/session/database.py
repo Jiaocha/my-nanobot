@@ -45,6 +45,36 @@ class SessionDatabase:
                 )
             """)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_key)")
+            
+            # New: Facts table for long-term memory
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS facts (
+                    key TEXT PRIMARY KEY,
+                    content TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+            """)
+
+    def save_fact(self, key: str, content: str) -> None:
+        """Save or update a long-term fact."""
+        with self._get_connection() as conn:
+            conn.execute("""
+                INSERT INTO facts (key, content, updated_at)
+                VALUES (?, ?, ?)
+                ON CONFLICT(key) DO UPDATE SET
+                    content = excluded.content,
+                    updated_at = excluded.updated_at
+            """, (key, content, datetime.now().isoformat()))
+
+    def get_all_facts(self) -> dict[str, str]:
+        """Retrieve all long-term facts as a dictionary."""
+        with self._get_connection() as conn:
+            rows = conn.execute("SELECT key, content FROM facts").fetchall()
+            return {r["key"]: r["content"] for r in rows}
+
+    def delete_fact(self, key: str) -> None:
+        with self._get_connection() as conn:
+            conn.execute("DELETE FROM facts WHERE key = ?", (key,))
 
     def save_session(self, key: str, created_at: datetime, updated_at: datetime, 
                      last_consolidated: int, metadata: dict, messages: list[dict]) -> None:

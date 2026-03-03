@@ -124,26 +124,60 @@ class SubagentManager:
                     metadata={"_progress": True, "task_start_time": task_start_time, "subagent_id": task_id}
                 ))
 
-                response = await self.provider.chat(
-                    messages=messages, tools=tools.get_definitions(),
-                    model=self.model, temperature=self.temperature, max_tokens=self.max_tokens, reasoning_effort=self.reasoning_effort,
-                )
+                full_content = ""
+                tool_calls_map = {}
+                
+                async for chunk in self.provider.chat_stream(
+                    messages=messages,
+                    tools=tools.get_definitions(),
+                    model=self.model,
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens,
+                    reasoning_effort=self.reasoning_effort,
+                ):
+                    if chunk.content:
+                        full_content += chunk.content
+                        # We don't stream raw subagent content to user yet to avoid noise,
+                        # but we could update metadata or logs here.
+                    
+                    if chunk.tool_call_delta:
+                        delta = chunk.tool_call_delta
+                        idx = delta["index"]
+                        if idx not in tool_calls_map:
+                            tool_calls_map[idx] = {"id": delta.get("id"), "name": delta.get("name"), "arguments": ""}
+                        if delta.get("name"): tool_calls_map[idx]["name"] = delta["name"]
+                        if delta.get("id"): tool_calls_map[idx]["id"] = delta["id"]
+                        if delta.get("arguments"): tool_calls_map[idx]["arguments"] += delta["arguments"]
 
-                if response.has_tool_calls:
-                    tool_call_dicts = [{"id": tc.id, "type": "function", "function": {"name": tc.name, "arguments": json.dumps(tc.arguments, ensure_ascii=False)}} for tc in response.tool_calls]
-                    messages.append({"role": "assistant", "content": response.content or "", "tool_calls": tool_call_dicts})
+                # Parse tool calls
+                tool_calls = []
+                for idx in sorted(tool_calls_map.keys()):
+                    tc = tool_calls_map[idx]
+                    import json_repair
+                    try:
+                        args = json_repair.loads(tc["arguments"]) if tc["arguments"] else {}
+                    except Exception: args = {}
+                    tool_calls.append(ToolCallRequest(id=tc["id"] or f"sub_{task_id}_{idx}", name=tc["name"] or "unknown", arguments=args))
 
-                    for tool_call in response.tool_calls:
-                        # LIVE: TOOL UPDATE
+                if tool_calls:
+                    tool_call_dicts = [{"id": tc.id, "type": "function", "function": {"name": tc.name, "arguments": json.dumps(tc.arguments, ensure_ascii=False)}} for tc in tool_calls]
+                    messages.append({"role": "assistant", "content": full_content, "tool_calls": tool_call_dicts})
+
+                    # Parallel tool execution for subagent too!
+                    async def _run_tool(tc):
                         await self.bus.publish_outbound(OutboundMessage(
                             channel=origin["channel"], chat_id=origin["chat_id"],
-                            content=f"🔧 <b>{label}</b>: 正在使用工具 <code>{tool_call.name}</code>...",
+                            content=f"🔧 <b>{label}</b>: 正在使用工具 <code>{tc.name}</code>...",
                             metadata={"_progress": True, "task_start_time": task_start_time, "subagent_id": task_id}
                         ))
-                        result = await tools.execute(tool_call.name, tool_call.arguments)
-                        messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": tool_call.name, "content": result})
+                        res = await tools.execute(tc.name, tc.arguments)
+                        return tc.id, tc.name, res
+
+                    tool_results = await asyncio.gather(*[_run_tool(tc) for tc in tool_calls])
+                    for tid, tname, res in tool_results:
+                        messages.append({"role": "tool", "tool_call_id": tid, "name": tname, "content": res})
                 else:
-                    final_result = response.content
+                    final_result = full_content
                     break
 
             # LIVE: FINAL SUCCESS

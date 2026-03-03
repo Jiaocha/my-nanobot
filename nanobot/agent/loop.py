@@ -29,7 +29,7 @@ from nanobot.agent.tools.spawn import SpawnTool
 from nanobot.agent.tools.web import WebFetchTool, WebSearchTool
 from nanobot.bus.events import InboundMessage, OutboundMessage
 from nanobot.bus.queue import MessageBus
-from nanobot.providers.base import LLMProvider
+from nanobot.providers.base import LLMProvider, ToolCallRequest
 from nanobot.session.manager import Session, SessionManager
 
 if TYPE_CHECKING:
@@ -149,80 +149,103 @@ class AgentLoop:
 
         while iteration < self.max_iterations:
             iteration += 1
-            # Send progress hint on first iteration so user sees activity
             if iteration == 1 and on_progress:
-                if has_images and self.vision_model:
-                    await on_progress("🖼️ 正在分析图片...")
-                else:
-                    await on_progress("思考中...")
+                if has_images and self.vision_model: await on_progress("🖼️ 正在分析图片...")
+                else: await on_progress("思考中...")
+            
             import time; start_t = time.perf_counter()
-            response = await self.provider.chat(
+            
+            # Streaming implementation
+            full_content = ""
+            full_reasoning = ""
+            tool_calls_map = {} # index -> {id, name, arguments}
+            finish_reason = "stop"
+            
+            async for chunk in self.provider.chat_stream(
                 messages=messages,
                 tools=self.tools.get_definitions(),
                 model=effective_model,
                 temperature=self.temperature,
                 max_tokens=self.max_tokens,
                 reasoning_effort=self.reasoning_effort
-            )
+            ):
+                if chunk.content:
+                    full_content += chunk.content
+                    if on_progress: await on_progress(full_content)
+                
+                if chunk.reasoning_content:
+                    full_reasoning += chunk.reasoning_content
+                    # We could also stream reasoning to UI if needed
+                
+                if chunk.tool_call_delta:
+                    delta = chunk.tool_call_delta
+                    idx = delta["index"]
+                    if idx not in tool_calls_map:
+                        tool_calls_map[idx] = {"id": delta.get("id"), "name": delta.get("name"), "arguments": ""}
+                    
+                    if delta.get("name"): tool_calls_map[idx]["name"] = delta["name"]
+                    if delta.get("id"): tool_calls_map[idx]["id"] = delta["id"]
+                    if delta.get("arguments"): tool_calls_map[idx]["arguments"] += delta["arguments"]
+                    
+                    if on_progress:
+                        # Show tool hint as it's being built
+                        current_tools = [v["name"] or "..." for v in tool_calls_map.values()]
+                        await on_progress(", ".join(current_tools), tool_hint=True)
+                
+                if chunk.finish_reason:
+                    finish_reason = chunk.finish_reason
 
-            # (Token usage tracking...)
-            if response.usage:
-                self._token_usage["prompt"] += response.usage.get("prompt_tokens", 0)
-                self._token_usage["completion"] += response.usage.get("completion_tokens", 0)
+            # Convert map back to list of ToolCallRequest
+            tool_calls = []
+            for idx in sorted(tool_calls_map.keys()):
+                tc = tool_calls_map[idx]
+                import json_repair
+                args = {}
+                try:
+                    args = json_repair.loads(tc["arguments"]) if tc["arguments"] else {}
+                except Exception: pass
+                
+                tool_calls.append(ToolCallRequest(
+                    id=tc["id"] or f"call_{idx}",
+                    name=tc["name"] or "unknown",
+                    arguments=args
+                ))
 
             self._recent_latencies.append(time.perf_counter() - start_t)
             if len(self._recent_latencies) > 5: self._recent_latencies.pop(0)
 
-            if response.has_tool_calls:
-                # (Lazy Wait for MCP...)
+            if tool_calls:
+                # Lazy Wait for MCP
                 if not self._mcp_connected and self._mcp_servers:
                     for _ in range(6):
                         if self._mcp_connected: break
-                        logger.debug("⏱️ MCP Warming (Attempt {}/6)...", _+1); await asyncio.sleep(0.5)
+                        await asyncio.sleep(0.5)
 
-                if on_progress:
-                    clean = self._strip_think(response.content)
-                    if clean: await on_progress(clean)
-                    await on_progress(self._tool_hint(response.tool_calls), tool_hint=True)
+                tool_call_dicts = [{"id": tc.id, "type": "function", "function": {"name": tc.name, "arguments": json.dumps(tc.arguments, ensure_ascii=False)}} for tc in tool_calls]
+                messages = self.context.add_assistant_message(messages, full_content, tool_call_dicts, reasoning_content=full_reasoning)
 
-                tool_call_dicts = [{"id": tc.id, "type": "function", "function": {"name": tc.name, "arguments": json.dumps(tc.arguments, ensure_ascii=False)}} for tc in response.tool_calls]
-                messages = self.context.add_assistant_message(messages, response.content, tool_call_dicts, reasoning_content=response.reasoning_content, thinking_blocks=response.thinking_blocks)
-
-                # Execute tools in parallel using asyncio.gather
+                # Execute tools in parallel
                 async def _run_tool(tc):
                     try:
                         res = await self.tools.execute(tc.name, tc.arguments)
-                        # Reflection Logic: Check for persistent errors
                         if "error" in str(res).lower() or "failed" in str(res).lower():
                             failure_tracker[tc.name] = failure_tracker.get(tc.name, 0) + 1
                             if failure_tracker[tc.name] >= 2:
-                                reflection_hint = (
-                                    f"\n\n[SYSTEM REFLECTION: Tool '{tc.name}' has failed {failure_tracker[tc.name]} times consecutively. "
-                                    "Your previous parameters are NOT WORKING. Stop repeating. "
-                                    "Re-analyze the environment (use list_dir/read_file) or try a completely different tool/strategy.]"
-                                )
-                                # Inject hint into the tool result to force LLM to see it
-                                res = str(res) + reflection_hint
-                        else:
-                            failure_tracker[tc.name] = 0 # Reset on success
+                                res = str(res) + f"\n\n[SYSTEM REFLECTION: Tool '{tc.name}' failed repeatedly. Try another strategy.]"
+                        else: failure_tracker[tc.name] = 0
                         return tc.id, tc.name, tc.arguments, res
                     except Exception as e:
-                        logger.error(f"Error executing tool {tc.name}: {e}")
-                        failure_tracker[tc.name] = failure_tracker.get(tc.name, 0) + 1
-                        return tc.id, tc.name, tc.arguments, f"Error: {str(e)}"
+                        return tc.id, tc.name, tc.arguments, f"Error: {e}"
 
-                tool_tasks = [_run_tool(tc) for tc in response.tool_calls]
-                tool_results = await asyncio.gather(*tool_tasks)
-
+                tool_results = await asyncio.gather(*[_run_tool(tc) for tc in tool_calls])
                 for tid, tname, targs, res in tool_results:
                     messages = self.context.add_tool_result(messages, tid, tname, res)
                     tools_used.append((tname, targs, res))
             else:
-                clean = self._strip_think(response.content)
-                if response.finish_reason == "error":
-                    final_content = clean or "Model error encountered."; break
-                messages = self.context.add_assistant_message(messages, clean, reasoning_content=response.reasoning_content, thinking_blocks=response.thinking_blocks)
-                final_content = clean; break
+                if finish_reason == "error":
+                    final_content = full_content or "Model error encountered."; break
+                messages = self.context.add_assistant_message(messages, full_content, reasoning_content=full_reasoning)
+                final_content = full_content; break
         # Post-loop reflection: Skill Mining
         skill_suggestion = self._mine_potential_skills(tools_used)
         if skill_suggestion:
@@ -517,7 +540,7 @@ class AgentLoop:
         if (mt := self.tools.get("message")) and isinstance(mt, MessageTool):
             mt.start_turn()
 
-        history = session.get_history(max_messages=self.memory_window)
+        history = session.get_history(max_tokens=self.max_tokens, model=self.model)
 
         async def _bp(c, *, tool_hint=False):
             await self.bus.publish_outbound(

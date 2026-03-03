@@ -3,13 +3,14 @@
 import os
 import secrets
 import string
-from typing import Any
+import json
+from typing import Any, AsyncGenerator, Dict, List
 
 import json_repair
 import litellm
 from litellm import acompletion
 
-from nanobot.providers.base import LLMProvider, LLMResponse, ToolCallRequest
+from nanobot.providers.base import LLMProvider, LLMResponse, ToolCallRequest, StreamChunk
 from nanobot.providers.registry import find_by_model, find_gateway
 
 # Standard chat-completion message keys.
@@ -25,10 +26,6 @@ def _short_tool_id() -> str:
 class LiteLLMProvider(LLMProvider):
     """
     LLM provider using LiteLLM for multi-provider support.
-
-    Supports OpenRouter, Anthropic, OpenAI, Gemini, MiniMax, and many other providers through
-    a unified interface.  Provider-specific logic is driven by the registry
-    (see providers/registry.py) — no if-elif chains needed here.
     """
 
     def __init__(
@@ -42,295 +39,144 @@ class LiteLLMProvider(LLMProvider):
         super().__init__(api_key, api_base)
         self.default_model = default_model
         self.extra_headers = extra_headers or {}
-
-        # Detect gateway / local deployment.
-        # provider_name (from config key) is the primary signal;
-        # api_key / api_base are fallback for auto-detection.
         self._gateway = find_gateway(provider_name, api_key, api_base)
 
-        # Configure environment variables
         if api_key:
             self._setup_env(api_key, api_base, default_model)
-
         if api_base:
             litellm.api_base = api_base
 
-        # Disable LiteLLM logging noise
         litellm.suppress_debug_info = True
-        # Drop unsupported parameters for providers (e.g., gpt-5 rejects some params)
         litellm.drop_params = True
 
     def _setup_env(self, api_key: str, api_base: str | None, model: str) -> None:
-        """Set environment variables based on detected provider."""
         spec = self._gateway or find_by_model(model)
-        if not spec:
-            return
-        if not spec.env_key:
-            # OAuth/provider-only specs (for example: openai_codex)
-            return
+        if not spec or not spec.env_key: return
+        
+        if self._gateway: os.environ[spec.env_key] = api_key
+        else: os.environ.setdefault(spec.env_key, api_key)
 
-        # Gateway/local overrides existing env; standard provider doesn't
-        if self._gateway:
-            os.environ[spec.env_key] = api_key
-        else:
-            os.environ.setdefault(spec.env_key, api_key)
-
-        # Resolve env_extras placeholders:
-        #   {api_key}  → user's API key
-        #   {api_base} → user's api_base, falling back to spec.default_api_base
         effective_base = api_base or spec.default_api_base
         for env_name, env_val in spec.env_extras:
-            resolved = env_val.replace("{api_key}", api_key)
-            resolved = resolved.replace("{api_base}", effective_base)
+            resolved = env_val.replace("{api_key}", api_key).replace("{api_base}", effective_base)
             os.environ.setdefault(env_name, resolved)
 
     def _resolve_model(self, model: str) -> str:
-        """Resolve model name by applying provider/gateway prefixes."""
         if self._gateway:
-            # Gateway mode: apply gateway prefix, skip provider-specific prefixes
             prefix = self._gateway.litellm_prefix
-            if self._gateway.strip_model_prefix:
-                model = model.split("/")[-1]
-            if prefix and not model.startswith(f"{prefix}/"):
-                model = f"{prefix}/{model}"
+            if self._gateway.strip_model_prefix: model = model.split("/")[-1]
+            if prefix and not model.startswith(f"{prefix}/"): model = f"{prefix}/{model}"
             return model
-
-        # Standard mode: auto-prefix for known providers
         spec = find_by_model(model)
         if spec and spec.litellm_prefix:
-            model = self._canonicalize_explicit_prefix(model, spec.name, spec.litellm_prefix)
             if not any(model.startswith(s) for s in spec.skip_prefixes):
                 model = f"{spec.litellm_prefix}/{model}"
-
         return model
 
-    @staticmethod
-    def _canonicalize_explicit_prefix(model: str, spec_name: str, canonical_prefix: str) -> str:
-        """Normalize explicit provider prefixes like `github-copilot/...`."""
-        if "/" not in model:
-            return model
-        prefix, remainder = model.split("/", 1)
-        if prefix.lower().replace("-", "_") != spec_name:
-            return model
-        return f"{canonical_prefix}/{remainder}"
-
-    def _supports_cache_control(self, model: str) -> bool:
-        """Return True when the provider supports cache_control on content blocks."""
-        if self._gateway is not None:
-            return self._gateway.supports_prompt_caching
-        spec = find_by_model(model)
-        return spec is not None and spec.supports_prompt_caching
-
-    def _apply_cache_control(
-        self,
-        messages: list[dict[str, Any]],
-        tools: list[dict[str, Any]] | None,
-    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]] | None]:
-        """Return copies of messages and tools with cache_control injected."""
-        new_messages = []
-        for msg in messages:
-            if msg.get("role") == "system":
-                content = msg["content"]
-                if isinstance(content, str):
-                    new_content = [{"type": "text", "text": content, "cache_control": {"type": "ephemeral"}}]
-                else:
-                    new_content = list(content)
-                    new_content[-1] = {**new_content[-1], "cache_control": {"type": "ephemeral"}}
-                new_messages.append({**msg, "content": new_content})
-            else:
-                new_messages.append(msg)
-
-        new_tools = tools
-        if tools:
-            new_tools = list(tools)
-            new_tools[-1] = {**new_tools[-1], "cache_control": {"type": "ephemeral"}}
-
-        return new_messages, new_tools
-
-    def _apply_model_overrides(self, model: str, kwargs: dict[str, Any]) -> None:
-        """Apply model-specific parameter overrides from the registry."""
-        model_lower = model.lower()
-        spec = find_by_model(model)
-        if spec:
-            for pattern, overrides in spec.model_overrides:
-                if pattern in model_lower:
-                    kwargs.update(overrides)
-                    return
-
-    @staticmethod
-    def _extra_msg_keys(original_model: str, resolved_model: str) -> frozenset[str]:
-        """Return provider-specific extra keys to preserve in request messages."""
-        spec = find_by_model(original_model) or find_by_model(resolved_model)
-        if (spec and spec.name == "anthropic") or "claude" in original_model.lower() or resolved_model.startswith("anthropic/"):
-            return _ANTHROPIC_EXTRA_KEYS
-        return frozenset()
-
-    @staticmethod
-    def _sanitize_messages(messages: list[dict[str, Any]], extra_keys: frozenset[str] = frozenset()) -> list[dict[str, Any]]:
-        """Strip non-standard keys and ensure assistant messages have a content key."""
-        allowed = _ALLOWED_MSG_KEYS | extra_keys
-        sanitized = []
-        for msg in messages:
-            clean = {k: v for k, v in msg.items() if k in allowed}
-            # Strict providers require "content" even when assistant only has tool_calls
-            if clean.get("role") == "assistant" and "content" not in clean:
-                clean["content"] = None
-            sanitized.append(clean)
-        return sanitized
-
-    async def chat(
-        self,
-        messages: list[dict[str, Any]],
-        tools: list[dict[str, Any]] | None = None,
-        model: str | None = None,
-        max_tokens: int = 4096,
-        temperature: float = 0.7,
-        reasoning_effort: str | None = None,
-    ) -> LLMResponse:
-        """
-        Send a chat completion request via LiteLLM.
-
-        Args:
-            messages: List of message dicts with 'role' and 'content'.
-            tools: Optional list of tool definitions in OpenAI format.
-            model: Model identifier (e.g., 'anthropic/claude-sonnet-4-5').
-            max_tokens: Maximum tokens in response.
-            temperature: Sampling temperature.
-
-        Returns:
-            LLMResponse with content and/or tool calls.
-        """
+    def _prepare_kwargs(self, messages, tools, model, max_tokens, temperature, reasoning_effort) -> dict:
         original_model = model or self.default_model
-        model = self._resolve_model(original_model)
-        extra_msg_keys = self._extra_msg_keys(original_model, model)
-
-        if self._supports_cache_control(original_model):
-            messages, tools = self._apply_cache_control(messages, tools)
-
-        # Clamp max_tokens to at least 1 — negative or zero values cause
-        # LiteLLM to reject the request with "max_tokens must be at least 1".
-        max_tokens = max(1, max_tokens)
-
-        # Inject Chain-of-Thought (CoT) instructions into the system message
-        cot_instruction = (
-            "\n\n[CRITICAL: Reasoning Mode]\n"
-            "You MUST think step-by-step before responding or calling tools.\n"
-            "Use the following structure for your internal monologue:\n"
-            "<think>\n"
-            "1. Goal Analysis: What is the user's core intent?\n"
-            "2. Logic/Strategy: What steps are needed? Which tools are most appropriate?\n"
-            "3. Safety/Constraints: Any risks or path limitations to consider?\n"
-            "</think>\n"
-            "Never skip the <think> block for complex requests."
-        )
-
+        resolved_model = self._resolve_model(original_model)
+        
+        # CoT Injection
+        cot_instruction = "\n\n[ Reasoning Mode ]\nThink step-by-step in <think> tags."
         enhanced_messages = []
-        system_injected = False
         for m in messages:
-            if m.get("role") == "system" and not system_injected:
-                enhanced_messages.append({
-                    **m,
-                    "content": str(m["content"]) + cot_instruction
-                })
-                system_injected = True
-            else:
-                enhanced_messages.append(m)
+            if m.get("role") == "system":
+                enhanced_messages.append({**m, "content": str(m["content"]) + cot_instruction})
+            else: enhanced_messages.append(m)
 
-        kwargs: dict[str, Any] = {
-            "model": model,
-            "messages": self._sanitize_messages(self._sanitize_empty_content(enhanced_messages), extra_keys=extra_msg_keys),
-            "max_tokens": max_tokens,
+        kwargs = {
+            "model": resolved_model,
+            "messages": self._sanitize_messages(self._sanitize_empty_content(enhanced_messages)),
+            "max_tokens": max(1, max_tokens),
             "temperature": temperature,
-            "drop_params": True, # Aggressively drop unsupported parameters
+            "drop_params": True,
         }
 
-        # Apply model-specific overrides (e.g. kimi-k2.5 temperature)
-        self._apply_model_overrides(model, kwargs)
-
-        # CRITICAL FIX: For custom endpoints that require a specific provider protocol
-        if self.api_base:
-            # If the model has a prefix (e.g. 'openai/gpt-4o'), ensure we use it correctly
-            # with custom_llm_provider='openai' to handle the custom api_base.
-            if "/" in model:
-                # Format: provider/name -> e.g. openai/gpt-4o
-                # litellm expects the full string including prefix when using custom_llm_provider='openai'
-                # OR it expects just the name if the provider is already set.
-                # To be safest with most proxies, we provide the full string but ensure protocol is set.
-                kwargs["custom_llm_provider"] = "openai"
-            else:
-                # No prefix, default to openai protocol for custom bases
-                kwargs["model"] = f"openai/{model}"
-                kwargs["custom_llm_provider"] = "openai"
-
-        # Pass api_key directly — more reliable than env vars alone
-        if self.api_key:
-            kwargs["api_key"] = self.api_key
-
-        # Pass api_base for custom endpoints
         if self.api_base:
             kwargs["api_base"] = self.api_base
-
-        # Pass extra headers (e.g. APP-Code for AiHubMix)
-        if self.extra_headers:
-            kwargs["extra_headers"] = self.extra_headers
-
-        if reasoning_effort:
-            kwargs["reasoning_effort"] = reasoning_effort
-            kwargs["drop_params"] = True
-
+            kwargs["custom_llm_provider"] = "openai"
+        if self.api_key: kwargs["api_key"] = self.api_key
+        if self.extra_headers: kwargs["extra_headers"] = self.extra_headers
+        if reasoning_effort: kwargs["reasoning_effort"] = reasoning_effort
         if tools:
             kwargs["tools"] = tools
             kwargs["tool_choice"] = "auto"
+        
+        return kwargs
 
+    async def chat(self, **kwargs) -> LLMResponse:
+        # Standard implementation redirects to a parsed result
+        full_kwargs = self._prepare_kwargs(
+            kwargs.get("messages"), kwargs.get("tools"), kwargs.get("model"), 
+            kwargs.get("max_tokens", 4096), kwargs.get("temperature", 0.7), 
+            kwargs.get("reasoning_effort")
+        )
         try:
-            response = await acompletion(**kwargs)
+            response = await acompletion(**full_kwargs)
             return self._parse_response(response)
         except Exception as e:
-            # Return error as content for graceful handling
-            return LLMResponse(
-                content=f"Error calling LLM: {str(e)}",
-                finish_reason="error",
-            )
+            return LLMResponse(content=f"LLM Error: {e}", finish_reason="error")
+
+    async def chat_stream(self, messages, tools=None, model=None, max_tokens=4096, temperature=0.7, reasoning_effort=None) -> AsyncGenerator[StreamChunk, None]:
+        full_kwargs = self._prepare_kwargs(messages, tools, model, max_tokens, temperature, reasoning_effort)
+        full_kwargs["stream"] = True
+        
+        try:
+            async for chunk in await acompletion(**full_kwargs):
+                if not chunk.choices: continue
+                delta = chunk.choices[0].delta
+                finish_reason = chunk.choices[0].finish_reason
+                
+                # Extract parts
+                content = getattr(delta, "content", None)
+                reasoning = getattr(delta, "reasoning_content", None)
+                
+                tool_call_delta = None
+                if hasattr(delta, "tool_calls") and delta.tool_calls:
+                    tc = delta.tool_calls[0]
+                    tool_call_delta = {
+                        "index": getattr(tc, "index", 0),
+                        "id": getattr(tc, "id", None),
+                        "name": getattr(tc.function, "name", None),
+                        "arguments": getattr(tc.function, "arguments", None)
+                    }
+
+                yield StreamChunk(
+                    content=content,
+                    reasoning_content=reasoning,
+                    tool_call_delta=tool_call_delta,
+                    finish_reason=finish_reason
+                )
+        except Exception as e:
+            yield StreamChunk(content=f"\n[Stream Error: {e}]", finish_reason="error")
 
     def _parse_response(self, response: Any) -> LLMResponse:
-        """Parse LiteLLM response into our standard format."""
         choice = response.choices[0]
         message = choice.message
-
         tool_calls = []
         if hasattr(message, "tool_calls") and message.tool_calls:
             for tc in message.tool_calls:
-                # Parse arguments from JSON string if needed
                 args = tc.function.arguments
-                if isinstance(args, str):
-                    args = json_repair.loads(args)
+                if isinstance(args, str): args = json_repair.loads(args)
+                tool_calls.append(ToolCallRequest(id=getattr(tc, "id", None) or _short_tool_id(), name=tc.function.name, arguments=args))
 
-                tool_calls.append(ToolCallRequest(
-                    id=getattr(tc, "id", None) or _short_tool_id(),
-                    name=tc.function.name,
-                    arguments=args,
-                ))
-
-        usage = {}
-        if hasattr(response, "usage") and response.usage:
-            usage = {
-                "prompt_tokens": response.usage.prompt_tokens,
-                "completion_tokens": response.usage.completion_tokens,
-                "total_tokens": response.usage.total_tokens,
-            }
-
-        reasoning_content = getattr(message, "reasoning_content", None) or None
-        thinking_blocks = getattr(message, "thinking_blocks", None) or None
-
+        usage = {"total_tokens": getattr(response.usage, "total_tokens", 0)} if hasattr(response, "usage") else {}
         return LLMResponse(
-            content=message.content,
-            tool_calls=tool_calls,
-            finish_reason=choice.finish_reason or "stop",
+            content=message.content, 
+            tool_calls=tool_calls, 
+            finish_reason=choice.finish_reason or "stop", 
             usage=usage,
-            reasoning_content=reasoning_content,
-            thinking_blocks=thinking_blocks,
+            reasoning_content=getattr(message, "reasoning_content", None),
+            thinking_blocks=getattr(message, "thinking_blocks", None)
         )
 
-    def get_default_model(self) -> str:
-        """Get the default model."""
-        return self.default_model
+    def _sanitize_messages(self, messages: list[dict]) -> list[dict]:
+        sanitized = []
+        for msg in messages:
+            clean = {k: v for k, v in msg.items() if k in _ALLOWED_MSG_KEYS}
+            if clean.get("role") == "assistant" and "content" not in clean: clean["content"] = None
+            sanitized.append(clean)
+        return sanitized
+
+    def get_default_model(self) -> str: return self.default_model

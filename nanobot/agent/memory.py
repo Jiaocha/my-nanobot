@@ -50,25 +50,48 @@ class MemoryStore:
     """
 
     def __init__(self, workspace: Path, config: Config | None = None):
+        self.workspace = workspace
         self.memory_dir = ensure_dir(workspace / "memory")
         self.memory_file = self.memory_dir / "MEMORY.md"
         self.history_file = self.memory_dir / "HISTORY.md"
         self.config = config
         self.vector_store = None
+        
+        # Database connection for facts
+        from nanobot.session.database import SessionDatabase
+        db_path = workspace / "sessions" / "sessions.db"
+        self.db = SessionDatabase(db_path)
 
         if config and config.agents.defaults.memory_mode == "vector":
             from nanobot.agent.vector_memory import VectorMemoryStore
             self.vector_store = VectorMemoryStore(config.agents.defaults.vector_memory)
+            
+        # Initial migration
+        self._migrate_md_to_db()
+
+    def _migrate_md_to_db(self):
+        """One-time migration from MEMORY.md to SQLite facts table."""
+        if self.memory_file.exists():
+            try:
+                content = self.memory_file.read_text(encoding="utf-8")
+                if content.strip():
+                    self.db.save_fact("main_memory", content)
+                    logger.info("Migrated MEMORY.md to SQLite database.")
+                
+                # Backup and remove to prevent re-migration
+                self.memory_file.rename(self.memory_file.with_suffix(".md.bak"))
+            except Exception as e:
+                logger.error(f"Failed to migrate MEMORY.md: {e}")
 
     def read_long_term(self) -> str:
-        if self.memory_file.exists():
-            return self.memory_file.read_text(encoding="utf-8")
-        return ""
+        facts = self.db.get_all_facts()
+        return facts.get("main_memory", "")
 
     def write_long_term(self, content: str) -> None:
-        self.memory_file.write_text(content, encoding="utf-8")
+        self.db.save_fact("main_memory", content)
 
     def append_history(self, entry: str) -> None:
+        # Keep HISTORY.md as a plain text log for now (it's append-only and huge)
         with open(self.history_file, "a", encoding="utf-8") as f:
             f.write(entry.rstrip() + "\n\n")
 

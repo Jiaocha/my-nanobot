@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, AsyncGenerator
 
 
 @dataclass
@@ -11,6 +11,16 @@ class ToolCallRequest:
     id: str
     name: str
     arguments: dict[str, Any]
+
+
+@dataclass
+class StreamChunk:
+    """A chunk of response from a streaming LLM request."""
+    content: str | None = None
+    reasoning_content: str | None = None
+    tool_call_delta: dict[str, Any] | None = None
+    finish_reason: str | None = None
+    usage: dict[str, int] | None = None
 
 
 @dataclass
@@ -43,11 +53,7 @@ class LLMProvider(ABC):
 
     @staticmethod
     def _sanitize_empty_content(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """Replace empty text content that causes provider 400 errors.
-
-        Empty content can appear when MCP tools return nothing. Most providers
-        reject empty-string content or empty text blocks in list content.
-        """
+        """Replace empty text content that causes provider 400 errors."""
         result: list[dict[str, Any]] = []
         for msg in messages:
             content = msg.get("content")
@@ -97,20 +103,22 @@ class LLMProvider(ABC):
         temperature: float = 0.7,
         reasoning_effort: str | None = None,
     ) -> LLMResponse:
-        """
-        Send a chat completion request.
-
-        Args:
-            messages: List of message dicts with 'role' and 'content'.
-            tools: Optional list of tool definitions.
-            model: Model identifier (provider-specific).
-            max_tokens: Maximum tokens in response.
-            temperature: Sampling temperature.
-
-        Returns:
-            LLMResponse with content and/or tool calls.
-        """
+        """Send a standard chat completion request."""
         pass
+
+    @abstractmethod
+    async def chat_stream(
+        self,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]] | None = None,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        reasoning_effort: str | None = None,
+    ) -> AsyncGenerator[StreamChunk, None]:
+        """Send a streaming chat completion request."""
+        # This is an abstract async generator
+        yield StreamChunk(finish_reason="not_implemented")
 
     @abstractmethod
     def get_default_model(self) -> str:

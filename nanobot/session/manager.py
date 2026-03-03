@@ -2,6 +2,7 @@
 
 import json
 import shutil
+import tiktoken
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -13,13 +14,48 @@ from nanobot.session.database import SessionDatabase
 from nanobot.utils.helpers import ensure_dir, safe_filename
 
 
+def count_message_tokens(messages: list[dict], model: str = "gpt-4") -> int:
+    """Estimate token count for a list of messages."""
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base")
+
+    tokens_per_message = 3
+    tokens_per_name = 1
+    total_tokens = 0
+
+    for m in messages:
+        total_tokens += tokens_per_message
+        for key, value in m.items():
+            if key == "content":
+                if isinstance(value, str):
+                    total_tokens += len(encoding.encode(value))
+                elif isinstance(value, list):
+                    # Multi-modal content
+                    for item in value:
+                        if item.get("type") == "text":
+                            total_tokens += len(encoding.encode(item.get("text", "")))
+                        elif item.get("type") == "image_url":
+                            total_tokens += 1105  # Standard high-res image cost
+            elif key == "role":
+                total_tokens += len(encoding.encode(value))
+            elif key == "name":
+                total_tokens += tokens_per_name + len(encoding.encode(value))
+            elif key == "tool_calls" and value:
+                total_tokens += len(encoding.encode(json.dumps(value)))
+            elif key == "tool_call_id":
+                total_tokens += len(encoding.encode(value))
+
+    total_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
+    return total_tokens
+
+
 @dataclass
 class Session:
     """
     A conversation session.
     Important: Messages are append-only for LLM cache efficiency.
-    The consolidation process writes summaries to MEMORY.md/HISTORY.md
-    but does NOT modify the messages list or get_history() output.
     """
 
     key: str  # channel:chat_id
@@ -40,19 +76,34 @@ class Session:
         self.messages.append(msg)
         self.updated_at = datetime.now()
 
-    def get_history(self, max_messages: int = 500) -> list[dict[str, Any]]:
-        """Return unconsolidated messages for LLM input, aligned to a user turn."""
+    def get_history(self, max_tokens: int = 100000, model: str = "gpt-4") -> list[dict[str, Any]]:
+        """Return unconsolidated messages for LLM input, respecting token budget."""
         unconsolidated = self.messages[self.last_consolidated:]
-        sliced = unconsolidated[-max_messages:]
+        
+        # We process messages from NEWEST to OLDEST to stay within budget
+        history_to_keep = []
+        current_token_count = 0
+        
+        # Reserve some tokens for system prompt and safety (approx 3 tokens per msg overhead)
+        budget = max_tokens - 1000 
+
+        for m in reversed(unconsolidated):
+            # Estimate tokens for this single message
+            msg_tokens = count_message_tokens([m], model=model)
+            if current_token_count + msg_tokens > budget:
+                break
+            
+            history_to_keep.insert(0, m)
+            current_token_count += msg_tokens
 
         # Drop leading non-user messages to avoid orphaned tool_result blocks
-        for i, m in enumerate(sliced):
+        for i, m in enumerate(history_to_keep):
             if m.get("role") == "user":
-                sliced = sliced[i:]
+                history_to_keep = history_to_keep[i:]
                 break
 
         out: list[dict[str, Any]] = []
-        for m in sliced:
+        for m in history_to_keep:
             entry: dict[str, Any] = {"role": m["role"], "content": m.get("content", "")}
             for k in ("tool_calls", "tool_call_id", "name"):
                 if k in m:
