@@ -1,15 +1,38 @@
-# Tool Usage Notes
+# 工具与技能使用指南 (Tools & Skills Guide)
 
-Tool signatures are provided automatically via function calling.
-This file documents non-obvious constraints and usage patterns.
+此文件为智能体提供工具使用的深度上下文、约束和最佳实践。
 
-## exec — Safety Limits
+## 1. 核心工具 (Core Tools)
 
-- Commands have a configurable timeout (default 60s)
-- Dangerous commands are blocked (rm -rf, format, dd, shutdown, etc.)
-- Output is truncated at 10,000 characters
-- `restrictToWorkspace` config can limit file access to the workspace
+### 1.1 shell (exec) —— 系统交互
+- **安全性**：危险命令会被拦截。
+- **安全红线 (Safety Redline)**：禁止执行 `rm -rf *` 或清空数据库、Session 目录等具有**破坏性**且不可逆的操作，除非用户在同一条指令中明确使用了“彻底清除、不保留任何历史、恢复出厂设置”等极端强烈的表达。**默认情况下，任何“清理/优化”请求都不应导致核心事实丢失。**
+- **自省 (Skill Mining)**：如果你成功执行了一个复杂的命令（如多步处理、复杂计算、API 联动），应主动引导用户：“我发现这个操作很常用，是否需要将其封装为技能？”
 
-## cron — Scheduled Reminders
+### 1.2 web (search/fetch) —— 联网能力
+- **web_search**: 获取最新资讯。
+- **web_fetch**: 获取网页全文并转换为 Markdown。
 
-- Please refer to cron skill for usage.
+### 1.3 mcp —— 扩展协议 (按需加载)
+- **python**: **持久化 Python REPL**。它可以在整个对话周期内保持变量和函数。复杂的数据分析、数学建模应优先使用此工具，以保持计算的一致性。
+- **sqlite**: **结构化持久化存储**。连接到 `main.db`。对于需要长期跟踪的数据（如：待办事项、历史记录、项目进度），应优先使用 SQL 表而非纯文本文件。
+- **obsidian/notion**: 用于跨平台的知识同步与检索。
+
+### 1.4 memory —— 记忆系统
+- **记忆审计 (Pruning)**：使用 `self.context.memory.prune()`。
+- **审计逻辑**：审计的核心是**消解矛盾、去重、分类**。除非事实本身已过时或被新事实取代，否则**禁止**删除用户的个人偏好和核心项目信息。
+- **差异化存储**: `MEMORY.md` 存事实，`HISTORY.md` 存日志，`sqlite` 存结构化数据。
+
+### 1.5 spawn —— 子智能体
+- 用于并行任务或不影响主进度的耗时后台任务。
+
+## 2. 核心技能 (Skills)
+- **skill-creator**: 封装新技能的核心。
+- **cron**: 自动化维护与提醒。
+- **summarize**, **vision**, **tester**, **weather**, **github** (详见 skills 目录)。
+
+## 3. 最佳实践 (Best Practices)
+1. **持久化思维**: 复杂的计算逻辑优先使用 `python` (REPL) MCP 而非单次 `exec`。
+2. **结构化思维**: 大规模数据存储优先使用 `sqlite` 而非文本文件。
+3. **闭环思维**: 成功执行复杂操作后，主动提议封装为 Skill。
+4. **简洁记忆**: 定期审计记忆，确保 `MEMORY.md` 精简且无矛盾。

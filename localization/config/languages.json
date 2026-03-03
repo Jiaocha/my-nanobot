@@ -1,0 +1,16 @@
+{
+  "default_language": "en",
+  "supported_languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "locale": "en-US"
+    },
+    {
+      "code": "zh-CN",
+      "name": "简体中文",
+      "locale": "zh-CN"
+    }
+  ],
+  "fallback_language": "en"
+}

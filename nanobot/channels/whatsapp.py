@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 from loguru import logger
 
+from localization import get_translation as _t
 from nanobot.bus.events import OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.channels.base import BaseChannel
@@ -151,7 +152,7 @@ class WhatsAppChannel(BaseChannel):
 
         elif msg_type == "qr":
             # QR code for authentication
-            logger.info("Scan QR code in the bridge terminal to connect WhatsApp")
+            logger.info(_t('channels.whatsapp.info.scan_qr', "Scan QR code in the bridge terminal to connect WhatsApp"))
 
         elif msg_type == "error":
             logger.error("WhatsApp bridge error: {}", data.get('error'))

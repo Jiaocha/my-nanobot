@@ -1,31 +1,38 @@
 ---
 name: memory
-description: Two-layer memory system with grep-based recall.
+description: 具有高性能向量检索和重排序功能的双层记忆系统。
 always: true
 ---
 
-# Memory
+# 记忆 (Memory)
 
-## Structure
+## 搜索过去事件的铁律 (Sequential Search Rule)
 
-- `memory/MEMORY.md` — Long-term facts (preferences, project context, relationships). Always loaded into your context.
-- `memory/HISTORY.md` — Append-only event log. NOT loaded into context. Search it with grep. Each entry starts with [YYYY-MM-DD HH:MM].
+由于 API 频率限制，你必须遵循以下**严格的顺序**进行搜索，**严禁在单次回复中调用多个搜索工具**：
 
-## Search Past Events
+1.  **第一步：仅调用 `search_memory`**。这是基于语义的检索，涵盖了绝大多数情况。
+2.  **第二步：观察结果**。
+    - 如果 `search_memory` 返回了相关信息，**严禁**再调用 `exec` 或 `findstr`。直接基于搜索结果回答用户。
+    - **只有当** `search_memory` 明确返回“未找到相关记忆”，且你认为关键词匹配可能更有效时，才可以在**下一轮**调用 `exec` 使用 `findstr`。
 
-```bash
-grep -i "keyword" memory/HISTORY.md
-```
+## 工具使用注意事项
 
-Use the `exec` tool to run grep. Combine patterns: `grep -iE "meeting|deadline" memory/HISTORY.md`
+- **`search_memory` 是全能的**：它已经包含了对历史日志的语义提取，不要怀疑它的覆盖范围。
+- **`findstr /i` 是大小写不敏感的**：严禁在同一次调用中分别搜索大写和小写单词（如 "DeepSeek" 和 "deepseek"），这纯属浪费资源。
+- **严禁过度搜索**：通常 `top_k=5` 已足够。严禁请求过大的 `top_k` 导致上下文溢出。
 
-## When to Update MEMORY.md
+## 何时更新 MEMORY.md
 
-Write important facts immediately using `edit_file` or `write_file`:
-- User preferences ("I prefer dark mode")
-- Project context ("The API uses OAuth2")
-- Relationships ("Alice is the project lead")
+继续将重要事实记录到 `MEMORY.md`。这部分内容会始终跟随上下文，无需搜索。
 
-## Auto-consolidation
+## 记忆审计与冲突消解 (Memory Auditing)
 
-Old conversations are automatically summarized and appended to HISTORY.md when the session grows large. Long-term facts are extracted to MEMORY.md. You don't need to manage this.
+如果你发现 `MEMORY.md` 内容混乱、存在重复项或明显的矛盾（如旧的失效路径），你应该主动提出整理记忆。
+
+- **主动整理**: 调用 `self.context.memory.prune()` (通过 Python 代码段执行)。
+- **目标**: 审计逻辑会自动去重、解决矛盾并对事实进行分类整理。
+- **安全建议**: 除非事实本身已过时，否则不要删除用户的核心偏好。
+
+## 自动整合 (Auto-consolidation)
+
+对话会自动同步到向量库（Qdrant）。你只需要通过 `search_memory` 即可召回。

@@ -60,7 +60,7 @@ async def connect_mcp_servers(
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
 
-    for name, cfg in mcp_servers.items():
+    async def _connect_single_server(name: str, cfg: Any) -> None:
         try:
             if cfg.command:
                 params = StdioServerParameters(
@@ -83,7 +83,7 @@ async def connect_mcp_servers(
                 )
             else:
                 logger.warning("MCP server '{}': no command or url configured, skipping", name)
-                continue
+                return
 
             session = await stack.enter_async_context(ClientSession(read, write))
             await session.initialize()
@@ -97,3 +97,6 @@ async def connect_mcp_servers(
             logger.info("MCP server '{}': connected, {} tools registered", name, len(tools.tools))
         except Exception as e:
             logger.error("MCP server '{}': failed to connect: {}", name, e)
+
+    # Connect to all servers in parallel
+    await asyncio.gather(*[_connect_single_server(name, cfg) for name, cfg in mcp_servers.items()])

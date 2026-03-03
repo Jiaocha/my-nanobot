@@ -4,6 +4,8 @@ import difflib
 from pathlib import Path
 from typing import Any
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.agent.tools.base import Tool
 
 
@@ -32,17 +34,17 @@ class ReadFileTool(Tool):
 
     @property
     def name(self) -> str:
-        return "read_file"
+        return _t("agent.tools.filesystem.read_file.name", "read_file")
 
     @property
     def description(self) -> str:
-        return "Read the contents of a file at the given path."
+        return _t("agent.tools.filesystem.read_file.description", "Read the contents of a file at the given path.")
 
     @property
     def parameters(self) -> dict[str, Any]:
         return {
             "type": "object",
-            "properties": {"path": {"type": "string", "description": "The file path to read"}},
+            "properties": {"path": {"type": "string", "description": _t("agent.tools.filesystem.read_file.params.path", "The file path to read")}},
             "required": ["path"],
         }
 
@@ -50,16 +52,16 @@ class ReadFileTool(Tool):
         try:
             file_path = _resolve_path(path, self._workspace, self._allowed_dir)
             if not file_path.exists():
-                return f"Error: File not found: {path}"
+                return _t("agent.tools.filesystem.error.file_not_found", f"Error: File not found: {path}")
             if not file_path.is_file():
-                return f"Error: Not a file: {path}"
+                return _t("agent.tools.filesystem.error.not_a_file", f"Error: Not a file: {path}")
 
             content = file_path.read_text(encoding="utf-8")
             return content
         except PermissionError as e:
-            return f"Error: {e}"
+            return _t("agent.tools.filesystem.error.permission_denied", f"Error: {e}")
         except Exception as e:
-            return f"Error reading file: {str(e)}"
+            return _t("agent.tools.filesystem.error.read_failed", f"Error reading file: {str(e)}")
 
 
 class WriteFileTool(Tool):
@@ -71,19 +73,19 @@ class WriteFileTool(Tool):
 
     @property
     def name(self) -> str:
-        return "write_file"
+        return _t("agent.tools.filesystem.write_file.name", "write_file")
 
     @property
     def description(self) -> str:
-        return "Write content to a file at the given path. Creates parent directories if needed."
+        return _t("agent.tools.filesystem.write_file.description", "Write content to a file at the given path. Creates parent directories if needed.")
 
     @property
     def parameters(self) -> dict[str, Any]:
         return {
             "type": "object",
             "properties": {
-                "path": {"type": "string", "description": "The file path to write to"},
-                "content": {"type": "string", "description": "The content to write"},
+                "path": {"type": "string", "description": _t("agent.tools.filesystem.write_file.params.path", "The file path to write to")},
+                "content": {"type": "string", "description": _t("agent.tools.filesystem.write_file.params.content", "The content to write")},
             },
             "required": ["path", "content"],
         }
@@ -93,11 +95,11 @@ class WriteFileTool(Tool):
             file_path = _resolve_path(path, self._workspace, self._allowed_dir)
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_text(content, encoding="utf-8")
-            return f"Successfully wrote {len(content)} bytes to {file_path}"
+            return _t("agent.tools.filesystem.messages.write_success", f"Successfully wrote {len(content)} bytes to {file_path}")
         except PermissionError as e:
-            return f"Error: {e}"
+            return _t("agent.tools.filesystem.error.permission_denied", f"Error: {e}")
         except Exception as e:
-            return f"Error writing file: {str(e)}"
+            return _t("agent.tools.filesystem.error.write_failed", f"Error writing file: {str(e)}")
 
 
 class EditFileTool(Tool):
@@ -109,20 +111,20 @@ class EditFileTool(Tool):
 
     @property
     def name(self) -> str:
-        return "edit_file"
+        return _t("agent.tools.filesystem.edit_file.name", "edit_file")
 
     @property
     def description(self) -> str:
-        return "Edit a file by replacing old_text with new_text. The old_text must exist exactly in the file."
+        return _t("agent.tools.filesystem.edit_file.description", "Edit a file by replacing old_text with new_text. The old_text must exist exactly in the file.")
 
     @property
     def parameters(self) -> dict[str, Any]:
         return {
             "type": "object",
             "properties": {
-                "path": {"type": "string", "description": "The file path to edit"},
-                "old_text": {"type": "string", "description": "The exact text to find and replace"},
-                "new_text": {"type": "string", "description": "The text to replace with"},
+                "path": {"type": "string", "description": _t("agent.tools.filesystem.edit_file.params.path", "The file path to edit")},
+                "old_text": {"type": "string", "description": _t("agent.tools.filesystem.edit_file.params.old_text", "The exact text to find and replace")},
+                "new_text": {"type": "string", "description": _t("agent.tools.filesystem.edit_file.params.new_text", "The text to replace with")},
             },
             "required": ["path", "old_text", "new_text"],
         }
@@ -131,7 +133,7 @@ class EditFileTool(Tool):
         try:
             file_path = _resolve_path(path, self._workspace, self._allowed_dir)
             if not file_path.exists():
-                return f"Error: File not found: {path}"
+                return _t("agent.tools.filesystem.error.file_not_found", f"Error: File not found: {path}")
 
             content = file_path.read_text(encoding="utf-8")
 
@@ -141,16 +143,16 @@ class EditFileTool(Tool):
             # Count occurrences
             count = content.count(old_text)
             if count > 1:
-                return f"Warning: old_text appears {count} times. Please provide more context to make it unique."
+                return _t("agent.tools.filesystem.error.multiple_matches", f"Warning: old_text appears {count} times. Please provide more context to make it unique.")
 
             new_content = content.replace(old_text, new_text, 1)
             file_path.write_text(new_content, encoding="utf-8")
 
-            return f"Successfully edited {file_path}"
+            return _t("agent.tools.filesystem.messages.edit_success", f"Successfully edited {file_path}")
         except PermissionError as e:
-            return f"Error: {e}"
+            return _t("agent.tools.filesystem.error.permission_denied", f"Error: {e}")
         except Exception as e:
-            return f"Error editing file: {str(e)}"
+            return _t("agent.tools.filesystem.error.edit_failed", f"Error editing file: {str(e)}")
 
     @staticmethod
     def _not_found_message(old_text: str, content: str, path: str) -> str:
@@ -175,10 +177,8 @@ class EditFileTool(Tool):
                     lineterm="",
                 )
             )
-            return f"Error: old_text not found in {path}.\nBest match ({best_ratio:.0%} similar) at line {best_start + 1}:\n{diff}"
-        return (
-            f"Error: old_text not found in {path}. No similar text found. Verify the file content."
-        )
+            return _t("agent.tools.filesystem.error.text_not_found_with_diff", f"Error: old_text not found in {path}.\nBest match ({best_ratio:.0%} similar) at line {best_start + 1}:\n{diff}")
+        return _t("agent.tools.filesystem.error.text_not_found", f"Error: old_text not found in {path}. No similar text found. Verify the file content.")
 
 
 class ListDirTool(Tool):
@@ -190,17 +190,17 @@ class ListDirTool(Tool):
 
     @property
     def name(self) -> str:
-        return "list_dir"
+        return _t("agent.tools.filesystem.list_dir.name", "list_dir")
 
     @property
     def description(self) -> str:
-        return "List the contents of a directory."
+        return _t("agent.tools.filesystem.list_dir.description", "List the contents of a directory.")
 
     @property
     def parameters(self) -> dict[str, Any]:
         return {
             "type": "object",
-            "properties": {"path": {"type": "string", "description": "The directory path to list"}},
+            "properties": {"path": {"type": "string", "description": _t("agent.tools.filesystem.list_dir.params.path", "The directory path to list")}},
             "required": ["path"],
         }
 
@@ -208,9 +208,9 @@ class ListDirTool(Tool):
         try:
             dir_path = _resolve_path(path, self._workspace, self._allowed_dir)
             if not dir_path.exists():
-                return f"Error: Directory not found: {path}"
+                return _t("agent.tools.filesystem.error.dir_not_found", f"Error: Directory not found: {path}")
             if not dir_path.is_dir():
-                return f"Error: Not a directory: {path}"
+                return _t("agent.tools.filesystem.error.not_a_directory", f"Error: Not a directory: {path}")
 
             items = []
             for item in sorted(dir_path.iterdir()):
@@ -218,10 +218,10 @@ class ListDirTool(Tool):
                 items.append(f"{prefix}{item.name}")
 
             if not items:
-                return f"Directory {path} is empty"
+                return _t("agent.tools.filesystem.messages.dir_empty", f"Directory {path} is empty")
 
             return "\n".join(items)
         except PermissionError as e:
-            return f"Error: {e}"
+            return _t("agent.tools.filesystem.error.permission_denied", f"Error: {e}")
         except Exception as e:
-            return f"Error listing directory: {str(e)}"
+            return _t("agent.tools.filesystem.error.list_failed", f"Error listing directory: {str(e)}")

@@ -4,6 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
+# Skip this entire module if matrix dependencies are missing
+pytest.importorskip("nh3")
+
 import nanobot.channels.matrix as matrix_module
 from nanobot.bus.events import OutboundMessage
 from nanobot.bus.queue import MessageBus

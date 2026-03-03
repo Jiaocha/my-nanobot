@@ -7,7 +7,7 @@ from typing import Any
 
 from loguru import logger
 
-from nanobot.bus.events import OutboundMessage
+from localization import get_translation as _t
 from nanobot.bus.queue import MessageBus
 from nanobot.channels.base import BaseChannel
 from nanobot.config.schema import Config
@@ -155,8 +155,8 @@ class ChannelManager:
         for name, ch in self.channels.items():
             if getattr(ch.config, "allow_from", None) == []:
                 raise SystemExit(
-                    f'Error: "{name}" has empty allowFrom (denies all). '
-                    f'Set ["*"] to allow everyone, or add specific user IDs.'
+                    _t('cli.error.no_channels', 'Error: "{0}" has empty allowFrom (denies all). ').format(name) +
+                    _t('cli.next_steps', 'Set ["*"] to allow everyone, or add specific user IDs.')
                 )
 
     async def _start_channel(self, name: str, channel: BaseChannel) -> None:

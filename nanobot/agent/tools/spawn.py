@@ -2,6 +2,8 @@
 
 from typing import TYPE_CHECKING, Any
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.agent.tools.base import Tool
 
 if TYPE_CHECKING:
@@ -25,11 +27,12 @@ class SpawnTool(Tool):
 
     @property
     def name(self) -> str:
-        return "spawn"
+        return _t("agent.tools.spawn.name", "spawn")
 
     @property
     def description(self) -> str:
-        return (
+        return _t(
+            "agent.tools.spawn.description",
             "Spawn a subagent to handle a task in the background. "
             "Use this for complex or time-consuming tasks that can run independently. "
             "The subagent will complete the task and report back when done."
@@ -42,11 +45,11 @@ class SpawnTool(Tool):
             "properties": {
                 "task": {
                     "type": "string",
-                    "description": "The task for the subagent to complete",
+                    "description": _t("agent.tools.spawn.params.task", "The task for the subagent to complete"),
                 },
                 "label": {
                     "type": "string",
-                    "description": "Optional short label for the task (for display)",
+                    "description": _t("agent.tools.spawn.params.label", "Optional short label for the task (for display)"),
                 },
             },
             "required": ["task"],

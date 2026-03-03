@@ -17,6 +17,8 @@ from rich.markdown import Markdown
 from rich.table import Table
 from rich.text import Text
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot import __logo__, __version__
 from nanobot.config.schema import Config
 from nanobot.utils.helpers import sync_workspace_templates
@@ -121,7 +123,7 @@ async def _read_interactive_input_async() -> str:
     - Clean display (no ghost characters or artifacts)
     """
     if _PROMPT_SESSION is None:
-        raise RuntimeError("Call _init_prompt_session() first")
+        raise RuntimeError(_t("cli.error.prompt_session_not_initialized", "Call _init_prompt_session() first"))
     try:
         with patch_stdout():
             return await _PROMPT_SESSION.prompt_async(
@@ -163,36 +165,37 @@ def onboard():
     config_path = get_config_path()
 
     if config_path.exists():
-        console.print(f"[yellow]Config already exists at {config_path}[/yellow]")
-        console.print("  [bold]y[/bold] = overwrite with defaults (existing values will be lost)")
-        console.print("  [bold]N[/bold] = refresh config, keeping existing values and adding new fields")
+        console.print(_t("cli.status.config_exists", f"[yellow]Config already exists at {config_path}[/yellow]"))
+        console.print(_t("cli.config.overwrite_hint", "  [bold]y[/bold] = overwrite with defaults (existing values will be lost)"))
+        console.print(_t("cli.config.refresh_hint", "  [bold]N[/bold] = refresh config, keeping existing values and adding new fields"))
         if typer.confirm("Overwrite?"):
             config = Config()
             save_config(config)
-            console.print(f"[green]✓[/green] Config reset to defaults at {config_path}")
+            console.print(_t("cli.config.config_reset", f"[green]✓[/green] Config reset to defaults at {config_path}"))
         else:
             config = load_config()
             save_config(config)
-            console.print(f"[green]✓[/green] Config refreshed at {config_path} (existing values preserved)")
+            console.print(_t("cli.config.config_refreshed", f"[green]✓[/green] Config refreshed at {config_path} (existing values preserved)"))
     else:
         save_config(Config())
-        console.print(f"[green]✓[/green] Created config at {config_path}")
+        console.print(_t("cli.config.config_created", f"[green]✓[/green] Created config at {config_path}"))
 
     # Create workspace
     workspace = get_workspace_path()
 
     if not workspace.exists():
         workspace.mkdir(parents=True, exist_ok=True)
-        console.print(f"[green]✓[/green] Created workspace at {workspace}")
+        console.print(_t("cli.config.workspace_created", f"[green]✓[/green] Created workspace at {workspace}"))
 
     sync_workspace_templates(workspace)
 
     console.print(f"\n{__logo__} nanobot is ready!")
-    console.print("\nNext steps:")
-    console.print("  1. Add your API key to [cyan]~/.nanobot/config.json[/cyan]")
-    console.print("     Get one at: https://openrouter.ai/keys")
-    console.print("  2. Chat: [cyan]nanobot agent -m \"Hello!\"[/cyan]")
-    console.print("\n[dim]Want Telegram/WhatsApp? See: https://github.com/HKUDS/nanobot#-chat-apps[/dim]")
+    console.print(_t("cli.next_steps", "\nNext steps:"))
+    console.print(f"  1. {_t('cli.add_api_key', 'Add your API key to [cyan]~/.nanobot/config.json[/cyan]')}")
+    console.print(f"     {_t('cli.get_api_key', 'Get one at: https://openrouter.ai/keys')}")
+    chat_example = _t('cli.chat_example', 'Chat: [cyan]nanobot agent -m "Hello!"[/cyan]')
+    console.print(f"  2. {chat_example}")
+    console.print(_t("cli.want_chat_apps", "\n[dim]Want Telegram/WhatsApp? See: https://github.com/HKUDS/nanobot#-chat-apps[/dim]"))
 
 
 
@@ -223,8 +226,8 @@ def _make_provider(config: Config):
     from nanobot.providers.registry import find_by_name
     spec = find_by_name(provider_name)
     if not model.startswith("bedrock/") and not (p and p.api_key) and not (spec and spec.is_oauth):
-        console.print("[red]Error: No API key configured.[/red]")
-        console.print("Set one in ~/.nanobot/config.json under providers section")
+        console.print(_t("cli.error.no_api_key", "[red]错误：未配置 API 密钥。[/red]"))
+        console.print(_t("cli.error.no_api_key_detail", "请在 ~/.nanobot/config.json 的 providers 部分设置 API 密钥"))
         raise typer.Exit(1)
 
     return LiteLLMProvider(
@@ -243,8 +246,8 @@ def _make_provider(config: Config):
 
 @app.command()
 def gateway(
-    port: int = typer.Option(18790, "--port", "-p", help="Gateway port"),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
+    port: int = typer.Option(18790, "--port", "-p", help="网关端口"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="显示详细输出"),
 ):
     """Start the nanobot gateway."""
     from nanobot.agent.loop import AgentLoop
@@ -291,6 +294,7 @@ def gateway(
         session_manager=session_manager,
         mcp_servers=config.tools.mcp_servers,
         channels_config=config.channels,
+        config=config,
     )
 
     # Set cron callback (needs agent)
@@ -368,10 +372,36 @@ def gateway(
         await bus.publish_outbound(OutboundMessage(channel=channel, chat_id=chat_id, content=response))
 
     hb_cfg = config.gateway.heartbeat
+
+    # Create separate provider for heartbeat if configured
+    hb_provider = provider
+    hb_model = agent.model
+    if hb_cfg.provider and hb_cfg.model:
+        hb_model = hb_cfg.model
+        hb_p = getattr(config.providers, hb_cfg.provider, None)
+        if hb_p and (hb_p.api_key or hb_cfg.provider == "custom"):
+            if hb_cfg.provider == "custom":
+                from nanobot.providers.custom_provider import CustomProvider
+                hb_provider = CustomProvider(
+                    api_key=hb_p.api_key or "no-key",
+                    api_base=hb_p.api_base or "http://localhost:8000/v1",
+                    default_model=hb_model,
+                )
+            else:
+                from nanobot.providers.litellm_provider import LiteLLMProvider as _LP
+                hb_provider = _LP(
+                    api_key=hb_p.api_key,
+                    api_base=hb_p.api_base,
+                    default_model=hb_model,
+                    extra_headers=hb_p.extra_headers,
+                    provider_name=hb_cfg.provider,
+                )
+            console.print(f"[green]✓[/green] Heartbeat provider: {hb_cfg.provider} / {hb_model}")
+
     heartbeat = HeartbeatService(
         workspace=config.workspace_path,
-        provider=provider,
-        model=agent.model,
+        provider=hb_provider,
+        model=hb_model,
         on_execute=on_heartbeat_execute,
         on_notify=on_heartbeat_notify,
         interval_s=hb_cfg.interval_s,
@@ -381,13 +411,13 @@ def gateway(
     if channels.enabled_channels:
         console.print(f"[green]✓[/green] Channels enabled: {', '.join(channels.enabled_channels)}")
     else:
-        console.print("[yellow]Warning: No channels enabled[/yellow]")
+        console.print(f"[yellow]{_t('cli.warning.no_channels_enabled', 'Warning: No channels enabled')}[/yellow]")
 
     cron_status = cron.status()
     if cron_status["jobs"] > 0:
         console.print(f"[green]✓[/green] Cron: {cron_status['jobs']} scheduled jobs")
 
-    console.print(f"[green]✓[/green] Heartbeat: every {hb_cfg.interval_s}s")
+    console.print(f"[green]✓[/green] Heartbeat: every {hb_cfg.interval_s}s", style="dim")
 
     async def run():
         try:
@@ -398,7 +428,7 @@ def gateway(
                 channels.start_all(),
             )
         except KeyboardInterrupt:
-            console.print("\nShutting down...")
+            console.print(f"\n{_t('cli.status.shutting_down', 'Shutting down...')}")
         finally:
             await agent.close_mcp()
             heartbeat.stop()
@@ -418,10 +448,10 @@ def gateway(
 
 @app.command()
 def agent(
-    message: str = typer.Option(None, "--message", "-m", help="Message to send to the agent"),
-    session_id: str = typer.Option("cli:direct", "--session", "-s", help="Session ID"),
-    markdown: bool = typer.Option(True, "--markdown/--no-markdown", help="Render assistant output as Markdown"),
-    logs: bool = typer.Option(False, "--logs/--no-logs", help="Show nanobot runtime logs during chat"),
+    message: str = typer.Option(None, "--message", "-m", help="要发送给智能体的消息"),
+    session_id: str = typer.Option("cli:direct", "--session", "-s", help="会话 ID"),
+    markdown: bool = typer.Option(True, "--markdown/--no-markdown", help="将助手输出渲染为 Markdown"),
+    logs: bool = typer.Option(False, "--logs/--no-logs", help="在聊天期间显示 nanobot 运行时日志"),
 ):
     """Interact with the agent directly."""
     from loguru import logger
@@ -463,6 +493,7 @@ def agent(
         restrict_to_workspace=config.tools.restrict_to_workspace,
         mcp_servers=config.tools.mcp_servers,
         channels_config=config.channels,
+        config=config,
     )
 
     # Show spinner when logs are off (no output to miss); skip when logs are on
@@ -503,7 +534,7 @@ def agent(
 
         def _exit_on_sigint(signum, frame):
             _restore_terminal()
-            console.print("\nGoodbye!")
+            console.print(f"\n{_t('cli.status.goodbye', 'Goodbye!')}")
             os._exit(0)
 
         signal.signal(signal.SIGINT, _exit_on_sigint)
@@ -552,7 +583,7 @@ def agent(
 
                         if _is_exit_command(command):
                             _restore_terminal()
-                            console.print("\nGoodbye!")
+                            console.print(f"\n{_t('cli.status.goodbye', 'Goodbye!')}")
                             break
 
                         turn_done.clear()
@@ -572,11 +603,11 @@ def agent(
                             _print_agent_response(turn_response[0], render_markdown=markdown)
                     except KeyboardInterrupt:
                         _restore_terminal()
-                        console.print("\nGoodbye!")
+                        console.print(f"\n{_t('cli.status.goodbye', 'Goodbye!')}")
                         break
                     except EOFError:
                         _restore_terminal()
-                        console.print("\nGoodbye!")
+                        console.print(f"\n{_t('cli.status.goodbye', 'Goodbye!')}")
                         break
             finally:
                 agent_loop.stop()
@@ -703,7 +734,7 @@ def _get_bridge_dir() -> Path:
 
     # Check for npm
     if not shutil.which("npm"):
-        console.print("[red]npm not found. Please install Node.js >= 18.[/red]")
+        console.print(f"[red]{_t('cli.error.npm_not_found', 'npm not found. Please install Node.js >= 18.')}[/red]")
         raise typer.Exit(1)
 
     # Find source bridge: first check package data, then source dir
@@ -717,8 +748,8 @@ def _get_bridge_dir() -> Path:
         source = src_bridge
 
     if not source:
-        console.print("[red]Bridge source not found.[/red]")
-        console.print("Try reinstalling: pip install --force-reinstall nanobot")
+        console.print(f"[red]{_t('cli.error.bridge_source_not_found', 'Bridge source not found.')}[/red]")
+        console.print(_t('cli.error.bridge_reinstall_hint', "Try reinstalling: pip install --force-reinstall nanobot"))
         raise typer.Exit(1)
 
     console.print(f"{__logo__} Setting up bridge...")
@@ -731,15 +762,15 @@ def _get_bridge_dir() -> Path:
 
     # Install and build
     try:
-        console.print("  Installing dependencies...")
+        console.print(_t('cli.status.installing_deps', "  Installing dependencies..."))
         subprocess.run(["npm", "install"], cwd=user_bridge, check=True, capture_output=True)
 
-        console.print("  Building...")
+        console.print(_t('cli.status.building', "  Building..."))
         subprocess.run(["npm", "run", "build"], cwd=user_bridge, check=True, capture_output=True)
 
-        console.print("[green]✓[/green] Bridge ready\n")
+        console.print(f"[green]✓[/green] {_t('cli.status.bridge_ready', 'Bridge ready')}\n")
     except subprocess.CalledProcessError as e:
-        console.print(f"[red]Build failed: {e}[/red]")
+        console.print(f"[red]{_t('cli.status.build_failed', 'Build failed: {}').format(e)}[/red]")
         if e.stderr:
             console.print(f"[dim]{e.stderr.decode()[:500]}[/dim]")
         raise typer.Exit(1)
@@ -757,8 +788,8 @@ def channels_login():
     config = load_config()
     bridge_dir = _get_bridge_dir()
 
-    console.print(f"{__logo__} Starting bridge...")
-    console.print("Scan the QR code to connect.\n")
+    console.print(f"{__logo__} {_t('cli.status.starting_bridge', 'Starting bridge...')}")
+    console.print(_t('cli.status.scan_qr', "Scan the QR code to connect.\n"))
 
     env = {**os.environ}
     if config.channels.whatsapp.bridge_token:
@@ -767,9 +798,9 @@ def channels_login():
     try:
         subprocess.run(["npm", "start"], cwd=bridge_dir, check=True, env=env)
     except subprocess.CalledProcessError as e:
-        console.print(f"[red]Bridge failed: {e}[/red]")
+        console.print(f"[red]{_t('cli.status.bridge_failed', 'Bridge failed: {}').format(e)}[/red]")
     except FileNotFoundError:
-        console.print("[red]npm not found. Please install Node.js.[/red]")
+        console.print(f"[red]{_t('cli.error.npm_not_found_simple', 'npm not found. Please install Node.js.')}[/red]")
 
 
 # ============================================================================
@@ -794,7 +825,7 @@ def cron_list(
     jobs = service.list_jobs(include_disabled=all)
 
     if not jobs:
-        console.print("No scheduled jobs.")
+        console.print(_t('cli.schedule.no_jobs', "No scheduled jobs."))
         return
 
     table = Table(title="Scheduled Jobs")
@@ -851,7 +882,7 @@ def cron_add(
     from nanobot.cron.types import CronSchedule
 
     if tz and not cron_expr:
-        console.print("[red]Error: --tz can only be used with --cron[/red]")
+        console.print(f"[red]{_t('cli.error.tz_without_cron', '--tz can only be used with --cron')}[/red]")
         raise typer.Exit(1)
 
     # Determine schedule type
@@ -864,7 +895,7 @@ def cron_add(
         dt = datetime.datetime.fromisoformat(at)
         schedule = CronSchedule(kind="at", at_ms=int(dt.timestamp() * 1000))
     else:
-        console.print("[red]Error: Must specify --every, --cron, or --at[/red]")
+        console.print(f"[red]{_t('cli.error.missing_schedule', 'Must specify --every, --cron, or --at')}[/red]")
         raise typer.Exit(1)
 
     store_path = get_data_dir() / "cron" / "jobs.json"
@@ -880,7 +911,7 @@ def cron_add(
             channel=channel,
         )
     except ValueError as e:
-        console.print(f"[red]Error: {e}[/red]")
+        console.print(f"[red]{_t('cli.error.cron_error', 'Error: {}').format(e)}[/red]")
         raise typer.Exit(1) from e
 
     console.print(f"[green]✓[/green] Added job '{job.name}' ({job.id})")
@@ -900,7 +931,7 @@ def cron_remove(
     if service.remove_job(job_id):
         console.print(f"[green]✓[/green] Removed job {job_id}")
     else:
-        console.print(f"[red]Job {job_id} not found[/red]")
+        console.print(f"[red]{_t('cli.status.job_not_found', 'Job {} not found').format(job_id)}[/red]")
 
 
 @cron_app.command("enable")
@@ -920,7 +951,7 @@ def cron_enable(
         status = "disabled" if disable else "enabled"
         console.print(f"[green]✓[/green] Job '{job.name}' {status}")
     else:
-        console.print(f"[red]Job {job_id} not found[/red]")
+        console.print(f"[red]{_t('cli.status.job_not_found', 'Job {} not found').format(job_id)}[/red]")
 
 
 @cron_app.command("run")
@@ -957,6 +988,7 @@ def cron_run(
         restrict_to_workspace=config.tools.restrict_to_workspace,
         mcp_servers=config.tools.mcp_servers,
         channels_config=config.channels,
+        config=config,
     )
 
     store_path = get_data_dir() / "cron" / "jobs.json"
@@ -980,11 +1012,11 @@ def cron_run(
         return await service.run_job(job_id, force=force)
 
     if asyncio.run(run()):
-        console.print("[green]✓[/green] Job executed")
+        console.print(f"[green]✓[/green] {_t('cli.status.job_executed', 'Job executed')}")
         if result_holder:
             _print_agent_response(result_holder[0], render_markdown=True)
     else:
-        console.print(f"[red]Failed to run job {job_id}[/red]")
+        console.print(f"[red]{_t('cli.status.job_failed', 'Failed to run job {}').format(job_id)}[/red]")
 
 
 # ============================================================================
@@ -1058,12 +1090,12 @@ def provider_login(
     spec = next((s for s in PROVIDERS if s.name == key and s.is_oauth), None)
     if not spec:
         names = ", ".join(s.name.replace("_", "-") for s in PROVIDERS if s.is_oauth)
-        console.print(f"[red]Unknown OAuth provider: {provider}[/red]  Supported: {names}")
+        console.print(f"[red]{_t('cli.status.unknown_oauth_provider', 'Unknown OAuth provider: {}. Supported: {}').format(provider, names)}[/red]")
         raise typer.Exit(1)
 
     handler = _LOGIN_HANDLERS.get(spec.name)
     if not handler:
-        console.print(f"[red]Login not implemented for {spec.label}[/red]")
+        console.print(f"[red]{_t('cli.status.login_not_implemented', 'Login not implemented for {}').format(spec.label)}[/red]")
         raise typer.Exit(1)
 
     console.print(f"{__logo__} OAuth Login - {spec.label}\n")
@@ -1080,17 +1112,23 @@ def _login_openai_codex() -> None:
         except Exception:
             pass
         if not (token and token.access):
-            console.print("[cyan]Starting interactive OAuth login...[/cyan]\n")
+            console.print(f"[cyan]{_t('cli.status.starting_oauth', 'Starting interactive OAuth login...')}[/cyan]\n")
             token = login_oauth_interactive(
                 print_fn=lambda s: console.print(s),
                 prompt_fn=lambda s: typer.prompt(s),
             )
         if not (token and token.access):
-            console.print("[red]✗ Authentication failed[/red]")
+            console.print(f"[cyan]{_t('cli.status.starting_oauth', 'Starting interactive OAuth login...')}[/cyan]\n")
+            token = login_oauth_interactive(
+                print_fn=lambda s: console.print(s),
+                prompt_fn=lambda s: typer.prompt(s),
+            )
+        if not (token and token.access):
+            console.print(f"[red]{_t('cli.status.authentication_failed', '✗ Authentication failed')}[/red]")
             raise typer.Exit(1)
         console.print(f"[green]✓ Authenticated with OpenAI Codex[/green]  [dim]{token.account_id}[/dim]")
     except ImportError:
-        console.print("[red]oauth_cli_kit not installed. Run: pip install oauth-cli-kit[/red]")
+        console.print(f"[red]{_t('cli.status.oauth_cli_kit_not_installed', 'oauth_cli_kit not installed. Run: pip install oauth-cli-kit')}[/red]")
         raise typer.Exit(1)
 
 
@@ -1098,7 +1136,7 @@ def _login_openai_codex() -> None:
 def _login_github_copilot() -> None:
     import asyncio
 
-    console.print("[cyan]Starting GitHub Copilot device flow...[/cyan]\n")
+    console.print(f"[cyan]{_t('cli.status.starting_github', 'Starting GitHub Copilot device flow...')}[/cyan]\n")
 
     async def _trigger():
         from litellm import acompletion
@@ -1106,9 +1144,9 @@ def _login_github_copilot() -> None:
 
     try:
         asyncio.run(_trigger())
-        console.print("[green]✓ Authenticated with GitHub Copilot[/green]")
+        console.print(f"[green]{_t('cli.status.github_authenticated', 'Authenticated with GitHub Copilot')}[/green]")
     except Exception as e:
-        console.print(f"[red]Authentication error: {e}[/red]")
+        console.print(f"[red]{_t('cli.status.authentication_error', 'Authentication error: {}').format(e)}[/red]")
         raise typer.Exit(1)
 
 

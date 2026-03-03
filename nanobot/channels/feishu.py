@@ -11,6 +11,7 @@ from typing import Any
 
 from loguru import logger
 
+from localization import get_translation as _t
 from nanobot.bus.events import OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.channels.base import BaseChannel
@@ -594,7 +595,7 @@ class FeishuChannel(BaseChannel):
             logger.debug("Downloaded {} to {}", msg_type, file_path)
             return str(file_path), f"[{msg_type}: {filename}]"
 
-        return None, f"[{msg_type}: download failed]"
+        return None, _t('cli.status.media_download_failed', '[{0}: download failed]').format(msg_type)
 
     def _send_message_sync(self, receive_id_type: str, receive_id: str, msg_type: str, content: str) -> bool:
         """Send a single message (text/image/file/interactive) synchronously."""
@@ -653,11 +654,26 @@ class FeishuChannel(BaseChannel):
                         )
 
             if msg.content and msg.content.strip():
-                card = {"config": {"wide_screen_mode": True}, "elements": self._build_card_elements(msg.content)}
-                await loop.run_in_executor(
-                    None, self._send_message_sync,
-                    receive_id_type, msg.chat_id, "interactive", json.dumps(card, ensure_ascii=False),
-                )
+                # Feishu interactive card markdown nodes have limits (~30k). Use 20,000 for safety.
+                LIMIT = 20000
+                if len(msg.content) <= LIMIT:
+                    chunks = [msg.content]
+                else:
+                    chunks = []
+                    current = msg.content
+                    while len(current) > LIMIT:
+                        split_idx = current.rfind("\n", 0, LIMIT)
+                        if split_idx == -1: split_idx = LIMIT
+                        chunks.append(current[:split_idx])
+                        current = current[split_idx:].lstrip()
+                    if current: chunks.append(current)
+
+                for chunk in chunks:
+                    card = {"config": {"wide_screen_mode": True}, "elements": self._build_card_elements(chunk)}
+                    await loop.run_in_executor(
+                        None, self._send_message_sync,
+                        receive_id_type, msg.chat_id, "interactive", json.dumps(card, ensure_ascii=False),
+                    )
 
         except Exception as e:
             logger.error("Error sending Feishu message: {}", e)

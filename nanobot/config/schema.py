@@ -64,23 +64,6 @@ class DiscordConfig(Base):
     intents: int = 37377  # GUILDS + GUILD_MESSAGES + DIRECT_MESSAGES + MESSAGE_CONTENT
 
 
-class MatrixConfig(Base):
-    """Matrix (Element) channel configuration."""
-
-    enabled: bool = False
-    homeserver: str = "https://matrix.org"
-    access_token: str = ""
-    user_id: str = ""  # @bot:matrix.org
-    device_id: str = ""
-    e2ee_enabled: bool = True # Enable Matrix E2EE support (encryption + encrypted room handling).
-    sync_stop_grace_seconds: int = 2 # Max seconds to wait for sync_forever to stop gracefully before cancellation fallback.
-    max_media_bytes: int = 20 * 1024 * 1024 # Max attachment size accepted for Matrix media handling (inbound + outbound).
-    allow_from: list[str] = Field(default_factory=list)
-    group_policy: Literal["open", "mention", "allowlist"] = "open"
-    group_allow_from: list[str] = Field(default_factory=list)
-    allow_room_mentions: bool = False
-
-
 class EmailConfig(Base):
     """Email channel configuration (IMAP inbound + SMTP outbound)."""
 
@@ -217,16 +200,32 @@ class ChannelsConfig(Base):
     matrix: MatrixConfig = Field(default_factory=MatrixConfig)
 
 
+class VectorMemoryConfig(Base):
+    """Vector memory configuration."""
+
+    enabled: bool = False
+    provider: Literal["chroma", "qdrant"] = "qdrant"
+    db_path: str = "~/.nanobot/qdrant_db"
+    embedding_api_url: str = "http://127.0.0.1:8808/v1/embeddings"  # Local BGE service
+    rerank_api_url: str = "http://127.0.0.1:8808/v1/rerank"
+    collection_name: str = "nanobot_memory"
+    top_k: int = 5
+
+
 class AgentDefaults(Base):
     """Default agent configuration."""
 
     workspace: str = "~/.nanobot/workspace"
     model: str = "anthropic/claude-opus-4-5"
     provider: str = "auto"  # Provider name (e.g. "anthropic", "openrouter") or "auto" for auto-detection
+    vision_model: str | None = None  # Vision model for image analysis (e.g. "gpt-4o", "claude-3-5-sonnet")
+    memory_archival_model: str | None = None  # Dedicated model for memory consolidation/archival
     max_tokens: int = 8192
     temperature: float = 0.1
     max_tool_iterations: int = 40
     memory_window: int = 100
+    memory_mode: Literal["file", "vector"] = "file"
+    vector_memory: VectorMemoryConfig = Field(default_factory=VectorMemoryConfig)
     reasoning_effort: str | None = None  # low / medium / high — enables LLM thinking mode
 
 
@@ -271,6 +270,8 @@ class HeartbeatConfig(Base):
 
     enabled: bool = True
     interval_s: int = 30 * 60  # 30 minutes
+    provider: str | None = None  # Provider for heartbeat LLM (e.g. "custom"), defaults to main provider
+    model: str | None = None  # Model for heartbeat (e.g. "hunyuan-lite"), defaults to main model
 
 
 class GatewayConfig(Base):

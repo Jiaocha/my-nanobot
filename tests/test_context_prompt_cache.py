@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import datetime as datetime_module
 from datetime import datetime as real_datetime
 from pathlib import Path
-import datetime as datetime_module
 
 from nanobot.agent.context import ContextBuilder
 
@@ -58,7 +58,7 @@ def test_runtime_context_is_separate_untrusted_user_message(tmp_path) -> None:
     runtime_content = messages[-2]["content"]
     assert isinstance(runtime_content, str)
     assert ContextBuilder._RUNTIME_CONTEXT_TAG in runtime_content
-    assert "Current Time:" in runtime_content
+    assert "Time:" in runtime_content
     assert "Channel: cli" in runtime_content
     assert "Chat ID: direct" in runtime_content
 

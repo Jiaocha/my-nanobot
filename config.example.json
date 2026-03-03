@@ -1,0 +1,14 @@
+{
+  "providers": {
+    "openrouter": {
+      "apiKey": "sk-or-v1-YOUR_API_KEY"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": "anthropic/claude-opus-4-5",
+      "vision_model": "openai/gpt-4o",
+      "provider": "openrouter"
+    }
+  }
+}

@@ -1,0 +1,3792 @@
+{
+  "summary": {
+    "scanned_files": 90,
+    "total_user_visible_strings": 539,
+    "already_localized": 104,
+    "needs_localization": 435,
+    "localization_coverage": "19.3%"
+  },
+  "by_category": {
+    "error_messages": 4,
+    "cli_texts": 0,
+    "template_texts": 527,
+    "hardcoded_strings": 8
+  },
+  "needs_localization": [
+    {
+      "file": "nanobot\\agent\\context.py",
+      "line": 53,
+      "content": "\\n\\n---\\n\\n",
+      "type": "return",
+      "context": "return \"\\n\\n---\\n\\n\".join(parts)"
+    },
+    {
+      "file": "nanobot\\agent\\context.py",
+      "line": 103,
+      "content": "\\n\\n",
+      "type": "return",
+      "context": "return \"\\n\\n\".join(parts) if parts else \"\""
+    },
+    {
+      "file": "nanobot\\agent\\skills.py",
+      "line": 99,
+      "content": "\\n\\n---\\n\\n",
+      "type": "return",
+      "context": "return \"\\n\\n---\\n\\n\".join(parts) if parts else \"\""
+    },
+    {
+      "file": "nanobot\\agent\\subagent.py",
+      "line": 232,
+      "content": "\\n\\n",
+      "type": "return",
+      "context": "return \"\\n\\n\".join(parts)"
+    },
+    {
+      "file": "nanobot\\channels\\email.py",
+      "line": 379,
+      "content": "\\n\\n",
+      "type": "return",
+      "context": "return \"\\n\\n\".join(plain_parts).strip()"
+    },
+    {
+      "file": "tests\\test_heartbeat_service.py",
+      "line": 76,
+      "content": "done",
+      "type": "return",
+      "context": "return \"done\""
+    },
+    {
+      "file": "tests\\test_matrix_channel.py",
+      "line": 94,
+      "content": "send failed",
+      "type": "error",
+      "context": "raise RuntimeError(\"send failed\")"
+    },
+    {
+      "file": "tests\\test_matrix_channel.py",
+      "line": 104,
+      "content": "typing failed",
+      "type": "error",
+      "context": "raise RuntimeError(\"typing failed\")"
+    },
+    {
+      "file": "tests\\test_matrix_channel.py",
+      "line": 125,
+      "content": "upload failed",
+      "type": "error",
+      "context": "raise RuntimeError(\"upload failed\")"
+    },
+    {
+      "file": "tests\\test_matrix_channel.py",
+      "line": 1275,
+      "content": "boom",
+      "type": "error",
+      "context": "raise RuntimeError(\"boom\")"
+    },
+    {
+      "file": "tests\\test_tool_validation.py",
+      "line": 11,
+      "content": "sample",
+      "type": "return",
+      "context": "return \"sample\""
+    },
+    {
+      "file": "tests\\test_tool_validation.py",
+      "line": 15,
+      "content": "sample tool",
+      "type": "return",
+      "context": "return \"sample tool\""
+    },
+    {
+      "file": "README.md",
+      "line": 21,
+      "content": "📢 News",
+      "type": "markdown_heading",
+      "context": "## 📢 News"
+    },
+    {
+      "file": "README.md",
+      "line": 23,
+      "content": "- **2026-02-28** 🚀 Released **v0.1.4.post3** — cleaner context, hardened session history, and smarter agent. Please see [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post3) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-28** 🚀 Released **v0.1.4.post3** — cleaner context, hardened session history, and smarter agent. Please see [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post3) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 24,
+      "content": "- **2026-02-27** 🧠 Experimental thinking mode support, DingTalk media messages, Feishu and QQ channel fixes.",
+      "type": "markdown_list",
+      "context": "- **2026-02-27** 🧠 Experimental thinking mode support, DingTalk media messages, Feishu and QQ channel fixes."
+    },
+    {
+      "file": "README.md",
+      "line": 25,
+      "content": "- **2026-02-26** 🛡️ Session poisoning fix, WhatsApp dedup, Windows path guard, Mistral compatibility.",
+      "type": "markdown_list",
+      "context": "- **2026-02-26** 🛡️ Session poisoning fix, WhatsApp dedup, Windows path guard, Mistral compatibility."
+    },
+    {
+      "file": "README.md",
+      "line": 26,
+      "content": "- **2026-02-25** 🧹 New Matrix channel, cleaner session context, auto workspace template sync.",
+      "type": "markdown_list",
+      "context": "- **2026-02-25** 🧹 New Matrix channel, cleaner session context, auto workspace template sync."
+    },
+    {
+      "file": "README.md",
+      "line": 27,
+      "content": "- **2026-02-24** 🚀 Released **v0.1.4.post2** — a reliability-focused release with a redesigned heartbeat, prompt cache optimization, and hardened provider & channel stability. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post2) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-24** 🚀 Released **v0.1.4.post2** — a reliability-focused release with a redesigned heartbeat, prompt cache optimization, and hardened provider & channel stability. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post2) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 28,
+      "content": "- **2026-02-23** 🔧 Virtual tool-call heartbeat, prompt cache optimization, Slack mrkdwn fixes.",
+      "type": "markdown_list",
+      "context": "- **2026-02-23** 🔧 Virtual tool-call heartbeat, prompt cache optimization, Slack mrkdwn fixes."
+    },
+    {
+      "file": "README.md",
+      "line": 29,
+      "content": "- **2026-02-22** 🛡️ Slack thread isolation, Discord typing fix, agent reliability improvements.",
+      "type": "markdown_list",
+      "context": "- **2026-02-22** 🛡️ Slack thread isolation, Discord typing fix, agent reliability improvements."
+    },
+    {
+      "file": "README.md",
+      "line": 30,
+      "content": "- **2026-02-21** 🎉 Released **v0.1.4.post1** — new providers, media support across channels, and major stability improvements. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post1) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-21** 🎉 Released **v0.1.4.post1** — new providers, media support across channels, and major stability improvements. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4.post1) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 31,
+      "content": "- **2026-02-20** 🐦 Feishu now receives multimodal files from users. More reliable memory under the hood.",
+      "type": "markdown_list",
+      "context": "- **2026-02-20** 🐦 Feishu now receives multimodal files from users. More reliable memory under the hood."
+    },
+    {
+      "file": "README.md",
+      "line": 32,
+      "content": "- **2026-02-19** ✨ Slack now sends files, Discord splits long messages, and subagents work in CLI mode.",
+      "type": "markdown_list",
+      "context": "- **2026-02-19** ✨ Slack now sends files, Discord splits long messages, and subagents work in CLI mode."
+    },
+    {
+      "file": "README.md",
+      "line": 37,
+      "content": "- **2026-02-18** ⚡️ nanobot now supports VolcEngine, MCP custom auth headers, and Anthropic prompt caching.",
+      "type": "markdown_list",
+      "context": "- **2026-02-18** ⚡️ nanobot now supports VolcEngine, MCP custom auth headers, and Anthropic prompt caching."
+    },
+    {
+      "file": "README.md",
+      "line": 38,
+      "content": "- **2026-02-17** 🎉 Released **v0.1.4** — MCP support, progress streaming, new providers, and multiple channel improvements. Please see [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-17** 🎉 Released **v0.1.4** — MCP support, progress streaming, new providers, and multiple channel improvements. Please see [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.4) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 39,
+      "content": "- **2026-02-16** 🦞 nanobot now integrates a [ClawHub](https://clawhub.ai) skill — search and install public agent skills.",
+      "type": "markdown_list",
+      "context": "- **2026-02-16** 🦞 nanobot now integrates a [ClawHub](https://clawhub.ai) skill — search and install public agent skills."
+    },
+    {
+      "file": "README.md",
+      "line": 40,
+      "content": "- **2026-02-15** 🔑 nanobot now supports OpenAI Codex provider with OAuth login support.",
+      "type": "markdown_list",
+      "context": "- **2026-02-15** 🔑 nanobot now supports OpenAI Codex provider with OAuth login support."
+    },
+    {
+      "file": "README.md",
+      "line": 41,
+      "content": "- **2026-02-14** 🔌 nanobot now supports MCP! See [MCP section](#mcp-model-context-protocol) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-14** 🔌 nanobot now supports MCP! See [MCP section](#mcp-model-context-protocol) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 42,
+      "content": "- **2026-02-13** 🎉 Released **v0.1.3.post7** — includes security hardening and multiple improvements. **Please upgrade to the latest version to address security issues**. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post7) for more details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-13** 🎉 Released **v0.1.3.post7** — includes security hardening and multiple improvements. **Please upgrade to the latest version to address security issues**. See [release notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post7) for more details."
+    },
+    {
+      "file": "README.md",
+      "line": 43,
+      "content": "- **2026-02-12** 🧠 Redesigned memory system — Less code, more reliable. Join the [discussion](https://github.com/HKUDS/nanobot/discussions/566) about it!",
+      "type": "markdown_list",
+      "context": "- **2026-02-12** 🧠 Redesigned memory system — Less code, more reliable. Join the [discussion](https://github.com/HKUDS/nanobot/discussions/566) about it!"
+    },
+    {
+      "file": "README.md",
+      "line": 44,
+      "content": "- **2026-02-11** ✨ Enhanced CLI experience and added MiniMax support!",
+      "type": "markdown_list",
+      "context": "- **2026-02-11** ✨ Enhanced CLI experience and added MiniMax support!"
+    },
+    {
+      "file": "README.md",
+      "line": 45,
+      "content": "- **2026-02-10** 🎉 Released **v0.1.3.post6** with improvements! Check the updates [notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post6) and our [roadmap](https://github.com/HKUDS/nanobot/discussions/431).",
+      "type": "markdown_list",
+      "context": "- **2026-02-10** 🎉 Released **v0.1.3.post6** with improvements! Check the updates [notes](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post6) and our [roadmap](https://github.com/HKUDS/nanobot/discussions/431)."
+    },
+    {
+      "file": "README.md",
+      "line": 46,
+      "content": "- **2026-02-09** 💬 Added Slack, Email, and QQ support — nanobot now supports multiple chat platforms!",
+      "type": "markdown_list",
+      "context": "- **2026-02-09** 💬 Added Slack, Email, and QQ support — nanobot now supports multiple chat platforms!"
+    },
+    {
+      "file": "README.md",
+      "line": 47,
+      "content": "- **2026-02-08** 🔧 Refactored Providers—adding a new LLM provider now takes just 2 simple steps! Check [here](#providers).",
+      "type": "markdown_list",
+      "context": "- **2026-02-08** 🔧 Refactored Providers—adding a new LLM provider now takes just 2 simple steps! Check [here](#providers)."
+    },
+    {
+      "file": "README.md",
+      "line": 48,
+      "content": "- **2026-02-07** 🚀 Released **v0.1.3.post5** with Qwen support & several key improvements! Check [here](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post5) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-07** 🚀 Released **v0.1.3.post5** with Qwen support & several key improvements! Check [here](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post5) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 49,
+      "content": "- **2026-02-06** ✨ Added Moonshot/Kimi provider, Discord integration, and enhanced security hardening!",
+      "type": "markdown_list",
+      "context": "- **2026-02-06** ✨ Added Moonshot/Kimi provider, Discord integration, and enhanced security hardening!"
+    },
+    {
+      "file": "README.md",
+      "line": 50,
+      "content": "- **2026-02-05** ✨ Added Feishu channel, DeepSeek provider, and enhanced scheduled tasks support!",
+      "type": "markdown_list",
+      "context": "- **2026-02-05** ✨ Added Feishu channel, DeepSeek provider, and enhanced scheduled tasks support!"
+    },
+    {
+      "file": "README.md",
+      "line": 51,
+      "content": "- **2026-02-04** 🚀 Released **v0.1.3.post4** with multi-provider & Docker support! Check [here](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post4) for details.",
+      "type": "markdown_list",
+      "context": "- **2026-02-04** 🚀 Released **v0.1.3.post4** with multi-provider & Docker support! Check [here](https://github.com/HKUDS/nanobot/releases/tag/v0.1.3.post4) for details."
+    },
+    {
+      "file": "README.md",
+      "line": 52,
+      "content": "- **2026-02-03** ⚡ Integrated vLLM for local LLM support and improved natural language task scheduling!",
+      "type": "markdown_list",
+      "context": "- **2026-02-03** ⚡ Integrated vLLM for local LLM support and improved natural language task scheduling!"
+    },
+    {
+      "file": "README.md",
+      "line": 53,
+      "content": "- **2026-02-02** 🎉 nanobot officially launched! Welcome to try 🐈 nanobot!",
+      "type": "markdown_list",
+      "context": "- **2026-02-02** 🎉 nanobot officially launched! Welcome to try 🐈 nanobot!"
+    },
+    {
+      "file": "README.md",
+      "line": 57,
+      "content": "Key Features of nanobot:",
+      "type": "markdown_heading",
+      "context": "## Key Features of nanobot:"
+    },
+    {
+      "file": "README.md",
+      "line": 67,
+      "content": "🏗️ Architecture",
+      "type": "markdown_heading",
+      "context": "## 🏗️ Architecture"
+    },
+    {
+      "file": "README.md",
+      "line": 73,
+      "content": "✨ Features",
+      "type": "markdown_heading",
+      "context": "## ✨ Features"
+    },
+    {
+      "file": "README.md",
+      "line": 96,
+      "content": "📦 Install",
+      "type": "markdown_heading",
+      "context": "## 📦 Install"
+    },
+    {
+      "file": "README.md",
+      "line": 118,
+      "content": "🚀 Quick Start",
+      "type": "markdown_heading",
+      "context": "## 🚀 Quick Start"
+    },
+    {
+      "file": "README.md",
+      "line": 165,
+      "content": "💬 Chat Apps",
+      "type": "markdown_heading",
+      "context": "## 💬 Chat Apps"
+    },
+    {
+      "file": "README.md",
+      "line": 185,
+      "content": "- Open Telegram, search `@BotFather`",
+      "type": "markdown_list",
+      "context": "- Open Telegram, search `@BotFather`"
+    },
+    {
+      "file": "README.md",
+      "line": 186,
+      "content": "- Send `/newbot`, follow prompts",
+      "type": "markdown_list",
+      "context": "- Send `/newbot`, follow prompts"
+    },
+    {
+      "file": "README.md",
+      "line": 187,
+      "content": "- Copy the token",
+      "type": "markdown_list",
+      "context": "- Copy the token"
+    },
+    {
+      "file": "README.md",
+      "line": 276,
+      "content": "- Go to https://discord.com/developers/applications",
+      "type": "markdown_list",
+      "context": "- Go to https://discord.com/developers/applications"
+    },
+    {
+      "file": "README.md",
+      "line": 277,
+      "content": "- Create an application → Bot → Add Bot",
+      "type": "markdown_list",
+      "context": "- Create an application → Bot → Add Bot"
+    },
+    {
+      "file": "README.md",
+      "line": 278,
+      "content": "- Copy the bot token",
+      "type": "markdown_list",
+      "context": "- Copy the bot token"
+    },
+    {
+      "file": "README.md",
+      "line": 281,
+      "content": "- In the Bot settings, enable **MESSAGE CONTENT INTENT**",
+      "type": "markdown_list",
+      "context": "- In the Bot settings, enable **MESSAGE CONTENT INTENT**"
+    },
+    {
+      "file": "README.md",
+      "line": 282,
+      "content": "- (Optional) Enable **SERVER MEMBERS INTENT** if you plan to use allow lists based on member data",
+      "type": "markdown_list",
+      "context": "- (Optional) Enable **SERVER MEMBERS INTENT** if you plan to use allow lists based on member data"
+    },
+    {
+      "file": "README.md",
+      "line": 285,
+      "content": "- Discord Settings → Advanced → enable **Developer Mode**",
+      "type": "markdown_list",
+      "context": "- Discord Settings → Advanced → enable **Developer Mode**"
+    },
+    {
+      "file": "README.md",
+      "line": 286,
+      "content": "- Right-click your avatar → **Copy User ID**",
+      "type": "markdown_list",
+      "context": "- Right-click your avatar → **Copy User ID**"
+    },
+    {
+      "file": "README.md",
+      "line": 303,
+      "content": "- OAuth2 → URL Generator",
+      "type": "markdown_list",
+      "context": "- OAuth2 → URL Generator"
+    },
+    {
+      "file": "README.md",
+      "line": 304,
+      "content": "- Scopes: `bot`",
+      "type": "markdown_list",
+      "context": "- Scopes: `bot`"
+    },
+    {
+      "file": "README.md",
+      "line": 305,
+      "content": "- Bot Permissions: `Send Messages`, `Read Message History`",
+      "type": "markdown_list",
+      "context": "- Bot Permissions: `Send Messages`, `Read Message History`"
+    },
+    {
+      "file": "README.md",
+      "line": 306,
+      "content": "- Open the generated invite URL and add the bot to your server",
+      "type": "markdown_list",
+      "context": "- Open the generated invite URL and add the bot to your server"
+    },
+    {
+      "file": "README.md",
+      "line": 327,
+      "content": "- Create or reuse a Matrix account on your homeserver (for example `matrix.org`).",
+      "type": "markdown_list",
+      "context": "- Create or reuse a Matrix account on your homeserver (for example `matrix.org`)."
+    },
+    {
+      "file": "README.md",
+      "line": 328,
+      "content": "- Confirm you can log in with Element.",
+      "type": "markdown_list",
+      "context": "- Confirm you can log in with Element."
+    },
+    {
+      "file": "README.md",
+      "line": 332,
+      "content": "- You need:",
+      "type": "markdown_list",
+      "context": "- You need:"
+    },
+    {
+      "file": "README.md",
+      "line": 333,
+      "content": "- `userId` (example: `@nanobot:matrix.org`)",
+      "type": "markdown_list",
+      "context": "- `userId` (example: `@nanobot:matrix.org`)"
+    },
+    {
+      "file": "README.md",
+      "line": 334,
+      "content": "- `accessToken`",
+      "type": "markdown_list",
+      "context": "- `accessToken`"
+    },
+    {
+      "file": "README.md",
+      "line": 335,
+      "content": "- `deviceId` (recommended so sync tokens can be restored across restarts)",
+      "type": "markdown_list",
+      "context": "- `deviceId` (recommended so sync tokens can be restored across restarts)"
+    },
+    {
+      "file": "README.md",
+      "line": 336,
+      "content": "- You can obtain these from your homeserver login API (`/_matrix/client/v3/login`) or from your client's advanced session settings.",
+      "type": "markdown_list",
+      "context": "- You can obtain these from your homeserver login API (`/_matrix/client/v3/login`) or from your client's advanced session settings."
+    },
+    {
+      "file": "README.md",
+      "line": 391,
+      "content": "Scan QR with WhatsApp → Settings → Linked Devices",
+      "type": "markdown_heading",
+      "context": "# Scan QR with WhatsApp → Settings → Linked Devices"
+    },
+    {
+      "file": "README.md",
+      "line": 410,
+      "content": "Terminal 1",
+      "type": "markdown_heading",
+      "context": "# Terminal 1"
+    },
+    {
+      "file": "README.md",
+      "line": 413,
+      "content": "Terminal 2",
+      "type": "markdown_heading",
+      "context": "# Terminal 2"
+    },
+    {
+      "file": "README.md",
+      "line": 425,
+      "content": "- Visit [Feishu Open Platform](https://open.feishu.cn/app)",
+      "type": "markdown_list",
+      "context": "- Visit [Feishu Open Platform](https://open.feishu.cn/app)"
+    },
+    {
+      "file": "README.md",
+      "line": 426,
+      "content": "- Create a new app → Enable **Bot** capability",
+      "type": "markdown_list",
+      "context": "- Create a new app → Enable **Bot** capability"
+    },
+    {
+      "file": "README.md",
+      "line": 427,
+      "content": "- **Permissions**: Add `im:message` (send messages) and `im:message.p2p_msg:readonly` (receive messages)",
+      "type": "markdown_list",
+      "context": "- **Permissions**: Add `im:message` (send messages) and `im:message.p2p_msg:readonly` (receive messages)"
+    },
+    {
+      "file": "README.md",
+      "line": 428,
+      "content": "- **Events**: Add `im.message.receive_v1` (receive messages)",
+      "type": "markdown_list",
+      "context": "- **Events**: Add `im.message.receive_v1` (receive messages)"
+    },
+    {
+      "file": "README.md",
+      "line": 429,
+      "content": "- Select **Long Connection** mode (requires running nanobot first to establish connection)",
+      "type": "markdown_list",
+      "context": "- Select **Long Connection** mode (requires running nanobot first to establish connection)"
+    },
+    {
+      "file": "README.md",
+      "line": 430,
+      "content": "- Get **App ID** and **App Secret** from \"Credentials & Basic Info\"",
+      "type": "markdown_list",
+      "context": "- Get **App ID** and **App Secret** from \"Credentials & Basic Info\""
+    },
+    {
+      "file": "README.md",
+      "line": 431,
+      "content": "- Publish the app",
+      "type": "markdown_list",
+      "context": "- Publish the app"
+    },
+    {
+      "file": "README.md",
+      "line": 470,
+      "content": "- Visit [QQ Open Platform](https://q.qq.com) → Register as a developer (personal or enterprise)",
+      "type": "markdown_list",
+      "context": "- Visit [QQ Open Platform](https://q.qq.com) → Register as a developer (personal or enterprise)"
+    },
+    {
+      "file": "README.md",
+      "line": 471,
+      "content": "- Create a new bot application",
+      "type": "markdown_list",
+      "context": "- Create a new bot application"
+    },
+    {
+      "file": "README.md",
+      "line": 513,
+      "content": "- Visit [DingTalk Open Platform](https://open-dev.dingtalk.com/)",
+      "type": "markdown_list",
+      "context": "- Visit [DingTalk Open Platform](https://open-dev.dingtalk.com/)"
+    },
+    {
+      "file": "README.md",
+      "line": 514,
+      "content": "- Create a new app -> Add **Robot** capability",
+      "type": "markdown_list",
+      "context": "- Create a new app -> Add **Robot** capability"
+    },
+    {
+      "file": "README.md",
+      "line": 515,
+      "content": "- **Configuration**:",
+      "type": "markdown_list",
+      "context": "- **Configuration**:"
+    },
+    {
+      "file": "README.md",
+      "line": 516,
+      "content": "- Toggle **Stream Mode** ON",
+      "type": "markdown_list",
+      "context": "- Toggle **Stream Mode** ON"
+    },
+    {
+      "file": "README.md",
+      "line": 517,
+      "content": "- **Permissions**: Add necessary permissions for sending messages",
+      "type": "markdown_list",
+      "context": "- **Permissions**: Add necessary permissions for sending messages"
+    },
+    {
+      "file": "README.md",
+      "line": 518,
+      "content": "- Get **AppKey** (Client ID) and **AppSecret** (Client Secret) from \"Credentials\"",
+      "type": "markdown_list",
+      "context": "- Get **AppKey** (Client ID) and **AppSecret** (Client Secret) from \"Credentials\""
+    },
+    {
+      "file": "README.md",
+      "line": 519,
+      "content": "- Publish the app",
+      "type": "markdown_list",
+      "context": "- Publish the app"
+    },
+    {
+      "file": "README.md",
+      "line": 552,
+      "content": "- Go to [Slack API](https://api.slack.com/apps) → **Create New App** → \"From scratch\"",
+      "type": "markdown_list",
+      "context": "- Go to [Slack API](https://api.slack.com/apps) → **Create New App** → \"From scratch\""
+    },
+    {
+      "file": "README.md",
+      "line": 553,
+      "content": "- Pick a name and select your workspace",
+      "type": "markdown_list",
+      "context": "- Pick a name and select your workspace"
+    },
+    {
+      "file": "README.md",
+      "line": 556,
+      "content": "- **Socket Mode**: Toggle ON → Generate an **App-Level Token** with `connections:write` scope → copy it (`xapp-...`)",
+      "type": "markdown_list",
+      "context": "- **Socket Mode**: Toggle ON → Generate an **App-Level Token** with `connections:write` scope → copy it (`xapp-...`)"
+    },
+    {
+      "file": "README.md",
+      "line": 557,
+      "content": "- **OAuth & Permissions**: Add bot scopes: `chat:write`, `reactions:write`, `app_mentions:read`",
+      "type": "markdown_list",
+      "context": "- **OAuth & Permissions**: Add bot scopes: `chat:write`, `reactions:write`, `app_mentions:read`"
+    },
+    {
+      "file": "README.md",
+      "line": 558,
+      "content": "- **Event Subscriptions**: Toggle ON → Subscribe to bot events: `message.im`, `message.channels`, `app_mention` → Save Changes",
+      "type": "markdown_list",
+      "context": "- **Event Subscriptions**: Toggle ON → Subscribe to bot events: `message.im`, `message.channels`, `app_mention` → Save Changes"
+    },
+    {
+      "file": "README.md",
+      "line": 559,
+      "content": "- **App Home**: Scroll to **Show Tabs** → Enable **Messages Tab** → Check **\"Allow users to send Slash commands and messages from the messages tab\"**",
+      "type": "markdown_list",
+      "context": "- **App Home**: Scroll to **Show Tabs** → Enable **Messages Tab** → Check **\"Allow users to send Slash commands and messages from the messages tab\"**"
+    },
+    {
+      "file": "README.md",
+      "line": 560,
+      "content": "- **Install App**: Click **Install to Workspace** → Authorize → copy the **Bot Token** (`xoxb-...`)",
+      "type": "markdown_list",
+      "context": "- **Install App**: Click **Install to Workspace** → Authorize → copy the **Bot Token** (`xoxb-...`)"
+    },
+    {
+      "file": "README.md",
+      "line": 598,
+      "content": "- Create a dedicated Gmail account for your bot (e.g. `my-nanobot@gmail.com`)",
+      "type": "markdown_list",
+      "context": "- Create a dedicated Gmail account for your bot (e.g. `my-nanobot@gmail.com`)"
+    },
+    {
+      "file": "README.md",
+      "line": 599,
+      "content": "- Enable 2-Step Verification → Create an [App Password](https://myaccount.google.com/apppasswords)",
+      "type": "markdown_list",
+      "context": "- Enable 2-Step Verification → Create an [App Password](https://myaccount.google.com/apppasswords)"
+    },
+    {
+      "file": "README.md",
+      "line": 600,
+      "content": "- Use this app password for both IMAP and SMTP",
+      "type": "markdown_list",
+      "context": "- Use this app password for both IMAP and SMTP"
+    },
+    {
+      "file": "README.md",
+      "line": 639,
+      "content": "🌐 Agent Social Network",
+      "type": "markdown_heading",
+      "context": "## 🌐 Agent Social Network"
+    },
+    {
+      "file": "README.md",
+      "line": 650,
+      "content": "⚙️ Configuration",
+      "type": "markdown_heading",
+      "context": "## ⚙️ Configuration"
+    },
+    {
+      "file": "README.md",
+      "line": 654,
+      "content": "Providers",
+      "type": "markdown_heading",
+      "context": "### Providers"
+    },
+    {
+      "file": "README.md",
+      "line": 819,
+      "content": "MCP (Model Context Protocol)",
+      "type": "markdown_heading",
+      "context": "### MCP (Model Context Protocol)"
+    },
+    {
+      "file": "README.md",
+      "line": 874,
+      "content": "Security",
+      "type": "markdown_heading",
+      "context": "### Security"
+    },
+    {
+      "file": "README.md",
+      "line": 887,
+      "content": "CLI Reference",
+      "type": "markdown_heading",
+      "context": "## CLI Reference"
+    },
+    {
+      "file": "README.md",
+      "line": 908,
+      "content": "Add a job",
+      "type": "markdown_heading",
+      "context": "# Add a job"
+    },
+    {
+      "file": "README.md",
+      "line": 912,
+      "content": "List jobs",
+      "type": "markdown_heading",
+      "context": "# List jobs"
+    },
+    {
+      "file": "README.md",
+      "line": 915,
+      "content": "Remove a job",
+      "type": "markdown_heading",
+      "context": "# Remove a job"
+    },
+    {
+      "file": "README.md",
+      "line": 929,
+      "content": "Periodic Tasks",
+      "type": "markdown_heading",
+      "context": "## Periodic Tasks"
+    },
+    {
+      "file": "README.md",
+      "line": 931,
+      "content": "- [ ] Check weather forecast and send a summary",
+      "type": "markdown_list",
+      "context": "- [ ] Check weather forecast and send a summary"
+    },
+    {
+      "file": "README.md",
+      "line": 932,
+      "content": "- [ ] Scan inbox for urgent emails",
+      "type": "markdown_list",
+      "context": "- [ ] Scan inbox for urgent emails"
+    },
+    {
+      "file": "README.md",
+      "line": 941,
+      "content": "🐳 Docker",
+      "type": "markdown_heading",
+      "context": "## 🐳 Docker"
+    },
+    {
+      "file": "README.md",
+      "line": 946,
+      "content": "Docker Compose",
+      "type": "markdown_heading",
+      "context": "### Docker Compose"
+    },
+    {
+      "file": "README.md",
+      "line": 960,
+      "content": "Docker",
+      "type": "markdown_heading",
+      "context": "### Docker"
+    },
+    {
+      "file": "README.md",
+      "line": 963,
+      "content": "Build the image",
+      "type": "markdown_heading",
+      "context": "# Build the image"
+    },
+    {
+      "file": "README.md",
+      "line": 966,
+      "content": "Initialize config (first time only)",
+      "type": "markdown_heading",
+      "context": "# Initialize config (first time only)"
+    },
+    {
+      "file": "README.md",
+      "line": 969,
+      "content": "Edit config on host to add API keys",
+      "type": "markdown_heading",
+      "context": "# Edit config on host to add API keys"
+    },
+    {
+      "file": "README.md",
+      "line": 972,
+      "content": "Run gateway (connects to enabled channels, e.g. Telegram/Discord/Mochat)",
+      "type": "markdown_heading",
+      "context": "# Run gateway (connects to enabled channels, e.g. Telegram/Discord/Mochat)"
+    },
+    {
+      "file": "README.md",
+      "line": 975,
+      "content": "Or run a single command",
+      "type": "markdown_heading",
+      "context": "# Or run a single command"
+    },
+    {
+      "file": "README.md",
+      "line": 980,
+      "content": "🐧 Linux Service",
+      "type": "markdown_heading",
+      "context": "## 🐧 Linux Service"
+    },
+    {
+      "file": "README.md",
+      "line": 1033,
+      "content": "📁 Project Structure",
+      "type": "markdown_heading",
+      "context": "## 📁 Project Structure"
+    },
+    {
+      "file": "README.md",
+      "line": 1055,
+      "content": "🤝 Contribute & Roadmap",
+      "type": "markdown_heading",
+      "context": "## 🤝 Contribute & Roadmap"
+    },
+    {
+      "file": "README.md",
+      "line": 1061,
+      "content": "- [ ] **Multi-modal** — See and hear (images, voice, video)",
+      "type": "markdown_list",
+      "context": "- [ ] **Multi-modal** — See and hear (images, voice, video)"
+    },
+    {
+      "file": "README.md",
+      "line": 1062,
+      "content": "- [ ] **Long-term memory** — Never forget important context",
+      "type": "markdown_list",
+      "context": "- [ ] **Long-term memory** — Never forget important context"
+    },
+    {
+      "file": "README.md",
+      "line": 1063,
+      "content": "- [ ] **Better reasoning** — Multi-step planning and reflection",
+      "type": "markdown_list",
+      "context": "- [ ] **Better reasoning** — Multi-step planning and reflection"
+    },
+    {
+      "file": "README.md",
+      "line": 1064,
+      "content": "- [ ] **More integrations** — Calendar and more",
+      "type": "markdown_list",
+      "context": "- [ ] **More integrations** — Calendar and more"
+    },
+    {
+      "file": "README.md",
+      "line": 1065,
+      "content": "- [ ] **Self-improvement** — Learn from feedback and mistakes",
+      "type": "markdown_list",
+      "context": "- [ ] **Self-improvement** — Learn from feedback and mistakes"
+    },
+    {
+      "file": "README.md",
+      "line": 1067,
+      "content": "Contributors",
+      "type": "markdown_heading",
+      "context": "### Contributors"
+    },
+    {
+      "file": "README.md",
+      "line": 1074,
+      "content": "⭐ Star History",
+      "type": "markdown_heading",
+      "context": "## ⭐ Star History"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 1,
+      "content": "Security Policy",
+      "type": "markdown_heading",
+      "context": "# Security Policy"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 3,
+      "content": "Reporting a Vulnerability",
+      "type": "markdown_heading",
+      "context": "## Reporting a Vulnerability"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 7,
+      "content": "1. **DO NOT** open a public GitHub issue",
+      "type": "markdown_list",
+      "context": "1. **DO NOT** open a public GitHub issue"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 8,
+      "content": "2. Create a private security advisory on GitHub or contact the repository maintainers (xubinrencs@gmail.com)",
+      "type": "markdown_list",
+      "context": "2. Create a private security advisory on GitHub or contact the repository maintainers (xubinrencs@gmail.com)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 9,
+      "content": "3. Include:",
+      "type": "markdown_list",
+      "context": "3. Include:"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 10,
+      "content": "- Description of the vulnerability",
+      "type": "markdown_list",
+      "context": "- Description of the vulnerability"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 11,
+      "content": "- Steps to reproduce",
+      "type": "markdown_list",
+      "context": "- Steps to reproduce"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 12,
+      "content": "- Potential impact",
+      "type": "markdown_list",
+      "context": "- Potential impact"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 13,
+      "content": "- Suggested fix (if any)",
+      "type": "markdown_list",
+      "context": "- Suggested fix (if any)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 17,
+      "content": "Security Best Practices",
+      "type": "markdown_heading",
+      "context": "## Security Best Practices"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 19,
+      "content": "1. API Key Management",
+      "type": "markdown_heading",
+      "context": "### 1. API Key Management"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 24,
+      "content": "✅ Good: Store in config file with restricted permissions",
+      "type": "markdown_heading",
+      "context": "# ✅ Good: Store in config file with restricted permissions"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 27,
+      "content": "❌ Bad: Hardcoding keys in code or committing them",
+      "type": "markdown_heading",
+      "context": "# ❌ Bad: Hardcoding keys in code or committing them"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 31,
+      "content": "- Store API keys in `~/.nanobot/config.json` with file permissions set to `0600`",
+      "type": "markdown_list",
+      "context": "- Store API keys in `~/.nanobot/config.json` with file permissions set to `0600`"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 32,
+      "content": "- Consider using environment variables for sensitive keys",
+      "type": "markdown_list",
+      "context": "- Consider using environment variables for sensitive keys"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 33,
+      "content": "- Use OS keyring/credential manager for production deployments",
+      "type": "markdown_list",
+      "context": "- Use OS keyring/credential manager for production deployments"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 34,
+      "content": "- Rotate API keys regularly",
+      "type": "markdown_list",
+      "context": "- Rotate API keys regularly"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 35,
+      "content": "- Use separate API keys for development and production",
+      "type": "markdown_list",
+      "context": "- Use separate API keys for development and production"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 37,
+      "content": "2. Channel Access Control",
+      "type": "markdown_heading",
+      "context": "### 2. Channel Access Control"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 58,
+      "content": "- In `v0.1.4.post3` and earlier, an empty `allowFrom` allows all users. In newer versions (including source builds), **empty `allowFrom` denies all access** — set `[\"*\"]` to explicitly allow everyone.",
+      "type": "markdown_list",
+      "context": "- In `v0.1.4.post3` and earlier, an empty `allowFrom` allows all users. In newer versions (including source builds), **empty `allowFrom` denies all access** — set `[\"*\"]` to explicitly allow everyone."
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 59,
+      "content": "- Get your Telegram user ID from `@userinfobot`",
+      "type": "markdown_list",
+      "context": "- Get your Telegram user ID from `@userinfobot`"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 60,
+      "content": "- Use full phone numbers with country code for WhatsApp",
+      "type": "markdown_list",
+      "context": "- Use full phone numbers with country code for WhatsApp"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 61,
+      "content": "- Review access logs regularly for unauthorized access attempts",
+      "type": "markdown_list",
+      "context": "- Review access logs regularly for unauthorized access attempts"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 63,
+      "content": "3. Shell Command Execution",
+      "type": "markdown_heading",
+      "context": "### 3. Shell Command Execution"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 67,
+      "content": "- ✅ Review all tool usage in agent logs",
+      "type": "markdown_list",
+      "context": "- ✅ Review all tool usage in agent logs"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 68,
+      "content": "- ✅ Understand what commands the agent is running",
+      "type": "markdown_list",
+      "context": "- ✅ Understand what commands the agent is running"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 69,
+      "content": "- ✅ Use a dedicated user account with limited privileges",
+      "type": "markdown_list",
+      "context": "- ✅ Use a dedicated user account with limited privileges"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 70,
+      "content": "- ✅ Never run nanobot as root",
+      "type": "markdown_list",
+      "context": "- ✅ Never run nanobot as root"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 71,
+      "content": "- ❌ Don't disable security checks",
+      "type": "markdown_list",
+      "context": "- ❌ Don't disable security checks"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 72,
+      "content": "- ❌ Don't run on systems with sensitive data without careful review",
+      "type": "markdown_list",
+      "context": "- ❌ Don't run on systems with sensitive data without careful review"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 75,
+      "content": "- `rm -rf /` - Root filesystem deletion",
+      "type": "markdown_list",
+      "context": "- `rm -rf /` - Root filesystem deletion"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 76,
+      "content": "- Fork bombs",
+      "type": "markdown_list",
+      "context": "- Fork bombs"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 77,
+      "content": "- Filesystem formatting (`mkfs.*`)",
+      "type": "markdown_list",
+      "context": "- Filesystem formatting (`mkfs.*`)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 78,
+      "content": "- Raw disk writes",
+      "type": "markdown_list",
+      "context": "- Raw disk writes"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 79,
+      "content": "- Other destructive operations",
+      "type": "markdown_list",
+      "context": "- Other destructive operations"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 81,
+      "content": "4. File System Access",
+      "type": "markdown_heading",
+      "context": "### 4. File System Access"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 85,
+      "content": "- ✅ Run nanobot with a dedicated user account",
+      "type": "markdown_list",
+      "context": "- ✅ Run nanobot with a dedicated user account"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 86,
+      "content": "- ✅ Use filesystem permissions to protect sensitive directories",
+      "type": "markdown_list",
+      "context": "- ✅ Use filesystem permissions to protect sensitive directories"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 87,
+      "content": "- ✅ Regularly audit file operations in logs",
+      "type": "markdown_list",
+      "context": "- ✅ Regularly audit file operations in logs"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 88,
+      "content": "- ❌ Don't give unrestricted access to sensitive files",
+      "type": "markdown_list",
+      "context": "- ❌ Don't give unrestricted access to sensitive files"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 90,
+      "content": "5. Network Security",
+      "type": "markdown_heading",
+      "context": "### 5. Network Security"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 93,
+      "content": "- All external API calls use HTTPS by default",
+      "type": "markdown_list",
+      "context": "- All external API calls use HTTPS by default"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 94,
+      "content": "- Timeouts are configured to prevent hanging requests",
+      "type": "markdown_list",
+      "context": "- Timeouts are configured to prevent hanging requests"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 95,
+      "content": "- Consider using a firewall to restrict outbound connections if needed",
+      "type": "markdown_list",
+      "context": "- Consider using a firewall to restrict outbound connections if needed"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 98,
+      "content": "- The bridge binds to `127.0.0.1:3001` (localhost only, not accessible from external network)",
+      "type": "markdown_list",
+      "context": "- The bridge binds to `127.0.0.1:3001` (localhost only, not accessible from external network)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 99,
+      "content": "- Set `bridgeToken` in config to enable shared-secret authentication between Python and Node.js",
+      "type": "markdown_list",
+      "context": "- Set `bridgeToken` in config to enable shared-secret authentication between Python and Node.js"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 100,
+      "content": "- Keep authentication data in `~/.nanobot/whatsapp-auth` secure (mode 0700)",
+      "type": "markdown_list",
+      "context": "- Keep authentication data in `~/.nanobot/whatsapp-auth` secure (mode 0700)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 102,
+      "content": "6. Dependency Security",
+      "type": "markdown_heading",
+      "context": "### 6. Dependency Security"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 107,
+      "content": "Check for vulnerable dependencies",
+      "type": "markdown_heading",
+      "context": "# Check for vulnerable dependencies"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 111,
+      "content": "Update to latest secure versions",
+      "type": "markdown_heading",
+      "context": "# Update to latest secure versions"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 123,
+      "content": "- Keep `litellm` updated to the latest version for security fixes",
+      "type": "markdown_list",
+      "context": "- Keep `litellm` updated to the latest version for security fixes"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 124,
+      "content": "- We've updated `ws` to `>=8.17.1` to fix DoS vulnerability",
+      "type": "markdown_list",
+      "context": "- We've updated `ws` to `>=8.17.1` to fix DoS vulnerability"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 125,
+      "content": "- Run `pip-audit` or `npm audit` regularly",
+      "type": "markdown_list",
+      "context": "- Run `pip-audit` or `npm audit` regularly"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 126,
+      "content": "- Subscribe to security advisories for nanobot and its dependencies",
+      "type": "markdown_list",
+      "context": "- Subscribe to security advisories for nanobot and its dependencies"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 128,
+      "content": "7. Production Deployment",
+      "type": "markdown_heading",
+      "context": "### 7. Production Deployment"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 132,
+      "content": "1. **Isolate the Environment**",
+      "type": "markdown_list",
+      "context": "1. **Isolate the Environment**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 139,
+      "content": "2. **Use a Dedicated User**",
+      "type": "markdown_list",
+      "context": "2. **Use a Dedicated User**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 145,
+      "content": "3. **Set Proper Permissions**",
+      "type": "markdown_list",
+      "context": "3. **Set Proper Permissions**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 152,
+      "content": "4. **Enable Logging**",
+      "type": "markdown_list",
+      "context": "4. **Enable Logging**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 158,
+      "content": "5. **Use Rate Limiting**",
+      "type": "markdown_list",
+      "context": "5. **Use Rate Limiting**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 159,
+      "content": "- Configure rate limits on your API providers",
+      "type": "markdown_list",
+      "context": "- Configure rate limits on your API providers"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 160,
+      "content": "- Monitor usage for anomalies",
+      "type": "markdown_list",
+      "context": "- Monitor usage for anomalies"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 161,
+      "content": "- Set spending limits on LLM APIs",
+      "type": "markdown_list",
+      "context": "- Set spending limits on LLM APIs"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 163,
+      "content": "6. **Regular Updates**",
+      "type": "markdown_list",
+      "context": "6. **Regular Updates**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 169,
+      "content": "8. Development vs Production",
+      "type": "markdown_heading",
+      "context": "### 8. Development vs Production"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 172,
+      "content": "- Use separate API keys",
+      "type": "markdown_list",
+      "context": "- Use separate API keys"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 173,
+      "content": "- Test with non-sensitive data",
+      "type": "markdown_list",
+      "context": "- Test with non-sensitive data"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 174,
+      "content": "- Enable verbose logging",
+      "type": "markdown_list",
+      "context": "- Enable verbose logging"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 175,
+      "content": "- Use a test Telegram bot",
+      "type": "markdown_list",
+      "context": "- Use a test Telegram bot"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 178,
+      "content": "- Use dedicated API keys with spending limits",
+      "type": "markdown_list",
+      "context": "- Use dedicated API keys with spending limits"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 179,
+      "content": "- Restrict file system access",
+      "type": "markdown_list",
+      "context": "- Restrict file system access"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 180,
+      "content": "- Enable audit logging",
+      "type": "markdown_list",
+      "context": "- Enable audit logging"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 181,
+      "content": "- Regular security reviews",
+      "type": "markdown_list",
+      "context": "- Regular security reviews"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 182,
+      "content": "- Monitor for unusual activity",
+      "type": "markdown_list",
+      "context": "- Monitor for unusual activity"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 184,
+      "content": "9. Data Privacy",
+      "type": "markdown_heading",
+      "context": "### 9. Data Privacy"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 186,
+      "content": "- **Logs may contain sensitive information** - secure log files appropriately",
+      "type": "markdown_list",
+      "context": "- **Logs may contain sensitive information** - secure log files appropriately"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 187,
+      "content": "- **LLM providers see your prompts** - review their privacy policies",
+      "type": "markdown_list",
+      "context": "- **LLM providers see your prompts** - review their privacy policies"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 188,
+      "content": "- **Chat history is stored locally** - protect the `~/.nanobot` directory",
+      "type": "markdown_list",
+      "context": "- **Chat history is stored locally** - protect the `~/.nanobot` directory"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 189,
+      "content": "- **API keys are in plain text** - use OS keyring for production",
+      "type": "markdown_list",
+      "context": "- **API keys are in plain text** - use OS keyring for production"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 191,
+      "content": "10. Incident Response",
+      "type": "markdown_heading",
+      "context": "### 10. Incident Response"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 195,
+      "content": "1. **Immediately revoke compromised API keys**",
+      "type": "markdown_list",
+      "context": "1. **Immediately revoke compromised API keys**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 196,
+      "content": "2. **Review logs for unauthorized access**",
+      "type": "markdown_list",
+      "context": "2. **Review logs for unauthorized access**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 200,
+      "content": "3. **Check for unexpected file modifications**",
+      "type": "markdown_list",
+      "context": "3. **Check for unexpected file modifications**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 201,
+      "content": "4. **Rotate all credentials**",
+      "type": "markdown_list",
+      "context": "4. **Rotate all credentials**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 202,
+      "content": "5. **Update to latest version**",
+      "type": "markdown_list",
+      "context": "5. **Update to latest version**"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 203,
+      "content": "6. **Report the incident** to maintainers",
+      "type": "markdown_list",
+      "context": "6. **Report the incident** to maintainers"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 205,
+      "content": "Security Features",
+      "type": "markdown_heading",
+      "context": "## Security Features"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 207,
+      "content": "Built-in Security Controls",
+      "type": "markdown_heading",
+      "context": "### Built-in Security Controls"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 210,
+      "content": "- Path traversal protection on file operations",
+      "type": "markdown_list",
+      "context": "- Path traversal protection on file operations"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 211,
+      "content": "- Dangerous command pattern detection",
+      "type": "markdown_list",
+      "context": "- Dangerous command pattern detection"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 212,
+      "content": "- Input length limits on HTTP requests",
+      "type": "markdown_list",
+      "context": "- Input length limits on HTTP requests"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 215,
+      "content": "- Allow-list based access control — in `v0.1.4.post3` and earlier empty means allow all; in newer versions empty means deny all (`[\"*\"]` to explicitly allow all)",
+      "type": "markdown_list",
+      "context": "- Allow-list based access control — in `v0.1.4.post3` and earlier empty means allow all; in newer versions empty means deny all (`[\"*\"]` to explicitly allow all)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 216,
+      "content": "- Failed authentication attempt logging",
+      "type": "markdown_list",
+      "context": "- Failed authentication attempt logging"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 219,
+      "content": "- Command execution timeouts (60s default)",
+      "type": "markdown_list",
+      "context": "- Command execution timeouts (60s default)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 220,
+      "content": "- Output truncation (10KB limit)",
+      "type": "markdown_list",
+      "context": "- Output truncation (10KB limit)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 221,
+      "content": "- HTTP request timeouts (10-30s)",
+      "type": "markdown_list",
+      "context": "- HTTP request timeouts (10-30s)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 224,
+      "content": "- HTTPS for all external API calls",
+      "type": "markdown_list",
+      "context": "- HTTPS for all external API calls"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 225,
+      "content": "- TLS for Telegram API",
+      "type": "markdown_list",
+      "context": "- TLS for Telegram API"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 226,
+      "content": "- WhatsApp bridge: localhost-only binding + optional token auth",
+      "type": "markdown_list",
+      "context": "- WhatsApp bridge: localhost-only binding + optional token auth"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 228,
+      "content": "Known Limitations",
+      "type": "markdown_heading",
+      "context": "## Known Limitations"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 232,
+      "content": "1. **No Rate Limiting** - Users can send unlimited messages (add your own if needed)",
+      "type": "markdown_list",
+      "context": "1. **No Rate Limiting** - Users can send unlimited messages (add your own if needed)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 233,
+      "content": "2. **Plain Text Config** - API keys stored in plain text (use keyring for production)",
+      "type": "markdown_list",
+      "context": "2. **Plain Text Config** - API keys stored in plain text (use keyring for production)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 234,
+      "content": "3. **No Session Management** - No automatic session expiry",
+      "type": "markdown_list",
+      "context": "3. **No Session Management** - No automatic session expiry"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 235,
+      "content": "4. **Limited Command Filtering** - Only blocks obvious dangerous patterns",
+      "type": "markdown_list",
+      "context": "4. **Limited Command Filtering** - Only blocks obvious dangerous patterns"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 236,
+      "content": "5. **No Audit Trail** - Limited security event logging (enhance as needed)",
+      "type": "markdown_list",
+      "context": "5. **No Audit Trail** - Limited security event logging (enhance as needed)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 238,
+      "content": "Security Checklist",
+      "type": "markdown_heading",
+      "context": "## Security Checklist"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 242,
+      "content": "- [ ] API keys stored securely (not in code)",
+      "type": "markdown_list",
+      "context": "- [ ] API keys stored securely (not in code)"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 243,
+      "content": "- [ ] Config file permissions set to 0600",
+      "type": "markdown_list",
+      "context": "- [ ] Config file permissions set to 0600"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 244,
+      "content": "- [ ] `allowFrom` lists configured for all channels",
+      "type": "markdown_list",
+      "context": "- [ ] `allowFrom` lists configured for all channels"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 245,
+      "content": "- [ ] Running as non-root user",
+      "type": "markdown_list",
+      "context": "- [ ] Running as non-root user"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 246,
+      "content": "- [ ] File system permissions properly restricted",
+      "type": "markdown_list",
+      "context": "- [ ] File system permissions properly restricted"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 247,
+      "content": "- [ ] Dependencies updated to latest secure versions",
+      "type": "markdown_list",
+      "context": "- [ ] Dependencies updated to latest secure versions"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 248,
+      "content": "- [ ] Logs monitored for security events",
+      "type": "markdown_list",
+      "context": "- [ ] Logs monitored for security events"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 249,
+      "content": "- [ ] Rate limits configured on API providers",
+      "type": "markdown_list",
+      "context": "- [ ] Rate limits configured on API providers"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 250,
+      "content": "- [ ] Backup and disaster recovery plan in place",
+      "type": "markdown_list",
+      "context": "- [ ] Backup and disaster recovery plan in place"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 251,
+      "content": "- [ ] Security review of custom skills/tools",
+      "type": "markdown_list",
+      "context": "- [ ] Security review of custom skills/tools"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 253,
+      "content": "Updates",
+      "type": "markdown_heading",
+      "context": "## Updates"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 258,
+      "content": "- GitHub Security Advisories: https://github.com/HKUDS/nanobot/security/advisories",
+      "type": "markdown_list",
+      "context": "- GitHub Security Advisories: https://github.com/HKUDS/nanobot/security/advisories"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 259,
+      "content": "- Release Notes: https://github.com/HKUDS/nanobot/releases",
+      "type": "markdown_list",
+      "context": "- Release Notes: https://github.com/HKUDS/nanobot/releases"
+    },
+    {
+      "file": "SECURITY.md",
+      "line": 261,
+      "content": "License",
+      "type": "markdown_heading",
+      "context": "## License"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 1,
+      "content": "nanobot Skills",
+      "type": "markdown_heading",
+      "context": "# nanobot Skills"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 5,
+      "content": "Skill Format",
+      "type": "markdown_heading",
+      "context": "## Skill Format"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 8,
+      "content": "- YAML frontmatter (name, description, metadata)",
+      "type": "markdown_list",
+      "context": "- YAML frontmatter (name, description, metadata)"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 9,
+      "content": "- Markdown instructions for the agent",
+      "type": "markdown_list",
+      "context": "- Markdown instructions for the agent"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 11,
+      "content": "Attribution",
+      "type": "markdown_heading",
+      "context": "## Attribution"
+    },
+    {
+      "file": "nanobot\\skills\\README.md",
+      "line": 16,
+      "content": "Available Skills",
+      "type": "markdown_heading",
+      "context": "## Available Skills"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 8,
+      "content": "ClawHub",
+      "type": "markdown_heading",
+      "context": "# ClawHub"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 12,
+      "content": "When to use",
+      "type": "markdown_heading",
+      "context": "## When to use"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 15,
+      "content": "- \"find a skill for …\"",
+      "type": "markdown_list",
+      "context": "- \"find a skill for …\""
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 16,
+      "content": "- \"search for skills\"",
+      "type": "markdown_list",
+      "context": "- \"search for skills\""
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 17,
+      "content": "- \"install a skill\"",
+      "type": "markdown_list",
+      "context": "- \"install a skill\""
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 18,
+      "content": "- \"what skills are available?\"",
+      "type": "markdown_list",
+      "context": "- \"what skills are available?\""
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 19,
+      "content": "- \"update my skills\"",
+      "type": "markdown_list",
+      "context": "- \"update my skills\""
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 21,
+      "content": "Search",
+      "type": "markdown_heading",
+      "context": "## Search"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 27,
+      "content": "Install",
+      "type": "markdown_heading",
+      "context": "## Install"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 35,
+      "content": "Update",
+      "type": "markdown_heading",
+      "context": "## Update"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 41,
+      "content": "List installed",
+      "type": "markdown_heading",
+      "context": "## List installed"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 47,
+      "content": "Notes",
+      "type": "markdown_heading",
+      "context": "## Notes"
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 49,
+      "content": "- Requires Node.js (`npx` comes with it).",
+      "type": "markdown_list",
+      "context": "- Requires Node.js (`npx` comes with it)."
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 50,
+      "content": "- No API key needed for search and install.",
+      "type": "markdown_list",
+      "context": "- No API key needed for search and install."
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 51,
+      "content": "- Login (`npx --yes clawhub@latest login`) is only required for publishing.",
+      "type": "markdown_list",
+      "context": "- Login (`npx --yes clawhub@latest login`) is only required for publishing."
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 52,
+      "content": "- `--workdir ~/.nanobot/workspace` is critical — without it, skills install to the current directory instead of the nanobot workspace.",
+      "type": "markdown_list",
+      "context": "- `--workdir ~/.nanobot/workspace` is critical — without it, skills install to the current directory instead of the nanobot workspace."
+    },
+    {
+      "file": "nanobot\\skills\\clawhub\\SKILL.md",
+      "line": 53,
+      "content": "- After install, remind the user to start a new session to load the skill.",
+      "type": "markdown_list",
+      "context": "- After install, remind the user to start a new session to load the skill."
+    },
+    {
+      "file": "nanobot\\skills\\github\\SKILL.md",
+      "line": 7,
+      "content": "GitHub Skill",
+      "type": "markdown_heading",
+      "context": "# GitHub Skill"
+    },
+    {
+      "file": "nanobot\\skills\\github\\SKILL.md",
+      "line": 11,
+      "content": "Pull Requests",
+      "type": "markdown_heading",
+      "context": "## Pull Requests"
+    },
+    {
+      "file": "nanobot\\skills\\github\\SKILL.md",
+      "line": 33,
+      "content": "API for Advanced Queries",
+      "type": "markdown_heading",
+      "context": "## API for Advanced Queries"
+    },
+    {
+      "file": "nanobot\\skills\\github\\SKILL.md",
+      "line": 42,
+      "content": "JSON Output",
+      "type": "markdown_heading",
+      "context": "## JSON Output"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 6,
+      "content": "Skill Creator",
+      "type": "markdown_heading",
+      "context": "# Skill Creator"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 10,
+      "content": "About Skills",
+      "type": "markdown_heading",
+      "context": "## About Skills"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 17,
+      "content": "What Skills Provide",
+      "type": "markdown_heading",
+      "context": "### What Skills Provide"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 19,
+      "content": "1. Specialized workflows - Multi-step procedures for specific domains",
+      "type": "markdown_list",
+      "context": "1. Specialized workflows - Multi-step procedures for specific domains"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 20,
+      "content": "2. Tool integrations - Instructions for working with specific file formats or APIs",
+      "type": "markdown_list",
+      "context": "2. Tool integrations - Instructions for working with specific file formats or APIs"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 21,
+      "content": "3. Domain expertise - Company-specific knowledge, schemas, business logic",
+      "type": "markdown_list",
+      "context": "3. Domain expertise - Company-specific knowledge, schemas, business logic"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 22,
+      "content": "4. Bundled resources - Scripts, references, and assets for complex and repetitive tasks",
+      "type": "markdown_list",
+      "context": "4. Bundled resources - Scripts, references, and assets for complex and repetitive tasks"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 24,
+      "content": "Core Principles",
+      "type": "markdown_heading",
+      "context": "## Core Principles"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 26,
+      "content": "Concise is Key",
+      "type": "markdown_heading",
+      "context": "### Concise is Key"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 34,
+      "content": "Set Appropriate Degrees of Freedom",
+      "type": "markdown_heading",
+      "context": "### Set Appropriate Degrees of Freedom"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 46,
+      "content": "Anatomy of a Skill",
+      "type": "markdown_heading",
+      "context": "### Anatomy of a Skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 63,
+      "content": "SKILL.md (required)",
+      "type": "markdown_heading",
+      "context": "#### SKILL.md (required)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 67,
+      "content": "- **Frontmatter** (YAML): Contains `name` and `description` fields. These are the only fields that the agent reads to determine when the skill gets used, thus it is very important to be clear and comprehensive in describing what the skill is, and when it should be used.",
+      "type": "markdown_list",
+      "context": "- **Frontmatter** (YAML): Contains `name` and `description` fields. These are the only fields that the agent reads to determine when the skill gets used, thus it is very important to be clear and comprehensive in describing what the skill is, and when it should be used."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 68,
+      "content": "- **Body** (Markdown): Instructions and guidance for using the skill. Only loaded AFTER the skill triggers (if at all).",
+      "type": "markdown_list",
+      "context": "- **Body** (Markdown): Instructions and guidance for using the skill. Only loaded AFTER the skill triggers (if at all)."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 70,
+      "content": "Bundled Resources (optional)",
+      "type": "markdown_heading",
+      "context": "#### Bundled Resources (optional)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 72,
+      "content": "Scripts (`scripts/`)",
+      "type": "markdown_heading",
+      "context": "##### Scripts (`scripts/`)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 76,
+      "content": "- **When to include**: When the same code is being rewritten repeatedly or deterministic reliability is needed",
+      "type": "markdown_list",
+      "context": "- **When to include**: When the same code is being rewritten repeatedly or deterministic reliability is needed"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 77,
+      "content": "- **Example**: `scripts/rotate_pdf.py` for PDF rotation tasks",
+      "type": "markdown_list",
+      "context": "- **Example**: `scripts/rotate_pdf.py` for PDF rotation tasks"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 78,
+      "content": "- **Benefits**: Token efficient, deterministic, may be executed without loading into context",
+      "type": "markdown_list",
+      "context": "- **Benefits**: Token efficient, deterministic, may be executed without loading into context"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 79,
+      "content": "- **Note**: Scripts may still need to be read by the agent for patching or environment-specific adjustments",
+      "type": "markdown_list",
+      "context": "- **Note**: Scripts may still need to be read by the agent for patching or environment-specific adjustments"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 81,
+      "content": "References (`references/`)",
+      "type": "markdown_heading",
+      "context": "##### References (`references/`)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 85,
+      "content": "- **When to include**: For documentation that the agent should reference while working",
+      "type": "markdown_list",
+      "context": "- **When to include**: For documentation that the agent should reference while working"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 86,
+      "content": "- **Examples**: `references/finance.md` for financial schemas, `references/mnda.md` for company NDA template, `references/policies.md` for company policies, `references/api_docs.md` for API specifications",
+      "type": "markdown_list",
+      "context": "- **Examples**: `references/finance.md` for financial schemas, `references/mnda.md` for company NDA template, `references/policies.md` for company policies, `references/api_docs.md` for API specifications"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 87,
+      "content": "- **Use cases**: Database schemas, API documentation, domain knowledge, company policies, detailed workflow guides",
+      "type": "markdown_list",
+      "context": "- **Use cases**: Database schemas, API documentation, domain knowledge, company policies, detailed workflow guides"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 88,
+      "content": "- **Benefits**: Keeps SKILL.md lean, loaded only when the agent determines it's needed",
+      "type": "markdown_list",
+      "context": "- **Benefits**: Keeps SKILL.md lean, loaded only when the agent determines it's needed"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 89,
+      "content": "- **Best practice**: If files are large (>10k words), include grep search patterns in SKILL.md",
+      "type": "markdown_list",
+      "context": "- **Best practice**: If files are large (>10k words), include grep search patterns in SKILL.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 90,
+      "content": "- **Avoid duplication**: Information should live in either SKILL.md or references files, not both. Prefer references files for detailed information unless it's truly core to the skill—this keeps SKILL.md lean while making information discoverable without hogging the context window. Keep only essential procedural instructions and workflow guidance in SKILL.md; move detailed reference material, schemas, and examples to references files.",
+      "type": "markdown_list",
+      "context": "- **Avoid duplication**: Information should live in either SKILL.md or references files, not both. Prefer references files for detailed information unless it's truly core to the skill—this keeps SKILL.md lean while making information discoverable without hogging the context window. Keep only essential procedural instructions and workflow guidance in SKILL.md; move detailed reference material, schemas, and examples to references files."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 92,
+      "content": "Assets (`assets/`)",
+      "type": "markdown_heading",
+      "context": "##### Assets (`assets/`)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 96,
+      "content": "- **When to include**: When the skill needs files that will be used in the final output",
+      "type": "markdown_list",
+      "context": "- **When to include**: When the skill needs files that will be used in the final output"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 97,
+      "content": "- **Examples**: `assets/logo.png` for brand assets, `assets/slides.pptx` for PowerPoint templates, `assets/frontend-template/` for HTML/React boilerplate, `assets/font.ttf` for typography",
+      "type": "markdown_list",
+      "context": "- **Examples**: `assets/logo.png` for brand assets, `assets/slides.pptx` for PowerPoint templates, `assets/frontend-template/` for HTML/React boilerplate, `assets/font.ttf` for typography"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 98,
+      "content": "- **Use cases**: Templates, images, icons, boilerplate code, fonts, sample documents that get copied or modified",
+      "type": "markdown_list",
+      "context": "- **Use cases**: Templates, images, icons, boilerplate code, fonts, sample documents that get copied or modified"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 99,
+      "content": "- **Benefits**: Separates output resources from documentation, enables the agent to use files without loading them into context",
+      "type": "markdown_list",
+      "context": "- **Benefits**: Separates output resources from documentation, enables the agent to use files without loading them into context"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 101,
+      "content": "What to Not Include in a Skill",
+      "type": "markdown_heading",
+      "context": "#### What to Not Include in a Skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 105,
+      "content": "- README.md",
+      "type": "markdown_list",
+      "context": "- README.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 106,
+      "content": "- INSTALLATION_GUIDE.md",
+      "type": "markdown_list",
+      "context": "- INSTALLATION_GUIDE.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 107,
+      "content": "- QUICK_REFERENCE.md",
+      "type": "markdown_list",
+      "context": "- QUICK_REFERENCE.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 108,
+      "content": "- CHANGELOG.md",
+      "type": "markdown_list",
+      "context": "- CHANGELOG.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 109,
+      "content": "- etc.",
+      "type": "markdown_list",
+      "context": "- etc."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 113,
+      "content": "Progressive Disclosure Design Principle",
+      "type": "markdown_heading",
+      "context": "### Progressive Disclosure Design Principle"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 117,
+      "content": "1. **Metadata (name + description)** - Always in context (~100 words)",
+      "type": "markdown_list",
+      "context": "1. **Metadata (name + description)** - Always in context (~100 words)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 118,
+      "content": "2. **SKILL.md body** - When skill triggers (<5k words)",
+      "type": "markdown_list",
+      "context": "2. **SKILL.md body** - When skill triggers (<5k words)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 119,
+      "content": "3. **Bundled resources** - As needed by the agent (Unlimited because scripts can be executed without reading into context window)",
+      "type": "markdown_list",
+      "context": "3. **Bundled resources** - As needed by the agent (Unlimited because scripts can be executed without reading into context window)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 121,
+      "content": "Progressive Disclosure Patterns",
+      "type": "markdown_heading",
+      "context": "#### Progressive Disclosure Patterns"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 130,
+      "content": "PDF Processing",
+      "type": "markdown_heading",
+      "context": "# PDF Processing"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 132,
+      "content": "Quick start",
+      "type": "markdown_heading",
+      "context": "## Quick start"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 137,
+      "content": "Advanced features",
+      "type": "markdown_heading",
+      "context": "## Advanced features"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 139,
+      "content": "- **Form filling**: See [FORMS.md](FORMS.md) for complete guide",
+      "type": "markdown_list",
+      "context": "- **Form filling**: See [FORMS.md](FORMS.md) for complete guide"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 140,
+      "content": "- **API reference**: See [REFERENCE.md](REFERENCE.md) for all methods",
+      "type": "markdown_list",
+      "context": "- **API reference**: See [REFERENCE.md](REFERENCE.md) for all methods"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 141,
+      "content": "- **Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns",
+      "type": "markdown_list",
+      "context": "- **Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 180,
+      "content": "DOCX Processing",
+      "type": "markdown_heading",
+      "context": "# DOCX Processing"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 182,
+      "content": "Creating documents",
+      "type": "markdown_heading",
+      "context": "## Creating documents"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 186,
+      "content": "Editing documents",
+      "type": "markdown_heading",
+      "context": "## Editing documents"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 198,
+      "content": "- **Avoid deeply nested references** - Keep references one level deep from SKILL.md. All reference files should link directly from SKILL.md.",
+      "type": "markdown_list",
+      "context": "- **Avoid deeply nested references** - Keep references one level deep from SKILL.md. All reference files should link directly from SKILL.md."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 199,
+      "content": "- **Structure longer reference files** - For files longer than 100 lines, include a table of contents at the top so the agent can see the full scope when previewing.",
+      "type": "markdown_list",
+      "context": "- **Structure longer reference files** - For files longer than 100 lines, include a table of contents at the top so the agent can see the full scope when previewing."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 201,
+      "content": "Skill Creation Process",
+      "type": "markdown_heading",
+      "context": "## Skill Creation Process"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 205,
+      "content": "1. Understand the skill with concrete examples",
+      "type": "markdown_list",
+      "context": "1. Understand the skill with concrete examples"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 206,
+      "content": "2. Plan reusable skill contents (scripts, references, assets)",
+      "type": "markdown_list",
+      "context": "2. Plan reusable skill contents (scripts, references, assets)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 207,
+      "content": "3. Initialize the skill (run init_skill.py)",
+      "type": "markdown_list",
+      "context": "3. Initialize the skill (run init_skill.py)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 208,
+      "content": "4. Edit the skill (implement resources and write SKILL.md)",
+      "type": "markdown_list",
+      "context": "4. Edit the skill (implement resources and write SKILL.md)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 209,
+      "content": "5. Package the skill (run package_skill.py)",
+      "type": "markdown_list",
+      "context": "5. Package the skill (run package_skill.py)"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 210,
+      "content": "6. Iterate based on real usage",
+      "type": "markdown_list",
+      "context": "6. Iterate based on real usage"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 214,
+      "content": "Skill Naming",
+      "type": "markdown_heading",
+      "context": "### Skill Naming"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 216,
+      "content": "- Use lowercase letters, digits, and hyphens only; normalize user-provided titles to hyphen-case (e.g., \"Plan Mode\" -> `plan-mode`).",
+      "type": "markdown_list",
+      "context": "- Use lowercase letters, digits, and hyphens only; normalize user-provided titles to hyphen-case (e.g., \"Plan Mode\" -> `plan-mode`)."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 217,
+      "content": "- When generating names, generate a name under 64 characters (letters, digits, hyphens).",
+      "type": "markdown_list",
+      "context": "- When generating names, generate a name under 64 characters (letters, digits, hyphens)."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 218,
+      "content": "- Prefer short, verb-led phrases that describe the action.",
+      "type": "markdown_list",
+      "context": "- Prefer short, verb-led phrases that describe the action."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 219,
+      "content": "- Namespace by tool when it improves clarity or triggering (e.g., `gh-address-comments`, `linear-address-issue`).",
+      "type": "markdown_list",
+      "context": "- Namespace by tool when it improves clarity or triggering (e.g., `gh-address-comments`, `linear-address-issue`)."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 220,
+      "content": "- Name the skill folder exactly after the skill name.",
+      "type": "markdown_list",
+      "context": "- Name the skill folder exactly after the skill name."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 222,
+      "content": "Step 1: Understanding the Skill with Concrete Examples",
+      "type": "markdown_heading",
+      "context": "### Step 1: Understanding the Skill with Concrete Examples"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 230,
+      "content": "- \"What functionality should the image-editor skill support? Editing, rotating, anything else?\"",
+      "type": "markdown_list",
+      "context": "- \"What functionality should the image-editor skill support? Editing, rotating, anything else?\""
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 231,
+      "content": "- \"Can you give some examples of how this skill would be used?\"",
+      "type": "markdown_list",
+      "context": "- \"Can you give some examples of how this skill would be used?\""
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 232,
+      "content": "- \"I can imagine users asking for things like 'Remove the red-eye from this image' or 'Rotate this image'. Are there other ways you imagine this skill being used?\"",
+      "type": "markdown_list",
+      "context": "- \"I can imagine users asking for things like 'Remove the red-eye from this image' or 'Rotate this image'. Are there other ways you imagine this skill being used?\""
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 233,
+      "content": "- \"What would a user say that should trigger this skill?\"",
+      "type": "markdown_list",
+      "context": "- \"What would a user say that should trigger this skill?\""
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 239,
+      "content": "Step 2: Planning the Reusable Skill Contents",
+      "type": "markdown_heading",
+      "context": "### Step 2: Planning the Reusable Skill Contents"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 243,
+      "content": "1. Considering how to execute on the example from scratch",
+      "type": "markdown_list",
+      "context": "1. Considering how to execute on the example from scratch"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 244,
+      "content": "2. Identifying what scripts, references, and assets would be helpful when executing these workflows repeatedly",
+      "type": "markdown_list",
+      "context": "2. Identifying what scripts, references, and assets would be helpful when executing these workflows repeatedly"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 248,
+      "content": "1. Rotating a PDF requires re-writing the same code each time",
+      "type": "markdown_list",
+      "context": "1. Rotating a PDF requires re-writing the same code each time"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 249,
+      "content": "2. A `scripts/rotate_pdf.py` script would be helpful to store in the skill",
+      "type": "markdown_list",
+      "context": "2. A `scripts/rotate_pdf.py` script would be helpful to store in the skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 253,
+      "content": "1. Writing a frontend webapp requires the same boilerplate HTML/React each time",
+      "type": "markdown_list",
+      "context": "1. Writing a frontend webapp requires the same boilerplate HTML/React each time"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 254,
+      "content": "2. An `assets/hello-world/` template containing the boilerplate HTML/React project files would be helpful to store in the skill",
+      "type": "markdown_list",
+      "context": "2. An `assets/hello-world/` template containing the boilerplate HTML/React project files would be helpful to store in the skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 258,
+      "content": "1. Querying BigQuery requires re-discovering the table schemas and relationships each time",
+      "type": "markdown_list",
+      "context": "1. Querying BigQuery requires re-discovering the table schemas and relationships each time"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 259,
+      "content": "2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill",
+      "type": "markdown_list",
+      "context": "2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 263,
+      "content": "Step 3: Initializing the Skill",
+      "type": "markdown_heading",
+      "context": "### Step 3: Initializing the Skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 287,
+      "content": "- Creates the skill directory at the specified path",
+      "type": "markdown_list",
+      "context": "- Creates the skill directory at the specified path"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 288,
+      "content": "- Generates a SKILL.md template with proper frontmatter and TODO placeholders",
+      "type": "markdown_list",
+      "context": "- Generates a SKILL.md template with proper frontmatter and TODO placeholders"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 289,
+      "content": "- Optionally creates resource directories based on `--resources`",
+      "type": "markdown_list",
+      "context": "- Optionally creates resource directories based on `--resources`"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 290,
+      "content": "- Optionally adds example files when `--examples` is set",
+      "type": "markdown_list",
+      "context": "- Optionally adds example files when `--examples` is set"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 294,
+      "content": "Step 4: Edit the Skill",
+      "type": "markdown_heading",
+      "context": "### Step 4: Edit the Skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 298,
+      "content": "Learn Proven Design Patterns",
+      "type": "markdown_heading",
+      "context": "#### Learn Proven Design Patterns"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 302,
+      "content": "- **Multi-step processes**: See references/workflows.md for sequential workflows and conditional logic",
+      "type": "markdown_list",
+      "context": "- **Multi-step processes**: See references/workflows.md for sequential workflows and conditional logic"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 303,
+      "content": "- **Specific output formats or quality standards**: See references/output-patterns.md for template and example patterns",
+      "type": "markdown_list",
+      "context": "- **Specific output formats or quality standards**: See references/output-patterns.md for template and example patterns"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 307,
+      "content": "Start with Reusable Skill Contents",
+      "type": "markdown_heading",
+      "context": "#### Start with Reusable Skill Contents"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 315,
+      "content": "Update SKILL.md",
+      "type": "markdown_heading",
+      "context": "#### Update SKILL.md"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 319,
+      "content": "Frontmatter",
+      "type": "markdown_heading",
+      "context": "##### Frontmatter"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 323,
+      "content": "- `name`: The skill name",
+      "type": "markdown_list",
+      "context": "- `name`: The skill name"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 324,
+      "content": "- `description`: This is the primary triggering mechanism for your skill, and helps the agent understand when to use the skill.",
+      "type": "markdown_list",
+      "context": "- `description`: This is the primary triggering mechanism for your skill, and helps the agent understand when to use the skill."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 325,
+      "content": "- Include both what the Skill does and specific triggers/contexts for when to use it.",
+      "type": "markdown_list",
+      "context": "- Include both what the Skill does and specific triggers/contexts for when to use it."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 326,
+      "content": "- Include all \"when to use\" information here - Not in the body. The body is only loaded after triggering, so \"When to Use This Skill\" sections in the body are not helpful to the agent.",
+      "type": "markdown_list",
+      "context": "- Include all \"when to use\" information here - Not in the body. The body is only loaded after triggering, so \"When to Use This Skill\" sections in the body are not helpful to the agent."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 327,
+      "content": "- Example description for a `docx` skill: \"Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. Use when the agent needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks\"",
+      "type": "markdown_list",
+      "context": "- Example description for a `docx` skill: \"Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. Use when the agent needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks\""
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 331,
+      "content": "Body",
+      "type": "markdown_heading",
+      "context": "##### Body"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 335,
+      "content": "Step 5: Packaging a Skill",
+      "type": "markdown_heading",
+      "context": "### Step 5: Packaging a Skill"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 351,
+      "content": "1. **Validate** the skill automatically, checking:",
+      "type": "markdown_list",
+      "context": "1. **Validate** the skill automatically, checking:"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 353,
+      "content": "- YAML frontmatter format and required fields",
+      "type": "markdown_list",
+      "context": "- YAML frontmatter format and required fields"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 354,
+      "content": "- Skill naming conventions and directory structure",
+      "type": "markdown_list",
+      "context": "- Skill naming conventions and directory structure"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 355,
+      "content": "- Description completeness and quality",
+      "type": "markdown_list",
+      "context": "- Description completeness and quality"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 356,
+      "content": "- File organization and resource references",
+      "type": "markdown_list",
+      "context": "- File organization and resource references"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 358,
+      "content": "2. **Package** the skill if validation passes, creating a .skill file named after the skill (e.g., `my-skill.skill`) that includes all files and maintains the proper directory structure for distribution. The .skill file is a zip file with a .skill extension.",
+      "type": "markdown_list",
+      "context": "2. **Package** the skill if validation passes, creating a .skill file named after the skill (e.g., `my-skill.skill`) that includes all files and maintains the proper directory structure for distribution. The .skill file is a zip file with a .skill extension."
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 362,
+      "content": "Step 6: Iterate",
+      "type": "markdown_heading",
+      "context": "### Step 6: Iterate"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 368,
+      "content": "1. Use the skill on real tasks",
+      "type": "markdown_list",
+      "context": "1. Use the skill on real tasks"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 369,
+      "content": "2. Notice struggles or inefficiencies",
+      "type": "markdown_list",
+      "context": "2. Notice struggles or inefficiencies"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 370,
+      "content": "3. Identify how SKILL.md or bundled resources should be updated",
+      "type": "markdown_list",
+      "context": "3. Identify how SKILL.md or bundled resources should be updated"
+    },
+    {
+      "file": "nanobot\\skills\\skill-creator\\SKILL.md",
+      "line": 371,
+      "content": "4. Implement changes and test again",
+      "type": "markdown_list",
+      "context": "4. Implement changes and test again"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 41,
+      "content": "- OpenAI: `OPENAI_API_KEY`",
+      "type": "markdown_list",
+      "context": "- OpenAI: `OPENAI_API_KEY`"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 42,
+      "content": "- Anthropic: `ANTHROPIC_API_KEY`",
+      "type": "markdown_list",
+      "context": "- Anthropic: `ANTHROPIC_API_KEY`"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 43,
+      "content": "- xAI: `XAI_API_KEY`",
+      "type": "markdown_list",
+      "context": "- xAI: `XAI_API_KEY`"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 7,
+      "content": "tmux Skill",
+      "type": "markdown_heading",
+      "context": "# tmux Skill"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 11,
+      "content": "Quickstart (isolated socket, exec tool)",
+      "type": "markdown_heading",
+      "context": "## Quickstart (isolated socket, exec tool)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 32,
+      "content": "Socket convention",
+      "type": "markdown_heading",
+      "context": "## Socket convention"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 34,
+      "content": "- Use `NANOBOT_TMUX_SOCKET_DIR` environment variable.",
+      "type": "markdown_list",
+      "context": "- Use `NANOBOT_TMUX_SOCKET_DIR` environment variable."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 35,
+      "content": "- Default socket path: `\"$NANOBOT_TMUX_SOCKET_DIR/nanobot.sock\"`.",
+      "type": "markdown_list",
+      "context": "- Default socket path: `\"$NANOBOT_TMUX_SOCKET_DIR/nanobot.sock\"`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 37,
+      "content": "Targeting panes and naming",
+      "type": "markdown_heading",
+      "context": "## Targeting panes and naming"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 39,
+      "content": "- Target format: `session:window.pane` (defaults to `:0.0`).",
+      "type": "markdown_list",
+      "context": "- Target format: `session:window.pane` (defaults to `:0.0`)."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 40,
+      "content": "- Keep names short; avoid spaces.",
+      "type": "markdown_list",
+      "context": "- Keep names short; avoid spaces."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 41,
+      "content": "- Inspect: `tmux -S \"$SOCKET\" list-sessions`, `tmux -S \"$SOCKET\" list-panes -a`.",
+      "type": "markdown_list",
+      "context": "- Inspect: `tmux -S \"$SOCKET\" list-sessions`, `tmux -S \"$SOCKET\" list-panes -a`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 43,
+      "content": "Finding sessions",
+      "type": "markdown_heading",
+      "context": "## Finding sessions"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 45,
+      "content": "- List sessions on your socket: `{baseDir}/scripts/find-sessions.sh -S \"$SOCKET\"`.",
+      "type": "markdown_list",
+      "context": "- List sessions on your socket: `{baseDir}/scripts/find-sessions.sh -S \"$SOCKET\"`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 46,
+      "content": "- Scan all sockets: `{baseDir}/scripts/find-sessions.sh --all` (uses `NANOBOT_TMUX_SOCKET_DIR`).",
+      "type": "markdown_list",
+      "context": "- Scan all sockets: `{baseDir}/scripts/find-sessions.sh --all` (uses `NANOBOT_TMUX_SOCKET_DIR`)."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 48,
+      "content": "Sending input safely",
+      "type": "markdown_heading",
+      "context": "## Sending input safely"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 50,
+      "content": "- Prefer literal sends: `tmux -S \"$SOCKET\" send-keys -t target -l -- \"$cmd\"`.",
+      "type": "markdown_list",
+      "context": "- Prefer literal sends: `tmux -S \"$SOCKET\" send-keys -t target -l -- \"$cmd\"`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 51,
+      "content": "- Control keys: `tmux -S \"$SOCKET\" send-keys -t target C-c`.",
+      "type": "markdown_list",
+      "context": "- Control keys: `tmux -S \"$SOCKET\" send-keys -t target C-c`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 53,
+      "content": "Watching output",
+      "type": "markdown_heading",
+      "context": "## Watching output"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 55,
+      "content": "- Capture recent history: `tmux -S \"$SOCKET\" capture-pane -p -J -t target -S -200`.",
+      "type": "markdown_list",
+      "context": "- Capture recent history: `tmux -S \"$SOCKET\" capture-pane -p -J -t target -S -200`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 56,
+      "content": "- Wait for prompts: `{baseDir}/scripts/wait-for-text.sh -t session:0.0 -p 'pattern'`.",
+      "type": "markdown_list",
+      "context": "- Wait for prompts: `{baseDir}/scripts/wait-for-text.sh -t session:0.0 -p 'pattern'`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 57,
+      "content": "- Attaching is OK; detach with `Ctrl+b d`.",
+      "type": "markdown_list",
+      "context": "- Attaching is OK; detach with `Ctrl+b d`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 59,
+      "content": "Spawning processes",
+      "type": "markdown_heading",
+      "context": "## Spawning processes"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 61,
+      "content": "- For python REPLs, set `PYTHON_BASIC_REPL=1` (non-basic REPL breaks send-keys flows).",
+      "type": "markdown_list",
+      "context": "- For python REPLs, set `PYTHON_BASIC_REPL=1` (non-basic REPL breaks send-keys flows)."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 63,
+      "content": "Windows / WSL",
+      "type": "markdown_heading",
+      "context": "## Windows / WSL"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 65,
+      "content": "- tmux is supported on macOS/Linux. On Windows, use WSL and install tmux inside WSL.",
+      "type": "markdown_list",
+      "context": "- tmux is supported on macOS/Linux. On Windows, use WSL and install tmux inside WSL."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 66,
+      "content": "- This skill is gated to `darwin`/`linux` and requires `tmux` on PATH.",
+      "type": "markdown_list",
+      "context": "- This skill is gated to `darwin`/`linux` and requires `tmux` on PATH."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 68,
+      "content": "Orchestrating Coding Agents (Codex, Claude Code)",
+      "type": "markdown_heading",
+      "context": "## Orchestrating Coding Agents (Codex, Claude Code)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 75,
+      "content": "Create multiple sessions",
+      "type": "markdown_heading",
+      "context": "# Create multiple sessions"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 80,
+      "content": "Launch agents in different workdirs",
+      "type": "markdown_heading",
+      "context": "# Launch agents in different workdirs"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 84,
+      "content": "Poll for completion (check if prompt returned)",
+      "type": "markdown_heading",
+      "context": "# Poll for completion (check if prompt returned)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 93,
+      "content": "Get full output from completed session",
+      "type": "markdown_heading",
+      "context": "# Get full output from completed session"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 98,
+      "content": "- Use separate git worktrees for parallel fixes (no branch conflicts)",
+      "type": "markdown_list",
+      "context": "- Use separate git worktrees for parallel fixes (no branch conflicts)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 99,
+      "content": "- `pnpm install` first before running codex in fresh clones",
+      "type": "markdown_list",
+      "context": "- `pnpm install` first before running codex in fresh clones"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 100,
+      "content": "- Check for shell prompt (`❯` or `$`) to detect completion",
+      "type": "markdown_list",
+      "context": "- Check for shell prompt (`❯` or `$`) to detect completion"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 101,
+      "content": "- Codex needs `--yolo` or `--full-auto` for non-interactive fixes",
+      "type": "markdown_list",
+      "context": "- Codex needs `--yolo` or `--full-auto` for non-interactive fixes"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 103,
+      "content": "Cleanup",
+      "type": "markdown_heading",
+      "context": "## Cleanup"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 105,
+      "content": "- Kill a session: `tmux -S \"$SOCKET\" kill-session -t \"$SESSION\"`.",
+      "type": "markdown_list",
+      "context": "- Kill a session: `tmux -S \"$SOCKET\" kill-session -t \"$SESSION\"`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 106,
+      "content": "- Kill all sessions on a socket: `tmux -S \"$SOCKET\" list-sessions -F '#{session_name}' | xargs -r -n1 tmux -S \"$SOCKET\" kill-session -t`.",
+      "type": "markdown_list",
+      "context": "- Kill all sessions on a socket: `tmux -S \"$SOCKET\" list-sessions -F '#{session_name}' | xargs -r -n1 tmux -S \"$SOCKET\" kill-session -t`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 107,
+      "content": "- Remove everything on the private socket: `tmux -S \"$SOCKET\" kill-server`.",
+      "type": "markdown_list",
+      "context": "- Remove everything on the private socket: `tmux -S \"$SOCKET\" kill-server`."
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 109,
+      "content": "Helper: wait-for-text.sh",
+      "type": "markdown_heading",
+      "context": "## Helper: wait-for-text.sh"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 117,
+      "content": "- `-t`/`--target` pane target (required)",
+      "type": "markdown_list",
+      "context": "- `-t`/`--target` pane target (required)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 118,
+      "content": "- `-p`/`--pattern` regex to match (required); add `-F` for fixed string",
+      "type": "markdown_list",
+      "context": "- `-p`/`--pattern` regex to match (required); add `-F` for fixed string"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 119,
+      "content": "- `-T` timeout seconds (integer, default 15)",
+      "type": "markdown_list",
+      "context": "- `-T` timeout seconds (integer, default 15)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 120,
+      "content": "- `-i` poll interval seconds (default 0.5)",
+      "type": "markdown_list",
+      "context": "- `-i` poll interval seconds (default 0.5)"
+    },
+    {
+      "file": "nanobot\\skills\\tmux\\SKILL.md",
+      "line": 121,
+      "content": "- `-l` history lines to search (integer, default 1000)",
+      "type": "markdown_list",
+      "context": "- `-l` history lines to search (integer, default 1000)"
+    },
+    {
+      "file": "nanobot\\templates\\memory\\MEMORY.md",
+      "line": 1,
+      "content": "Long-term Memory",
+      "type": "markdown_heading",
+      "context": "# Long-term Memory"
+    },
+    {
+      "file": "nanobot\\templates\\memory\\MEMORY.md",
+      "line": 5,
+      "content": "User Information",
+      "type": "markdown_heading",
+      "context": "## User Information"
+    },
+    {
+      "file": "nanobot\\templates\\memory\\MEMORY.md",
+      "line": 9,
+      "content": "Preferences",
+      "type": "markdown_heading",
+      "context": "## Preferences"
+    },
+    {
+      "file": "nanobot\\templates\\memory\\MEMORY.md",
+      "line": 13,
+      "content": "Project Context",
+      "type": "markdown_heading",
+      "context": "## Project Context"
+    },
+    {
+      "file": "nanobot\\templates\\memory\\MEMORY.md",
+      "line": 17,
+      "content": "Important Notes",
+      "type": "markdown_heading",
+      "context": "## Important Notes"
+    }
+  ],
+  "already_localized": [
+    {
+      "file": "README.md",
+      "line": 472,
+      "content": "- Go to **开发设置 (Developer Settings)** → copy **AppID** and **AppSecret**",
+      "type": "markdown_list",
+      "context": "- Go to **开发设置 (Developer Settings)** → copy **AppID** and **AppSecret**"
+    },
+    {
+      "file": "README.md",
+      "line": 475,
+      "content": "- In the bot management console, find **沙箱配置 (Sandbox Config)**",
+      "type": "markdown_list",
+      "context": "- In the bot management console, find **沙箱配置 (Sandbox Config)**"
+    },
+    {
+      "file": "README.md",
+      "line": 476,
+      "content": "- Under **在消息列表配置**, click **添加成员** and add your own QQ number",
+      "type": "markdown_list",
+      "context": "- Under **在消息列表配置**, click **添加成员** and add your own QQ number"
+    },
+    {
+      "file": "README.md",
+      "line": 477,
+      "content": "- Once added, scan the bot's QR code with mobile QQ → open the bot profile → tap \"发消息\" to start chatting",
+      "type": "markdown_list",
+      "context": "- Once added, scan the bot's QR code with mobile QQ → open the bot profile → tap \"发消息\" to start chatting"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 6,
+      "content": "定时任务 (Cron)",
+      "type": "markdown_heading",
+      "context": "# 定时任务 (Cron)"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 10,
+      "content": "三种模式",
+      "type": "markdown_heading",
+      "context": "## 三种模式"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 12,
+      "content": "1. **提醒 (Reminder)** - 消息直接发送给用户。",
+      "type": "markdown_list",
+      "context": "1. **提醒 (Reminder)** - 消息直接发送给用户。"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 13,
+      "content": "2. **任务 (Task)** - 消息是任务描述，助手执行并发送结果。",
+      "type": "markdown_list",
+      "context": "2. **任务 (Task)** - 消息是任务描述，助手执行并发送结果。"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 14,
+      "content": "3. **一次性 (One-time)** - 在特定时间运行一次，然后自动删除。",
+      "type": "markdown_list",
+      "context": "3. **一次性 (One-time)** - 在特定时间运行一次，然后自动删除。"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 44,
+      "content": "时间表达式",
+      "type": "markdown_heading",
+      "context": "## 时间表达式"
+    },
+    {
+      "file": "nanobot\\skills\\cron\\SKILL.md",
+      "line": 56,
+      "content": "时区 (Timezone)",
+      "type": "markdown_heading",
+      "context": "## 时区 (Timezone)"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 7,
+      "content": "记忆 (Memory)",
+      "type": "markdown_heading",
+      "context": "# 记忆 (Memory)"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 11,
+      "content": "- `memory/MEMORY.md` — 长期事实（偏好、项目背景、人际关系）。始终加载到你的上下文中。",
+      "type": "markdown_list",
+      "context": "- `memory/MEMORY.md` — 长期事实（偏好、项目背景、人际关系）。始终加载到你的上下文中。"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 12,
+      "content": "- `memory/HISTORY.md` — 仅追加的事件日志。**不会**自动加载到上下文中。使用 grep 进行搜索。每个条目均以 [YYYY-MM-DD HH:MM] 开头。",
+      "type": "markdown_list",
+      "context": "- `memory/HISTORY.md` — 仅追加的事件日志。**不会**自动加载到上下文中。使用 grep 进行搜索。每个条目均以 [YYYY-MM-DD HH:MM] 开头。"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 14,
+      "content": "搜索过去事件",
+      "type": "markdown_heading",
+      "context": "## 搜索过去事件"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 22,
+      "content": "何时更新 MEMORY.md",
+      "type": "markdown_heading",
+      "context": "## 何时更新 MEMORY.md"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 25,
+      "content": "- 用户偏好（“我更喜欢深色模式”）",
+      "type": "markdown_list",
+      "context": "- 用户偏好（“我更喜欢深色模式”）"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 26,
+      "content": "- 项目背景（“该 API 使用 OAuth2 认证”）",
+      "type": "markdown_list",
+      "context": "- 项目背景（“该 API 使用 OAuth2 认证”）"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 27,
+      "content": "- 人际关系（“Alice 是项目负责人”）",
+      "type": "markdown_list",
+      "context": "- 人际关系（“Alice 是项目负责人”）"
+    },
+    {
+      "file": "nanobot\\skills\\memory\\SKILL.md",
+      "line": 29,
+      "content": "自动整合 (Auto-consolidation)",
+      "type": "markdown_heading",
+      "context": "## 自动整合 (Auto-consolidation)"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 8,
+      "content": "总结 (Summarize)",
+      "type": "markdown_heading",
+      "context": "# 总结 (Summarize)"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 12,
+      "content": "何时使用（触发词）",
+      "type": "markdown_heading",
+      "context": "## 何时使用（触发词）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 15,
+      "content": "- “使用 summarize.sh”",
+      "type": "markdown_list",
+      "context": "- “使用 summarize.sh”"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 16,
+      "content": "- “这个链接/视频讲了什么？”",
+      "type": "markdown_list",
+      "context": "- “这个链接/视频讲了什么？”"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 17,
+      "content": "- “总结这个 URL/文章”",
+      "type": "markdown_list",
+      "context": "- “总结这个 URL/文章”"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 18,
+      "content": "- “转录这个 YouTube/视频”（尽力提取转录内容；不需要 `yt-dlp`）",
+      "type": "markdown_list",
+      "context": "- “转录这个 YouTube/视频”（尽力提取转录内容；不需要 `yt-dlp`）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 20,
+      "content": "快速入门",
+      "type": "markdown_heading",
+      "context": "## 快速入门"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 28,
+      "content": "YouTube：总结 vs 转录",
+      "type": "markdown_heading",
+      "context": "## YouTube：总结 vs 转录"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 38,
+      "content": "模型与密钥",
+      "type": "markdown_heading",
+      "context": "## 模型与密钥"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 44,
+      "content": "- Google: `GEMINI_API_KEY`（别名：`GOOGLE_GENERATIVE_AI_API_KEY`, `GOOGLE_API_KEY`）",
+      "type": "markdown_list",
+      "context": "- Google: `GEMINI_API_KEY`（别名：`GOOGLE_GENERATIVE_AI_API_KEY`, `GOOGLE_API_KEY`）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 48,
+      "content": "常用参数 (Flags)",
+      "type": "markdown_heading",
+      "context": "## 常用参数 (Flags)"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 50,
+      "content": "- `--length short|medium|long|xl|xxl|<字符数>`",
+      "type": "markdown_list",
+      "context": "- `--length short|medium|long|xl|xxl|<字符数>`"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 51,
+      "content": "- `--max-output-tokens <数量>`",
+      "type": "markdown_list",
+      "context": "- `--max-output-tokens <数量>`"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 52,
+      "content": "- `--extract-only`（仅限 URL）",
+      "type": "markdown_list",
+      "context": "- `--extract-only`（仅限 URL）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 53,
+      "content": "- `--json`（机器可读格式）",
+      "type": "markdown_list",
+      "context": "- `--json`（机器可读格式）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 54,
+      "content": "- `--firecrawl auto|off|always`（备选提取方案）",
+      "type": "markdown_list",
+      "context": "- `--firecrawl auto|off|always`（备选提取方案）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 55,
+      "content": "- `--youtube auto`（如果设置了 `APIFY_API_TOKEN`，则使用 Apify 作为备选方案）",
+      "type": "markdown_list",
+      "context": "- `--youtube auto`（如果设置了 `APIFY_API_TOKEN`，则使用 Apify 作为备选方案）"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 57,
+      "content": "配置 (Config)",
+      "type": "markdown_heading",
+      "context": "## 配置 (Config)"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 66,
+      "content": "- `FIRECRAWL_API_KEY` 用于访问被拦截的网站",
+      "type": "markdown_list",
+      "context": "- `FIRECRAWL_API_KEY` 用于访问被拦截的网站"
+    },
+    {
+      "file": "nanobot\\skills\\summarize\\SKILL.md",
+      "line": 67,
+      "content": "- `APIFY_API_TOKEN` 用于 YouTube 备选提取方案",
+      "type": "markdown_list",
+      "context": "- `APIFY_API_TOKEN` 用于 YouTube 备选提取方案"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 8,
+      "content": "天气 (Weather)",
+      "type": "markdown_heading",
+      "context": "# 天气 (Weather)"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 12,
+      "content": "wttr.in (首选)",
+      "type": "markdown_heading",
+      "context": "## wttr.in (首选)"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 17,
+      "content": "输出: London: ⛅️ +8°C",
+      "type": "markdown_heading",
+      "context": "# 输出: London: ⛅️ +8°C"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 23,
+      "content": "输出: London: ⛅️ +8°C 71% ↙5km/h",
+      "type": "markdown_heading",
+      "context": "# 输出: London: ⛅️ +8°C 71% ↙5km/h"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 34,
+      "content": "- URL 编码空格：`wttr.in/New+York`",
+      "type": "markdown_list",
+      "context": "- URL 编码空格：`wttr.in/New+York`"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 35,
+      "content": "- 机场代码：`wttr.in/PEK` (北京首都机场)",
+      "type": "markdown_list",
+      "context": "- 机场代码：`wttr.in/PEK` (北京首都机场)"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 36,
+      "content": "- 单位：`?m` (公制) `?u` (美制)",
+      "type": "markdown_list",
+      "context": "- 单位：`?m` (公制) `?u` (美制)"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 37,
+      "content": "- 仅限今日：`?1` · 仅限当前：`?0`",
+      "type": "markdown_list",
+      "context": "- 仅限今日：`?1` · 仅限当前：`?0`"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 38,
+      "content": "- 图片输出：`curl -s \"wttr.in/Beijing.png\" -o /tmp/weather.png`",
+      "type": "markdown_list",
+      "context": "- 图片输出：`curl -s \"wttr.in/Beijing.png\" -o /tmp/weather.png`"
+    },
+    {
+      "file": "nanobot\\skills\\weather\\SKILL.md",
+      "line": 40,
+      "content": "Open-Meteo (备选，JSON 格式)",
+      "type": "markdown_heading",
+      "context": "## Open-Meteo (备选，JSON 格式)"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 1,
+      "content": "Agent 指令 (Agent Instructions)",
+      "type": "markdown_heading",
+      "context": "# Agent 指令 (Agent Instructions)"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 5,
+      "content": "计划提醒 (Scheduled Reminders)",
+      "type": "markdown_heading",
+      "context": "## 计划提醒 (Scheduled Reminders)"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 15,
+      "content": "心跳任务 (Heartbeat Tasks)",
+      "type": "markdown_heading",
+      "context": "## 心跳任务 (Heartbeat Tasks)"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 19,
+      "content": "- **添加 (Add)**：使用 `edit_file` 追加新任务。",
+      "type": "markdown_list",
+      "context": "- **添加 (Add)**：使用 `edit_file` 追加新任务。"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 20,
+      "content": "- **移除 (Remove)**：使用 `edit_file` 删除已完成的任务。",
+      "type": "markdown_list",
+      "context": "- **移除 (Remove)**：使用 `edit_file` 删除已完成的任务。"
+    },
+    {
+      "file": "nanobot\\templates\\AGENTS.md",
+      "line": 21,
+      "content": "- **重写 (Rewrite)**：使用 `write_file` 替换所有任务。",
+      "type": "markdown_list",
+      "context": "- **重写 (Rewrite)**：使用 `write_file` 替换所有任务。"
+    },
+    {
+      "file": "nanobot\\templates\\HEARTBEAT.md",
+      "line": 1,
+      "content": "心跳任务 (Heartbeat Tasks)",
+      "type": "markdown_heading",
+      "context": "# 心跳任务 (Heartbeat Tasks)"
+    },
+    {
+      "file": "nanobot\\templates\\HEARTBEAT.md",
+      "line": 8,
+      "content": "活跃任务 (Active Tasks)",
+      "type": "markdown_heading",
+      "context": "## 活跃任务 (Active Tasks)"
+    },
+    {
+      "file": "nanobot\\templates\\HEARTBEAT.md",
+      "line": 13,
+      "content": "已完成 (Completed)",
+      "type": "markdown_heading",
+      "context": "## 已完成 (Completed)"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 1,
+      "content": "助手之魂 (Soul)",
+      "type": "markdown_heading",
+      "context": "# 助手之魂 (Soul)"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 5,
+      "content": "性格 (Personality)",
+      "type": "markdown_heading",
+      "context": "## 性格 (Personality)"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 7,
+      "content": "- 乐于助人且友好",
+      "type": "markdown_list",
+      "context": "- 乐于助人且友好"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 8,
+      "content": "- 简洁明了，直击要点",
+      "type": "markdown_list",
+      "context": "- 简洁明了，直击要点"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 9,
+      "content": "- 好奇心强，渴望学习",
+      "type": "markdown_list",
+      "context": "- 好奇心强，渴望学习"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 11,
+      "content": "价值观 (Values)",
+      "type": "markdown_heading",
+      "context": "## 价值观 (Values)"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 13,
+      "content": "- 准确度优先于速度",
+      "type": "markdown_list",
+      "context": "- 准确度优先于速度"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 14,
+      "content": "- 用户隐私与安全第一",
+      "type": "markdown_list",
+      "context": "- 用户隐私与安全第一"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 15,
+      "content": "- 行动过程透明公开",
+      "type": "markdown_list",
+      "context": "- 行动过程透明公开"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 17,
+      "content": "交流风格 (Communication Style)",
+      "type": "markdown_heading",
+      "context": "## 交流风格 (Communication Style)"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 19,
+      "content": "- 表达清晰直接",
+      "type": "markdown_list",
+      "context": "- 表达清晰直接"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 20,
+      "content": "- 必要时解释推理过程",
+      "type": "markdown_list",
+      "context": "- 必要时解释推理过程"
+    },
+    {
+      "file": "nanobot\\templates\\SOUL.md",
+      "line": 21,
+      "content": "- 需要时提出澄清性问题",
+      "type": "markdown_list",
+      "context": "- 需要时提出澄清性问题"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 1,
+      "content": "工具使用说明 (Tool Usage Notes)",
+      "type": "markdown_heading",
+      "context": "# 工具使用说明 (Tool Usage Notes)"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 6,
+      "content": "exec —— 安全限制",
+      "type": "markdown_heading",
+      "context": "## exec —— 安全限制"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 8,
+      "content": "- 命令具有可配置的超时时间（默认 60 秒）",
+      "type": "markdown_list",
+      "context": "- 命令具有可配置的超时时间（默认 60 秒）"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 9,
+      "content": "- 危险命令将被拦截（如 rm -rf, format, dd, shutdown 等）",
+      "type": "markdown_list",
+      "context": "- 危险命令将被拦截（如 rm -rf, format, dd, shutdown 等）"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 10,
+      "content": "- 输出截断在 10,000 个字符以内",
+      "type": "markdown_list",
+      "context": "- 输出截断在 10,000 个字符以内"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 11,
+      "content": "- `restrictToWorkspace` 配置可以限制文件访问权限仅在工作区内",
+      "type": "markdown_list",
+      "context": "- `restrictToWorkspace` 配置可以限制文件访问权限仅在工作区内"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 13,
+      "content": "cron —— 计划提醒",
+      "type": "markdown_heading",
+      "context": "## cron —— 计划提醒"
+    },
+    {
+      "file": "nanobot\\templates\\TOOLS.md",
+      "line": 15,
+      "content": "- 使用方法请参考 cron 技能。",
+      "type": "markdown_list",
+      "context": "- 使用方法请参考 cron 技能。"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 1,
+      "content": "用户画像 (User Profile)",
+      "type": "markdown_heading",
+      "context": "# 用户画像 (User Profile)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 5,
+      "content": "基本信息 (Basic Information)",
+      "type": "markdown_heading",
+      "context": "## 基本信息 (Basic Information)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 7,
+      "content": "- **姓名**: (你的姓名)",
+      "type": "markdown_list",
+      "context": "- **姓名**: (你的姓名)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 8,
+      "content": "- **时区**: (你的时区，例如 UTC+8)",
+      "type": "markdown_list",
+      "context": "- **时区**: (你的时区，例如 UTC+8)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 9,
+      "content": "- **语言**: (首选语言)",
+      "type": "markdown_list",
+      "context": "- **语言**: (首选语言)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 11,
+      "content": "偏好 (Preferences)",
+      "type": "markdown_heading",
+      "context": "## 偏好 (Preferences)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 13,
+      "content": "交流风格 (Communication Style)",
+      "type": "markdown_heading",
+      "context": "### 交流风格 (Communication Style)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 15,
+      "content": "- [ ] 随意的 (Casual)",
+      "type": "markdown_list",
+      "context": "- [ ] 随意的 (Casual)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 16,
+      "content": "- [ ] 专业严谨的 (Professional)",
+      "type": "markdown_list",
+      "context": "- [ ] 专业严谨的 (Professional)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 17,
+      "content": "- [ ] 技术导向的 (Technical)",
+      "type": "markdown_list",
+      "context": "- [ ] 技术导向的 (Technical)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 19,
+      "content": "回复长度 (Response Length)",
+      "type": "markdown_heading",
+      "context": "### 回复长度 (Response Length)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 21,
+      "content": "- [ ] 简洁扼要 (Brief and concise)",
+      "type": "markdown_list",
+      "context": "- [ ] 简洁扼要 (Brief and concise)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 22,
+      "content": "- [ ] 详细解释 (Detailed explanations)",
+      "type": "markdown_list",
+      "context": "- [ ] 详细解释 (Detailed explanations)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 23,
+      "content": "- [ ] 根据问题自适应 (Adaptive based on question)",
+      "type": "markdown_list",
+      "context": "- [ ] 根据问题自适应 (Adaptive based on question)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 25,
+      "content": "技术水平 (Technical Level)",
+      "type": "markdown_heading",
+      "context": "### 技术水平 (Technical Level)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 27,
+      "content": "- [ ] 入门 (Beginner)",
+      "type": "markdown_list",
+      "context": "- [ ] 入门 (Beginner)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 28,
+      "content": "- [ ] 中级 (Intermediate)",
+      "type": "markdown_list",
+      "context": "- [ ] 中级 (Intermediate)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 29,
+      "content": "- [ ] 专家 (Expert)",
+      "type": "markdown_list",
+      "context": "- [ ] 专家 (Expert)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 31,
+      "content": "工作背景 (Work Context)",
+      "type": "markdown_heading",
+      "context": "## 工作背景 (Work Context)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 33,
+      "content": "- **主要角色**: (你的职位/角色，例如开发者、研究员)",
+      "type": "markdown_list",
+      "context": "- **主要角色**: (你的职位/角色，例如开发者、研究员)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 34,
+      "content": "- **主要项目**: (你正在处理的工作)",
+      "type": "markdown_list",
+      "context": "- **主要项目**: (你正在处理的工作)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 35,
+      "content": "- **常用工具**: (IDE、编程语言、框架)",
+      "type": "markdown_list",
+      "context": "- **常用工具**: (IDE、编程语言、框架)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 37,
+      "content": "兴趣话题 (Topics of Interest)",
+      "type": "markdown_heading",
+      "context": "## 兴趣话题 (Topics of Interest)"
+    },
+    {
+      "file": "nanobot\\templates\\USER.md",
+      "line": 43,
+      "content": "特殊指令 (Special Instructions)",
+      "type": "markdown_heading",
+      "context": "## 特殊指令 (Special Instructions)"
+    }
+  ]
+}

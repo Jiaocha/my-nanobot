@@ -2,6 +2,8 @@
 
 from typing import Any
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.agent.tools.base import Tool
 from nanobot.cron.service import CronService
 from nanobot.cron.types import CronSchedule
@@ -22,11 +24,11 @@ class CronTool(Tool):
 
     @property
     def name(self) -> str:
-        return "cron"
+        return _t("agent.tools.cron.name", "cron")
 
     @property
     def description(self) -> str:
-        return "Schedule reminders and recurring tasks. Actions: add, list, remove."
+        return _t("agent.tools.cron.description", "Schedule reminders and recurring tasks. Actions: add, list, remove.")
 
     @property
     def parameters(self) -> dict[str, Any]:
@@ -36,26 +38,26 @@ class CronTool(Tool):
                 "action": {
                     "type": "string",
                     "enum": ["add", "list", "remove"],
-                    "description": "Action to perform",
+                    "description": _t("agent.tools.cron.params.action", "Action to perform"),
                 },
-                "message": {"type": "string", "description": "Reminder message (for add)"},
+                "message": {"type": "string", "description": _t("agent.tools.cron.params.message", "Reminder message (for add)")},
                 "every_seconds": {
                     "type": "integer",
-                    "description": "Interval in seconds (for recurring tasks)",
+                    "description": _t("agent.tools.cron.params.every_seconds", "Interval in seconds (for recurring tasks)"),
                 },
                 "cron_expr": {
                     "type": "string",
-                    "description": "Cron expression like '0 9 * * *' (for scheduled tasks)",
+                    "description": _t("agent.tools.cron.params.cron_expr", "Cron expression like '0 9 * * *' (for scheduled tasks)"),
                 },
                 "tz": {
                     "type": "string",
-                    "description": "IANA timezone for cron expressions (e.g. 'America/Vancouver')",
+                    "description": _t("agent.tools.cron.params.tz", "IANA timezone for cron expressions (e.g. 'America/Vancouver')"),
                 },
                 "at": {
                     "type": "string",
-                    "description": "ISO datetime for one-time execution (e.g. '2026-02-12T10:30:00')",
+                    "description": _t("agent.tools.cron.params.at", "ISO datetime for one-time execution (e.g. '2026-02-12T10:30:00')"),
                 },
-                "job_id": {"type": "string", "description": "Job ID (for remove)"},
+                "job_id": {"type": "string", "description": _t("agent.tools.cron.params.job_id", "Job ID (for remove)")},
             },
             "required": ["action"],
         }
@@ -88,18 +90,18 @@ class CronTool(Tool):
         at: str | None,
     ) -> str:
         if not message:
-            return "Error: message is required for add"
+            return _t("agent.tools.cron.error.message_required", "Error: message is required for add")
         if not self._channel or not self._chat_id:
-            return "Error: no session context (channel/chat_id)"
+            return _t("agent.tools.cron.error.no_session_context", "Error: no session context (channel/chat_id)")
         if tz and not cron_expr:
-            return "Error: tz can only be used with cron_expr"
+            return _t("agent.tools.cron.error.tz_without_cron", "Error: tz can only be used with cron_expr")
         if tz:
             from zoneinfo import ZoneInfo
 
             try:
                 ZoneInfo(tz)
             except (KeyError, Exception):
-                return f"Error: unknown timezone '{tz}'"
+                return _t("agent.tools.cron.error.unknown_timezone", f"Error: unknown timezone '{tz}'")
 
         # Build schedule
         delete_after = False
@@ -115,7 +117,7 @@ class CronTool(Tool):
             schedule = CronSchedule(kind="at", at_ms=at_ms)
             delete_after = True
         else:
-            return "Error: either every_seconds, cron_expr, or at is required"
+            return _t("agent.tools.cron.error.schedule_required", "Error: either every_seconds, cron_expr, or at is required")
 
         job = self._cron.add_job(
             name=message[:30],
@@ -126,18 +128,18 @@ class CronTool(Tool):
             to=self._chat_id,
             delete_after_run=delete_after,
         )
-        return f"Created job '{job.name}' (id: {job.id})"
+        return _t("agent.tools.cron.messages.job_added", f"Created job '{job.name}' (id: {job.id})")
 
     def _list_jobs(self) -> str:
         jobs = self._cron.list_jobs()
         if not jobs:
-            return "No scheduled jobs."
+            return _t("agent.tools.cron.messages.no_jobs", "No scheduled jobs.")
         lines = [f"- {j.name} (id: {j.id}, {j.schedule.kind})" for j in jobs]
-        return "Scheduled jobs:\n" + "\n".join(lines)
+        return _t("agent.tools.cron.messages.scheduled_jobs", "Scheduled jobs:\n") + "\n".join(lines)
 
     def _remove_job(self, job_id: str | None) -> str:
         if not job_id:
-            return "Error: job_id is required for remove"
+            return _t("agent.tools.cron.error.job_id_required", "Error: job_id is required for remove")
         if self._cron.remove_job(job_id):
-            return f"Removed job {job_id}"
-        return f"Job {job_id} not found"
+            return _t("agent.tools.cron.messages.job_removed", f"Removed job {job_id}")
+        return _t("agent.tools.cron.error.job_not_found", f"Job {job_id} not found")

@@ -1,0 +1,22 @@
+{
+  "agent": {
+    "name": "Agent",
+    "description": "Core agent functionality",
+    "tools": {
+      "base": "Base Tool",
+      "cron": "Cron Tool",
+      "filesystem": "Filesystem Tool",
+      "mcp": "MCP Tool",
+      "message": "Message Tool",
+      "registry": "Registry Tool",
+      "shell": "Shell Tool",
+      "spawn": "Spawn Tool",
+      "web": "Web Tool"
+    },
+    "context": "Context",
+    "loop": "Loop",
+    "memory": "Memory",
+    "skills": "Skills",
+    "subagent": "Subagent"
+  }
+}

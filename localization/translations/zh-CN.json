@@ -1,0 +1,479 @@
+{
+  "cli": {
+    "next_steps": "下一步:",
+    "add_api_key": "将您的 API 密钥添加到 [cyan]~/.nanobot/config.json[/cyan]",
+    "get_api_key": "获取地址：https://openrouter.ai/keys",
+    "chat_example": "聊天：[cyan]nanobot agent -m \"Hello!\"[/cyan]",
+    "want_chat_apps": "想要 Telegram/WhatsApp？查看：https://github.com/HKUDS/nanobot#-chat-apps",
+    "ready": "✓ nanobot 已就绪！",
+    "interactive_mode": "交互式模式（输入 [bold]exit[/bold] 或 [bold]Ctrl+C[/bold] 退出）",
+    "thinking": "nanobot 正在思考...",
+    "you": "你",
+    "error": {
+      "no_api_key": "错误：未配置 API 密钥。",
+      "no_api_key_detail": "在 ~/.nanobot/config.json 的 providers 部分设置 API 密钥",
+      "no_channels": "警告：未启用任何频道",
+      "npm_not_found": "未找到 npm。请安装 Node.js >= 18。",
+      "npm_not_found_simple": "未找到 npm。请安装 Node.js。",
+      "bridge_not_found": "未找到 Bridge 源代码。",
+      "bridge_source_not_found": "未找到 Bridge 源代码。",
+      "bridge_reinstall": "尝试重新安装：pip install --force-reinstall nanobot",
+      "bridge_reinstall_hint": "尝试重新安装：pip install --force-reinstall nanobot",
+      "tz_without_cron": "错误：--tz 只能与 --cron 一起使用",
+      "missing_schedule": "错误：必须指定 --every、--cron 或 --at",
+      "job_not_found": "错误：未找到任务 {}",
+      "build_failed": "构建失败：{}",
+      "bridge_failed": "错误：Bridge 失败：{}",
+      "unknown_oauth_provider": "错误：未知的 OAuth 提供者：{}。支持的提供者：{}",
+      "login_not_implemented": "错误：未实现 {} 的登录功能",
+      "authentication_error": "错误：认证错误：{}",
+      "cron_error": "错误：{}",
+      "prompt_session_not_initialized": "错误：提示会话环境未初始化。",
+      "send_failed": "错误：发送失败",
+      "typing_failed": "错误：输入状态设置失败",
+      "upload_failed": "错误：上传失败"
+    },
+    "status": {
+      "shutting_down": "正在关闭...",
+      "goodbye": "再见！",
+      "bridge_ready": "✓ Bridge 已就绪",
+      "scan_qr": "扫描二维码以连接。",
+      "installing_deps": "正在安装依赖...",
+      "building": "正在构建...",
+      "job_executed": "✓ 任务已执行",
+      "job_failed": "运行任务 {} 失败",
+      "job_added": "✓ 已添加任务 '{}' ({})",
+      "job_removed": "✓ 已移除任务 {}",
+      "job_enabled": "✓ 任务 '{}' 已{}",
+      "job_not_found": "错误：未找到任务 {}",
+      "starting_oauth": "正在启动交互式 OAuth 登录...",
+      "starting_interactive_oauth": "正在启动交互式 OAuth 登录...",
+      "auth_failed": "✗ 认证失败",
+      "authentication_failed": "✗ 认证失败",
+      "starting_github": "正在启动 GitHub Copilot 设备流程...",
+      "github_authenticated": "✓ 已通过 GitHub Copilot 认证",
+      "oauth_login": "OAuth 登录 - {}",
+      "authenticated_codex": "✓ 已通过 OpenAI Codex 认证  [dim]{}[/dim]",
+      "channels_enabled": "✓ 已启用频道：{}",
+      "cron_jobs": "✓ 定时任务：{} 个计划任务",
+      "heartbeat": "✓ 心跳：每 {} 秒",
+      "starting_gateway": "正在启动 nanobot 网关，端口：{}...",
+      "starting_bridge": "正在设置 Bridge...",
+      "setup_bridge": "正在设置 Bridge...",
+      "bot_connected": "机器人已连接",
+      "oauth_cli_kit_not_installed": "oauth_cli_kit 未安装。运行：pip install oauth-cli-kit",
+      "media_send_failed": "[发送失败：{}]",
+      "media_download_failed": "[{}: 下载失败]"
+    },
+    "config": {
+      "overwrite_hint": "  [bold]y[/bold] = 使用默认值覆盖（现有值将丢失）",
+      "refresh_hint": "  [bold]N[/bold] = 刷新配置，保留现有值并添加新字段",
+      "config_exists": "[yellow]配置文件已存在于 {}[/yellow]",
+      "config_reset": "✓ 配置已重置为默认值：{}",
+      "config_refreshed": "✓ 配置已刷新：{}（保留现有值）",
+      "config_created": "✓ 已创建配置文件：{}",
+      "workspace_created": "✓ 已创建工作组：{}"
+    },
+    "schedule": {
+      "no_jobs": "没有计划任务。",
+      "jobs_list": "计划任务：\n",
+      "table_title": "计划任务",
+      "table_id": "ID",
+      "table_name": "名称",
+      "table_schedule": "计划",
+      "table_status": "状态",
+      "table_next_run": "下次运行",
+      "every_seconds": "每 {} 秒",
+      "enabled": "已启用",
+      "disabled": "已禁用",
+      "one_time": "一次性"
+    },
+    "channel": {
+      "table_title": "频道状态",
+      "channel": "频道",
+      "enabled": "已启用",
+      "configuration": "配置",
+      "not_configured": "[dim]未配置[/dim]"
+    },
+    "oauth": {
+      "oauth_cli_kit_not_installed": "[red]oauth_cli_kit 未安装。运行：pip install oauth-cli-kit[/red]",
+      "starting_interactive": "正在启动交互式 OAuth 登录...",
+      "starting_github": "正在启动 GitHub Copilot 设备流程..."
+    },
+    "warning": {
+      "no_channels_enabled": "警告：未启用任何频道"
+    }
+  },
+  "agent": {
+    "tools": {
+      "cron": {
+        "name": "定时任务",
+        "description": "安排提醒和重复性任务。操作：添加、列表、删除。",
+        "params": {
+          "action": "要执行的操作",
+          "message": "提醒消息内容（用于添加）",
+          "every_seconds": "间隔秒数（用于重复任务）",
+          "cron_expr": "Cron 表达式，如 '0 9 * * *'（用于计划任务）",
+          "tz": "Cron 表达式的 IANA 时区（如 'America/Vancouver'）",
+          "at": "一次性执行的 ISO 日期时间（如 '2026-02-12T10:30:00'）",
+          "job_id": "任务 ID（用于删除）"
+        },
+        "error": {
+          "message_required": "错误：添加操作需要提供消息内容",
+          "no_session_context": "错误：没有会话上下文（channel/chat_id）",
+          "tz_without_cron": "错误：tz 参数只能与 cron_expr 一起使用",
+          "schedule_required": "错误：必须提供 every_seconds、cron_expr 或 at 参数",
+          "job_id_required": "错误：删除操作需要提供 job_id",
+          "unknown_timezone": "错误：未知时区 '{}'",
+          "job_not_found": "错误：未找到任务 {}"
+        },
+        "messages": {
+          "no_jobs": "没有计划任务。",
+          "scheduled_jobs": "计划任务：\n",
+          "job_added": "已创建任务 '{}' (id: {})",
+          "job_removed": "已移除任务 {}"
+        }
+      },
+      "filesystem": {
+        "read_file": {
+          "name": "读取文件",
+          "description": "读取指定路径的文件内容。",
+          "params": {
+            "path": "要读取的文件路径"
+          }
+        },
+        "write_file": {
+          "name": "写入文件",
+          "description": "将内容写入指定路径的文件。如果父目录不存在会先创建。",
+          "params": {
+            "path": "要写入的文件路径",
+            "content": "要写入的内容"
+          }
+        },
+        "edit_file": {
+          "name": "编辑文件",
+          "description": "通过替换 old_text 为 new_text 来编辑文件。old_text 必须在文件中精确匹配。",
+          "params": {
+            "path": "要编辑的文件路径",
+            "old_text": "要查找并替换的精确文本",
+            "new_text": "用于替换的文本"
+          }
+        },
+        "list_dir": {
+          "name": "列出目录",
+          "description": "列出指定目录的内容。",
+          "params": {
+            "path": "要列出的目录路径"
+          }
+        },
+        "error": {
+          "file_not_found": "错误：文件未找到：{}",
+          "not_a_file": "错误：不是文件：{}",
+          "dir_not_found": "错误：目录未找到：{}",
+          "not_a_directory": "错误：不是目录：{}",
+          "permission_denied": "错误：{}",
+          "read_failed": "读取文件失败：{}",
+          "write_failed": "写入文件失败：{}",
+          "edit_failed": "编辑文件失败：{}",
+          "list_failed": "列出目录失败：{}",
+          "multiple_matches": "警告：old_text 出现 {} 次。请提供更多上下文以使其唯一。",
+          "text_not_found_with_diff": "错误：在 {} 中未找到 old_text。\n最佳匹配（{} 相似）在第 {} 行：\n{}",
+          "text_not_found": "错误：在 {} 中未找到 old_text。未找到相似文本。请检查文件内容。"
+        },
+        "messages": {
+          "write_success": "成功写入 {} 字节到 {}",
+          "edit_success": "成功编辑 {}",
+          "dir_empty": "目录 {} 为空"
+        }
+      },
+      "message": {
+        "name": "消息",
+        "description": "向用户发送消息。当您想要沟通某些内容时使用此工具。",
+        "params": {
+          "content": "要发送的消息内容",
+          "channel": "可选：目标频道（telegram、discord 等）",
+          "chat_id": "可选：目标聊天/用户 ID",
+          "media": "可选：要附加的文件路径列表（图片、音频、文档）"
+        },
+        "error": {
+          "no_target": "错误：未指定目标频道/聊天",
+          "not_configured": "错误：消息发送功能未配置"
+        }
+      },
+      "shell": {
+        "name": "Shell 命令",
+        "description": "执行 Shell 命令并返回输出。请谨慎使用。",
+        "params": {
+          "command": "要执行的 Shell 命令",
+          "working_dir": "可选：命令的工作目录"
+        },
+        "error": {
+          "blocked_dangerous": "错误：命令被安全拦截（检测到危险模式）",
+          "blocked_not_allowed": "错误：命令被安全拦截（不在允许列表中）",
+          "blocked_path_traversal": "错误：命令被安全拦截（检测到路径遍历）",
+          "blocked_path_outside": "错误：命令被安全拦截（路径超出工作目录）",
+          "timeout": "错误：命令在 {} 秒后超时",
+          "exec_failed": "执行命令失败：{}"
+        }
+      },
+      "web": {
+        "search": {
+          "name": "网络搜索",
+          "description": "搜索网络。返回标题、URL 和摘要。",
+          "params": {
+            "query": "搜索查询",
+            "count": "结果数量（1-10）"
+          },
+          "error": {
+            "api_key_not_configured": "错误：Brave Search API 密钥未配置。请在 ~/.nanobot/config.json 的 tools.web.search.apiKey 中设置（或导出 BRAVE_API_KEY），然后重启网关。",
+            "no_results": "未找到结果：{}",
+            "proxy_error": "代理错误：{}",
+            "search_failed": "错误：{}"
+          }
+        },
+        "fetch": {
+          "name": "获取网页",
+          "description": "获取 URL 并提取可读内容（HTML → markdown/文本）。",
+          "params": {
+            "url": "要获取的 URL"
+          },
+          "error": {
+            "url_validation_failed": "URL 验证失败：{}",
+            "proxy_error": "代理错误：{}"
+          }
+        },
+        "error": {
+          "invalid_url": "只允许 http/https，得到 '{}'",
+          "missing_domain": "缺少域名"
+        }
+      },
+      "mcp": {
+        "name": "MCP 工具",
+        "description": "使用 Model Context Protocol 工具。",
+        "no_output": "（无输出）"
+      },
+      "spawn": {
+        "name": "子进程",
+        "description": "启动子进程在后台执行任务。用于处理复杂或耗时的任务，子进程将独立完成任务并报告结果。",
+        "params": {
+          "task": "子进程要完成的任务",
+          "label": "可选的任务简短标签（用于显示）"
+        }
+      }
+    }
+  },
+  "templates": {
+    "memory": {
+      "title": "长期记忆",
+      "user_info": "用户信息",
+      "preferences": "偏好设置",
+      "project_context": "项目上下文",
+      "important_notes": "重要说明"
+    },
+    "soul": {
+      "title": "灵魂",
+      "personality": "性格",
+      "values": "价值观",
+      "communication_style": "沟通风格"
+    },
+    "tools": {
+      "title": "工具使用说明",
+      "exec_safety": "exec — 安全限制",
+      "cron_scheduled": "定时任务"
+    },
+    "user": {
+      "title": "用户档案",
+      "basic_info": "基本信息",
+      "preferences": {
+        "title": "偏好设置",
+        "communication_style": "沟通风格",
+        "response_length": "回复长度",
+        "technical_level": "技术级别"
+      },
+      "work_context": "工作上下文",
+      "topics_of_interest": "感兴趣话题",
+      "special_instructions": "特殊说明"
+    },
+    "agents": {
+      "title": "智能体说明",
+      "scheduled_reminders": "定时提醒",
+      "heartbeat_tasks": "心跳任务"
+    },
+    "heartbeat": {
+      "title": "心跳任务",
+      "active_tasks": "活动任务",
+      "completed": "已完成"
+    }
+  },
+  "channels": {
+    "telegram": {
+      "welcome": "👋 你好 {user}! 我是 nanobot。\n\n给我发消息，我会回复你！\n输入 /help 查看可用命令。",
+      "help": "🐈 nanobot 命令:\n/new — 开始新对话\n/stop — 停止当前任务\n/help — 显示可用命令",
+      "error": {
+        "bot_token_not_configured": "错误：未配置 Telegram 机器人令牌",
+        "invalid_chat_id": "错误：无效 chat_id: {}",
+        "failed_to_send_media": "错误：发送媒体文件失败 {}: {}",
+        "html_parse_failed": "警告：HTML 解析失败，回退到纯文本：{}",
+        "error_sending_message": "错误：发送 Telegram 消息时出错：{}"
+      },
+      "info": {
+        "starting_bot": "正在启动 Telegram 机器人（轮询模式）...",
+        "bot_connected": "Telegram 机器人 @{} 已连接",
+        "commands_registered": "机器人命令已注册",
+        "stopping_bot": "正在停止 Telegram 机器人...",
+        "bot_not_running": "警告：Telegram 机器人未运行",
+        "transcribed_media": "已转录 {}: {}...",
+        "downloaded_media": "已下载 {} 到 {}"
+      }
+    },
+    "whatsapp": {
+      "info": {
+        "connecting_bridge": "正在连接到 WhatsApp 桥接器：{}...",
+        "connected_bridge": "已连接到 WhatsApp 桥接器",
+        "reconnecting": "5 秒后重新连接...",
+        "bridge_not_connected": "警告：WhatsApp 桥接器未连接",
+        "sender_info": "来自 {} 的消息",
+        "voice_message": "收到来自 {} 的语音消息，但暂不支持直接从桥接器下载。",
+        "status": "WhatsApp 状态：{}",
+        "scan_qr": "扫描桥接器终端中的二维码以连接 WhatsApp"
+      },
+      "error": {
+        "bridge_error": "错误：WhatsApp 桥接器错误：{}",
+        "invalid_json": "警告：来自桥接器的 JSON 无效：{}",
+        "send_error": "错误：发送 WhatsApp 消息时出错：{}"
+      }
+    },
+    "mochat": {
+      "error": {
+        "claw_token_not_configured": "错误：未配置 Mochat claw_token",
+        "outbound_target_empty": "警告：Mochat 出站目标为空",
+        "send_failed": "错误：发送 Mochat 消息失败：{}",
+        "subscribe_failed": "错误：Mochat 订阅失败：{}",
+        "refresh_failed": "警告：Mochat 刷新失败：{}",
+        "list_failed": "警告：Mochat 列表失败：{}",
+        "http_client_not_initialized": "错误：Mochat HTTP 客户端未初始化"
+      },
+      "info": {
+        "websocket_connected": "Mochat websocket 已连接",
+        "websocket_disconnected": "Mochat websocket 已断开"
+      }
+    },
+    "slack": {
+      "error": {
+        "token_not_configured": "错误：未配置 Slack 机器人/应用令牌",
+        "unsupported_mode": "错误：不支持的 Slack 模式：{}",
+        "auth_failed": "警告：Slack 认证测试失败：{}",
+        "send_error": "错误：发送 Slack 消息时出错：{}"
+      },
+      "info": {
+        "bot_connected": "Slack 机器人已连接为 {}",
+        "starting_socket": "正在启动 Slack Socket Mode 客户端..."
+      }
+    },
+    "qq": {
+      "error": {
+        "sdk_not_installed": "错误：QQ SDK 未安装。运行：pip install qq-botpy",
+        "app_id_secret_not_configured": "错误：未配置 QQ app_id 和 secret",
+        "send_error": "错误：发送 QQ 消息时出错：{}"
+      },
+      "info": {
+        "bot_ready": "QQ 机器人已就绪：{}",
+        "bot_started": "QQ 机器人已启动（C2C 私聊消息）",
+        "reconnecting": "5 秒后重新连接 QQ 机器人...",
+        "bot_stopped": "QQ 机器人已停止"
+      }
+    },
+    "dingtalk": {
+      "media_type": {
+        "image": "图片",
+        "voice": "语音",
+        "video": "视频",
+        "file": "文件"
+      }
+    }
+  },
+  "providers": {
+    "openai_codex": {
+      "error": {
+        "response_failed": "Codex 响应失败",
+        "quota_exceeded": "ChatGPT 使用配额已用尽或速率限制已触发。请稍后重试。",
+        "ssl_certificate_failed": "Codex API 的 SSL 证书验证失败；将以 verify=False 重试",
+        "calling_failed": "调用 Codex 出错: {}"
+      }
+    },
+    "transcription": {
+      "warning": {
+        "groq_key_not_configured": "未配置 Groq API 密钥，无法进行语音转录"
+      },
+      "error": {
+        "audio_file_not_found": "错误：音频文件未找到：{}",
+        "groq_error": "错误：Groq 转录错误：{}"
+      }
+    }
+  },
+  "cron": {
+    "error": {
+      "tz_without_cron": "tz 参数只能与 cron 表达式一起使用",
+      "unknown_timezone": "未知时区 '{}'",
+      "load_failed": "加载 Cron 存储失败: {}"
+    },
+    "info": {
+      "jobs_reloaded": "Cron: jobs.json 已外部修改，重新加载",
+      "service_started": "Cron 服务已启动，共 {} 个任务",
+      "executing_job": "Cron: 正在执行任务 '{}' ({})",
+      "job_completed": "Cron: 任务 '{}' 已完成",
+      "job_failed": "Cron: 任务 '{}' 失败：{}",
+      "job_added": "Cron: 已添加任务 '{}' ({})",
+      "job_removed": "Cron: 已移除任务 {}"
+    }
+  },
+  "heartbeat": {
+    "info": {
+      "disabled": "心跳已禁用",
+      "already_running": "警告：心跳已在运行",
+      "started": "心跳已启动（每 {} 秒）",
+      "checking_tasks": "心跳：正在检查任务...",
+      "nothing_to_report": "心跳：正常（无内容可报告）",
+      "tasks_found": "心跳：发现任务，正在执行...",
+      "completed": "心跳：已完成，正在交付响应"
+    },
+    "error": {
+      "heartbeat_error": "错误：心跳错误：{}"
+    },
+    "debug": {
+      "heartbeat_file_missing_deprecated": "心跳：HEARTBEAT.md 缺失或为空"
+    }
+  },
+  "session": {
+    "info": {
+      "migrated_session": "已从旧路径迁移会话 {}"
+    },
+    "warning": {
+      "failed_to_load": "警告：加载会话 {} 失败：{}"
+    }
+  },
+  "config": {
+    "info": {
+      "using_default": "使用默认配置。"
+    }
+  },
+  "common": {
+    "error_prefix": "错误",
+    "warning_prefix": "警告",
+    "info_prefix": "信息",
+    "success_prefix": "成功",
+    "yes": "是",
+    "no": "否",
+    "ok": "确定",
+    "cancel": "取消",
+    "confirm": "确认",
+    "retry": "重试",
+    "loading": "加载中...",
+    "processing": "处理中...",
+    "saving": "保存中...",
+    "deleting": "删除中...",
+    "created": "已创建",
+    "updated": "已更新",
+    "deleted": "已删除"
+  }
+}

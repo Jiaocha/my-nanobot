@@ -12,6 +12,8 @@ from urllib.parse import unquote, urlparse
 import httpx
 from loguru import logger
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.bus.events import OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.channels.base import BaseChannel
@@ -204,10 +206,13 @@ class DingTalkChannel(BaseChannel):
 
     def _guess_upload_type(self, media_ref: str) -> str:
         ext = Path(urlparse(media_ref).path).suffix.lower()
-        if ext in self._IMAGE_EXTS: return "image"
-        if ext in self._AUDIO_EXTS: return "voice"
-        if ext in self._VIDEO_EXTS: return "video"
-        return "file"
+        if ext in self._IMAGE_EXTS:
+            return _t("channels.dingtalk.media_type.image", "image")
+        if ext in self._AUDIO_EXTS:
+            return _t("channels.dingtalk.media_type.voice", "voice")
+        if ext in self._VIDEO_EXTS:
+            return _t("channels.dingtalk.media_type.video", "video")
+        return _t("channels.dingtalk.media_type.file", "file")
 
     def _guess_filename(self, media_ref: str, upload_type: str) -> str:
         name = os.path.basename(urlparse(media_ref).path)
@@ -316,8 +321,10 @@ class DingTalkChannel(BaseChannel):
             if resp.status_code != 200:
                 logger.error("DingTalk send failed msgKey={} status={} body={}", msg_key, resp.status_code, body[:500])
                 return False
-            try: result = resp.json()
-            except Exception: result = {}
+            try:
+                result = resp.json()
+            except Exception:
+                result = {}
             errcode = result.get("errcode")
             if errcode not in (None, 0):
                 logger.error("DingTalk send api error msgKey={} errcode={} body={}", msg_key, errcode, body[:500])
@@ -402,7 +409,24 @@ class DingTalkChannel(BaseChannel):
             return
 
         if msg.content and msg.content.strip():
-            await self._send_markdown_text(token, msg.chat_id, msg.content.strip())
+            # DingTalk markdown limit is ~20k. Use 10,000 for safety.
+            LIMIT = 10000
+            content = msg.content.strip()
+
+            if len(content) <= LIMIT:
+                chunks = [content]
+            else:
+                chunks = []
+                current = content
+                while len(current) > LIMIT:
+                    split_idx = current.rfind("\n", 0, LIMIT)
+                    if split_idx == -1: split_idx = LIMIT
+                    chunks.append(current[:split_idx])
+                    current = current[split_idx:].lstrip()
+                if current: chunks.append(current)
+
+            for chunk in chunks:
+                await self._send_markdown_text(token, msg.chat_id, chunk)
 
         for media_ref in msg.media or []:
             ok = await self._send_media_ref(token, msg.chat_id, media_ref)

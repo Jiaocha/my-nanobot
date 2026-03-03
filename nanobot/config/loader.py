@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.config.schema import Config
 
 
@@ -31,13 +33,13 @@ def load_config(config_path: Path | None = None) -> Config:
 
     if path.exists():
         try:
-            with open(path, encoding="utf-8") as f:
+            with open(path, encoding="utf-8-sig") as f:
                 data = json.load(f)
             data = _migrate_config(data)
             return Config.model_validate(data)
         except (json.JSONDecodeError, ValueError) as e:
             print(f"Warning: Failed to load config from {path}: {e}")
-            print("Using default configuration.")
+            print(_t("config.info.using_default", "Using default configuration."))
 
     return Config()
 

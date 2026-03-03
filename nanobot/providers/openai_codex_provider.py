@@ -11,6 +11,8 @@ import httpx
 from loguru import logger
 from oauth_cli_kit import get_token as get_codex_token
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.providers.base import LLMProvider, LLMResponse, ToolCallRequest
 
 DEFAULT_CODEX_URL = "https://chatgpt.com/backend-api/codex/responses"
@@ -63,7 +65,7 @@ class OpenAICodexProvider(LLMProvider):
             except Exception as e:
                 if "CERTIFICATE_VERIFY_FAILED" not in str(e):
                     raise
-                logger.warning("SSL certificate verification failed for Codex API; retrying with verify=False")
+                logger.warning(_t('providers.openai_codex.error.ssl_certificate_failed', "SSL certificate verification failed for Codex API; retrying with verify=False"))
                 content, tool_calls, finish_reason = await _request_codex(url, headers, body, verify=False)
             return LLMResponse(
                 content=content,
@@ -72,7 +74,7 @@ class OpenAICodexProvider(LLMProvider):
             )
         except Exception as e:
             return LLMResponse(
-                content=f"Error calling Codex: {str(e)}",
+                content=_t('providers.openai_codex.error.calling_failed', "Error calling Codex: {0}").format(e),
                 finish_reason="error",
             )
 
@@ -228,7 +230,7 @@ async def _iter_sse(response: httpx.Response) -> AsyncGenerator[dict[str, Any], 
     async for line in response.aiter_lines():
         if line == "":
             if buffer:
-                data_lines = [l[5:].strip() for l in buffer if l.startswith("data:")]
+                data_lines = [line[5:].strip() for line in buffer if line.startswith("data:")]
                 buffer = []
                 if not data_lines:
                     continue
@@ -295,7 +297,7 @@ async def _consume_sse(response: httpx.Response) -> tuple[str, list[ToolCallRequ
             status = (event.get("response") or {}).get("status")
             finish_reason = _map_finish_reason(status)
         elif event_type in {"error", "response.failed"}:
-            raise RuntimeError("Codex response failed")
+            raise RuntimeError(_t("providers.openai_codex.error.response_failed", "Codex response failed"))
 
     return content, tool_calls, finish_reason
 
@@ -309,5 +311,5 @@ def _map_finish_reason(status: str | None) -> str:
 
 def _friendly_error(status_code: int, raw: str) -> str:
     if status_code == 429:
-        return "ChatGPT usage quota exceeded or rate limit triggered. Please try again later."
+        return _t("providers.openai_codex.error.quota_exceeded", "ChatGPT usage quota exceeded or rate limit triggered. Please try again later.")
     return f"HTTP {status_code}: {raw}"

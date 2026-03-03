@@ -1,16 +1,17 @@
-# Heartbeat Tasks
+# 心跳任务 (Heartbeat Tasks)
 
-This file is checked every 30 minutes by your nanobot agent.
-Add tasks below that you want the agent to work on periodically.
+你的 nanobot 助手每 30 分钟会检查一次此文件。
+请在下方添加你希望助手定期处理的任务。
 
-If this file has no tasks (only headers and comments), the agent will skip the heartbeat.
+如果此文件没有任务（仅包含标题和注释），助手将跳过心跳周期。
 
-## Active Tasks
+## 活跃任务 (Active Tasks)
 
-<!-- Add your periodic tasks below this line -->
+<!-- 在此行下方添加你的周期性任务 -->
+
+- [ ] **系统维护**: 检查 `MEMORY.md` 的内容。如果文件超过 50 行，调用 `memory.prune()` 来合并重复项、消解矛盾并重新组织事实。
 
 
-## Completed
+## 已完成 (Completed)
 
-<!-- Move completed tasks here or delete them -->
-
+<!-- 将已完成的任务移动到这里或直接删除 -->

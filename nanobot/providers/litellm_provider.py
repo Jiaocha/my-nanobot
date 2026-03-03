@@ -25,7 +25,7 @@ def _short_tool_id() -> str:
 class LiteLLMProvider(LLMProvider):
     """
     LLM provider using LiteLLM for multi-provider support.
-    
+
     Supports OpenRouter, Anthropic, OpenAI, Gemini, MiniMax, and many other providers through
     a unified interface.  Provider-specific logic is driven by the registry
     (see providers/registry.py) — no if-elif chains needed here.
@@ -211,15 +211,56 @@ class LiteLLMProvider(LLMProvider):
         # LiteLLM to reject the request with "max_tokens must be at least 1".
         max_tokens = max(1, max_tokens)
 
+        # Inject Chain-of-Thought (CoT) instructions into the system message
+        cot_instruction = (
+            "\n\n[CRITICAL: Reasoning Mode]\n"
+            "You MUST think step-by-step before responding or calling tools.\n"
+            "Use the following structure for your internal monologue:\n"
+            "<think>\n"
+            "1. Goal Analysis: What is the user's core intent?\n"
+            "2. Logic/Strategy: What steps are needed? Which tools are most appropriate?\n"
+            "3. Safety/Constraints: Any risks or path limitations to consider?\n"
+            "</think>\n"
+            "Never skip the <think> block for complex requests."
+        )
+
+        enhanced_messages = []
+        system_injected = False
+        for m in messages:
+            if m.get("role") == "system" and not system_injected:
+                enhanced_messages.append({
+                    **m,
+                    "content": str(m["content"]) + cot_instruction
+                })
+                system_injected = True
+            else:
+                enhanced_messages.append(m)
+
         kwargs: dict[str, Any] = {
             "model": model,
-            "messages": self._sanitize_messages(self._sanitize_empty_content(messages), extra_keys=extra_msg_keys),
+            "messages": self._sanitize_messages(self._sanitize_empty_content(enhanced_messages), extra_keys=extra_msg_keys),
             "max_tokens": max_tokens,
             "temperature": temperature,
+            "drop_params": True, # Aggressively drop unsupported parameters
         }
 
         # Apply model-specific overrides (e.g. kimi-k2.5 temperature)
         self._apply_model_overrides(model, kwargs)
+
+        # CRITICAL FIX: For custom endpoints that require a specific provider protocol
+        if self.api_base:
+            # If the model has a prefix (e.g. 'openai/gpt-4o'), ensure we use it correctly
+            # with custom_llm_provider='openai' to handle the custom api_base.
+            if "/" in model:
+                # Format: provider/name -> e.g. openai/gpt-4o
+                # litellm expects the full string including prefix when using custom_llm_provider='openai'
+                # OR it expects just the name if the provider is already set.
+                # To be safest with most proxies, we provide the full string but ensure protocol is set.
+                kwargs["custom_llm_provider"] = "openai"
+            else:
+                # No prefix, default to openai protocol for custom bases
+                kwargs["model"] = f"openai/{model}"
+                kwargs["custom_llm_provider"] = "openai"
 
         # Pass api_key directly — more reliable than env vars alone
         if self.api_key:
@@ -232,11 +273,11 @@ class LiteLLMProvider(LLMProvider):
         # Pass extra headers (e.g. APP-Code for AiHubMix)
         if self.extra_headers:
             kwargs["extra_headers"] = self.extra_headers
-        
+
         if reasoning_effort:
             kwargs["reasoning_effort"] = reasoning_effort
             kwargs["drop_params"] = True
-        
+
         if tools:
             kwargs["tools"] = tools
             kwargs["tool_choice"] = "auto"
@@ -265,7 +306,7 @@ class LiteLLMProvider(LLMProvider):
                     args = json_repair.loads(args)
 
                 tool_calls.append(ToolCallRequest(
-                    id=_short_tool_id(),
+                    id=getattr(tc, "id", None) or _short_tool_id(),
                     name=tc.function.name,
                     arguments=args,
                 ))
@@ -280,7 +321,7 @@ class LiteLLMProvider(LLMProvider):
 
         reasoning_content = getattr(message, "reasoning_content", None) or None
         thinking_blocks = getattr(message, "thinking_blocks", None) or None
-        
+
         return LLMResponse(
             content=message.content,
             tool_calls=tool_calls,

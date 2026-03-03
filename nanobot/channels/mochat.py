@@ -12,6 +12,8 @@ from typing import Any
 import httpx
 from loguru import logger
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.bus.events import OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.channels.base import BaseChannel
@@ -858,7 +860,7 @@ class MochatChannel(BaseChannel):
 
     async def _post_json(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         if not self._http:
-            raise RuntimeError("Mochat HTTP client not initialized")
+            raise RuntimeError(_t("channels.mochat.error.http_client_not_initialized", "Mochat HTTP client not initialized"))
         url = f"{self.config.base_url.strip().rstrip('/')}{path}"
         response = await self._http.post(url, headers={
             "Content-Type": "application/json", "X-Claw-Token": self.config.claw_token,

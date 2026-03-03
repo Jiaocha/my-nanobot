@@ -36,7 +36,7 @@ class TestHandleStop:
         msg = InboundMessage(channel="test", sender_id="u1", chat_id="c1", content="/stop")
         await loop._handle_stop(msg)
         out = await asyncio.wait_for(bus.consume_outbound(), timeout=1.0)
-        assert "No active task" in out.content
+        assert any(x in out.content for x in ["No active task", "已停止 0 个任务"])
 
     @pytest.mark.asyncio
     async def test_stop_cancels_active_task(self):
@@ -61,7 +61,7 @@ class TestHandleStop:
 
         assert cancelled.is_set()
         out = await asyncio.wait_for(bus.consume_outbound(), timeout=1.0)
-        assert "stopped" in out.content.lower()
+        assert any(x in out.content.lower() for x in ["stopped", "已停止 1 个任务"])
 
     @pytest.mark.asyncio
     async def test_stop_cancels_multiple_tasks(self):
@@ -86,7 +86,7 @@ class TestHandleStop:
 
         assert all(e.is_set() for e in events)
         out = await asyncio.wait_for(bus.consume_outbound(), timeout=1.0)
-        assert "2 task" in out.content
+        assert any(x in out.content for x in ["2 task", "已停止 2 个任务"])
 
 
 class TestDispatch:

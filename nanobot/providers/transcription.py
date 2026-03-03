@@ -6,6 +6,9 @@ from pathlib import Path
 import httpx
 from loguru import logger
 
+# 本地化支持
+from localization import get_translation as _t
+
 
 class GroqTranscriptionProvider:
     """
@@ -29,12 +32,12 @@ class GroqTranscriptionProvider:
             Transcribed text.
         """
         if not self.api_key:
-            logger.warning("Groq API key not configured for transcription")
+            logger.warning(_t('providers.transcription.warning.groq_key_not_configured', "Groq API key not configured for transcription"))
             return ""
 
         path = Path(file_path)
         if not path.exists():
-            logger.error("Audio file not found: {}", file_path)
+            logger.error(_t('providers.transcription.error.audio_file_not_found', "Audio file not found: {0}").format(file_path))
             return ""
 
         try:
@@ -60,5 +63,5 @@ class GroqTranscriptionProvider:
                     return data.get("text", "")
 
         except Exception as e:
-            logger.error("Groq transcription error: {}", e)
+            logger.error(_t('providers.transcription.error.groq_error', "Groq transcription error: {0}").format(e))
             return ""

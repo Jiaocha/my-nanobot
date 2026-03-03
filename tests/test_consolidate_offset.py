@@ -1,10 +1,11 @@
 """Test session management with cache-friendly message handling."""
 
 import asyncio
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pathlib import Path
+
 from nanobot.session.manager import Session, SessionManager
 
 # Test constants
@@ -676,7 +677,7 @@ class TestConsolidationDeduplicationGuard:
         release.set()
         response = await pending_new
         assert response is not None
-        assert "new session started" in response.content.lower()
+        assert any(x in response.content.lower() for x in ["new session started", "新会话已开始。"])
         assert archived_count > 0, "Expected /new archival to process a non-empty snapshot"
 
         session_after = loop.sessions.get_or_create("cli:test")
@@ -718,7 +719,7 @@ class TestConsolidationDeduplicationGuard:
         response = await loop._process_message(new_msg)
 
         assert response is not None
-        assert "failed" in response.content.lower()
+        assert any(x in response.content.lower() for x in ["failed", "失败"])
         session_after = loop.sessions.get_or_create("cli:test")
         assert len(session_after.messages) == before_count, (
             "Session must remain intact when /new archival fails"
@@ -780,7 +781,7 @@ class TestConsolidationDeduplicationGuard:
         response = await pending_new
 
         assert response is not None
-        assert "new session started" in response.content.lower()
+        assert any(x in response.content.lower() for x in ["new session started", "新会话已开始。"])
         assert archived_count == 3, (
             f"Expected only unconsolidated tail to archive, got {archived_count}"
         )
@@ -817,5 +818,5 @@ class TestConsolidationDeduplicationGuard:
         response = await loop._process_message(new_msg)
 
         assert response is not None
-        assert "new session started" in response.content.lower()
+        assert any(x in response.content.lower() for x in ["new session started", "新会话已开始。"])
         assert loop.sessions.get_or_create("cli:test").messages == []

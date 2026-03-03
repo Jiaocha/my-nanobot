@@ -2,7 +2,6 @@
 
 import asyncio
 import re
-from typing import Any
 
 from loguru import logger
 from slack_sdk.socket_mode.request import SocketModeRequest
@@ -86,11 +85,28 @@ class SlackChannel(BaseChannel):
             thread_ts_param = thread_ts if use_thread else None
 
             if msg.content:
-                await self._web_client.chat_postMessage(
-                    channel=msg.chat_id,
-                    text=self._to_mrkdwn(msg.content),
-                    thread_ts=thread_ts_param,
-                )
+                # Slack limit is ~40,000 chars. Use 30,000 for safety.
+                LIMIT = 30000
+                content = self._to_mrkdwn(msg.content)
+
+                if len(content) <= LIMIT:
+                    chunks = [content]
+                else:
+                    chunks = []
+                    current = content
+                    while len(current) > LIMIT:
+                        split_idx = current.rfind("\n", 0, LIMIT)
+                        if split_idx == -1: split_idx = LIMIT
+                        chunks.append(current[:split_idx])
+                        current = current[split_idx:].lstrip()
+                    if current: chunks.append(current)
+
+                for chunk in chunks:
+                    await self._web_client.chat_postMessage(
+                        channel=msg.chat_id,
+                        text=chunk,
+                        thread_ts=thread_ts_param,
+                    )
 
             for media_path in msg.media or []:
                 try:

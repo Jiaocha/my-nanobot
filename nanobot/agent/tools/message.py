@@ -2,6 +2,8 @@
 
 from typing import Any, Awaitable, Callable
 
+# 本地化支持
+from localization import get_translation as _t
 from nanobot.agent.tools.base import Tool
 from nanobot.bus.events import OutboundMessage
 
@@ -38,11 +40,11 @@ class MessageTool(Tool):
 
     @property
     def name(self) -> str:
-        return "message"
+        return _t("agent.tools.message.name", "message")
 
     @property
     def description(self) -> str:
-        return "Send a message to the user. Use this when you want to communicate something."
+        return _t("agent.tools.message.description", "Send a message to the user. Use this when you want to communicate something.")
 
     @property
     def parameters(self) -> dict[str, Any]:
@@ -51,20 +53,20 @@ class MessageTool(Tool):
             "properties": {
                 "content": {
                     "type": "string",
-                    "description": "The message content to send"
+                    "description": _t("agent.tools.message.params.content", "The message content to send")
                 },
                 "channel": {
                     "type": "string",
-                    "description": "Optional: target channel (telegram, discord, etc.)"
+                    "description": _t("agent.tools.message.params.channel", "Optional: target channel (telegram, discord, etc.)")
                 },
                 "chat_id": {
                     "type": "string",
-                    "description": "Optional: target chat/user ID"
+                    "description": _t("agent.tools.message.params.chat_id", "Optional: target chat/user ID")
                 },
                 "media": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Optional: list of file paths to attach (images, audio, documents)"
+                    "description": _t("agent.tools.message.params.media", "Optional: list of file paths to attach (images, audio, documents)")
                 }
             },
             "required": ["content"]
@@ -84,10 +86,10 @@ class MessageTool(Tool):
         message_id = message_id or self._default_message_id
 
         if not channel or not chat_id:
-            return "Error: No target channel/chat specified"
+            return _t("agent.tools.message.error.no_target", "Error: No target channel/chat specified")
 
         if not self._send_callback:
-            return "Error: Message sending not configured"
+            return _t("agent.tools.message.error.not_configured", "Error: Message sending not configured")
 
         msg = OutboundMessage(
             channel=channel,

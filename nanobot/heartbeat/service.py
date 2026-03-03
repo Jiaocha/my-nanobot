@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine
 
 from loguru import logger
 
+# 本地化支持
+
 if TYPE_CHECKING:
     from nanobot.providers.base import LLMProvider
 
@@ -16,18 +18,18 @@ _HEARTBEAT_TOOL = [
         "type": "function",
         "function": {
             "name": "heartbeat",
-            "description": "Report heartbeat decision after reviewing tasks.",
+            "description": "在查看任务后报告心跳决策结果。",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "action": {
                         "type": "string",
                         "enum": ["skip", "run"],
-                        "description": "skip = nothing to do, run = has active tasks",
+                        "description": "skip = 无需操作, run = 有活跃任务需要执行",
                     },
                     "tasks": {
                         "type": "string",
-                        "description": "Natural-language summary of active tasks (required for run)",
+                        "description": "活跃任务的自然语言摘要（当 action 为 run 时必填）",
                     },
                 },
                 "required": ["action"],
@@ -87,12 +89,21 @@ class HeartbeatService:
 
         Returns (action, tasks) where action is 'skip' or 'run'.
         """
+        system_prompt = (
+            "你是一个高度专业的心跳任务审计智能体。你的职责是阅读 HEARTBEAT.md 文件并判定是否确实存在需要【立即执行】的活跃任务。\n\n"
+            "### 严格规则：\n"
+            "1. 忽略自身：请无视所有描述“心跳运行正常”、“心跳监控”、“系统健康状况 OK”等描述心跳服务自身存活或频率的信息。这些信息不需要你报告或确认。\n"
+            "2. 仅业务：只有当存在明确的、由用户提出的业务逻辑任务（例如：总结代码、提醒、生成报告、查询数据等）且该任务未标记为【已完成】时，才返回 action='run'。\n"
+            "3. 状态：如果文件仅包含说明、标题或描述心跳系统本身的任务，请务必返回 action='skip'。\n"
+            "4. 绝不闲聊：不要在 heartbeat 工具调用之外回复任何内容。"
+        )
+
         response = await self.provider.chat(
             messages=[
-                {"role": "system", "content": "You are a heartbeat agent. Call the heartbeat tool to report your decision."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": (
-                    "Review the following HEARTBEAT.md and decide whether there are active tasks.\n\n"
-                    f"{content}"
+                    "请查看下方的 HEARTBEAT.md 内容，是否存在真正的活跃业务任务？\n\n"
+                    f"```markdown\n{content}\n```"
                 )},
             ],
             tools=_HEARTBEAT_TOOL,
@@ -103,20 +114,30 @@ class HeartbeatService:
             return "skip", ""
 
         args = response.tool_calls[0].arguments
-        return args.get("action", "skip"), args.get("tasks", "")
+        action = args.get("action", "skip")
+        tasks = args.get("tasks", "")
+
+        # Prevent the heartbeat status line itself from being treated as a task
+        status_keywords = ["运行正常", "状态", "OK", "心跳监控", "正常运行", "一切正常"]
+        if action == "run" and tasks:
+            if any(kw in tasks for kw in status_keywords) and len(tasks) < 200:
+                logger.debug("Filtered out self-monitoring heartbeat message: {}", tasks)
+                return "skip", ""
+
+        return action, tasks
 
     async def start(self) -> None:
         """Start the heartbeat service."""
         if not self.enabled:
-            logger.info("Heartbeat disabled")
+            logger.info("心跳功能已禁用")
             return
         if self._running:
-            logger.warning("Heartbeat already running")
+            logger.debug("心跳功能已在运行中")
             return
 
         self._running = True
         self._task = asyncio.create_task(self._run_loop())
-        logger.info("Heartbeat started (every {}s)", self.interval_s)
+        logger.debug("心跳功能已启动（每 {} 秒检查一次）", self.interval_s)
 
     def stop(self) -> None:
         """Stop the heartbeat service."""
@@ -138,29 +159,23 @@ class HeartbeatService:
                 logger.error("Heartbeat error: {}", e)
 
     async def _tick(self) -> None:
-        """Execute a single heartbeat tick."""
+        """Execute a single heartbeat tick (silent mode)."""
         content = self._read_heartbeat_file()
         if not content:
-            logger.debug("Heartbeat: HEARTBEAT.md missing or empty")
             return
-
-        logger.info("Heartbeat: checking for tasks...")
 
         try:
             action, tasks = await self._decide(content)
 
             if action != "run":
-                logger.info("Heartbeat: OK (nothing to report)")
                 return
 
-            logger.info("Heartbeat: tasks found, executing...")
             if self.on_execute:
                 response = await self.on_execute(tasks)
                 if response and self.on_notify:
-                    logger.info("Heartbeat: completed, delivering response")
                     await self.on_notify(response)
         except Exception:
-            logger.exception("Heartbeat execution failed")
+            logger.exception("Heartbeat task failed")
 
     async def trigger_now(self) -> str | None:
         """Manually trigger a heartbeat."""
