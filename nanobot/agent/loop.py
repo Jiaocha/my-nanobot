@@ -188,28 +188,35 @@ class AgentLoop:
                 tool_call_dicts = [{"id": tc.id, "type": "function", "function": {"name": tc.name, "arguments": json.dumps(tc.arguments, ensure_ascii=False)}} for tc in response.tool_calls]
                 messages = self.context.add_assistant_message(messages, response.content, tool_call_dicts, reasoning_content=response.reasoning_content, thinking_blocks=response.thinking_blocks)
 
-                # Execute tools and track failures
-                results = []
-                for tc in response.tool_calls:
-                    res = await self.tools.execute(tc.name, tc.arguments)
-                    results.append(res)
-
-                    # Reflection Logic: Check for persistent errors
-                    if "error" in str(res).lower() or "failed" in str(res).lower():
+                # Execute tools in parallel using asyncio.gather
+                async def _run_tool(tc):
+                    try:
+                        res = await self.tools.execute(tc.name, tc.arguments)
+                        # Reflection Logic: Check for persistent errors
+                        if "error" in str(res).lower() or "failed" in str(res).lower():
+                            failure_tracker[tc.name] = failure_tracker.get(tc.name, 0) + 1
+                            if failure_tracker[tc.name] >= 2:
+                                reflection_hint = (
+                                    f"\n\n[SYSTEM REFLECTION: Tool '{tc.name}' has failed {failure_tracker[tc.name]} times consecutively. "
+                                    "Your previous parameters are NOT WORKING. Stop repeating. "
+                                    "Re-analyze the environment (use list_dir/read_file) or try a completely different tool/strategy.]"
+                                )
+                                # Inject hint into the tool result to force LLM to see it
+                                res = str(res) + reflection_hint
+                        else:
+                            failure_tracker[tc.name] = 0 # Reset on success
+                        return tc.id, tc.name, tc.arguments, res
+                    except Exception as e:
+                        logger.error(f"Error executing tool {tc.name}: {e}")
                         failure_tracker[tc.name] = failure_tracker.get(tc.name, 0) + 1
-                        if failure_tracker[tc.name] >= 2:
-                            reflection_hint = (
-                                f"\n\n[SYSTEM REFLECTION: Tool '{tc.name}' has failed {failure_tracker[tc.name]} times consecutively. "
-                                "Your previous parameters are NOT WORKING. Stop repeating. "
-                                "Re-analyze the environment (use list_dir/read_file) or try a completely different tool/strategy.]"
-                            )
-                            # Inject hint into the tool result to force LLM to see it
-                            res = str(res) + reflection_hint
-                    else:
-                        failure_tracker[tc.name] = 0 # Reset on success
+                        return tc.id, tc.name, tc.arguments, f"Error: {str(e)}"
 
-                for tool_call, result in zip(response.tool_calls, results):
-                    messages = self.context.add_tool_result(messages, tool_call.id, tool_call.name, result)
+                tool_tasks = [_run_tool(tc) for tc in response.tool_calls]
+                tool_results = await asyncio.gather(*tool_tasks)
+
+                for tid, tname, targs, res in tool_results:
+                    messages = self.context.add_tool_result(messages, tid, tname, res)
+                    tools_used.append((tname, targs, res))
             else:
                 clean = self._strip_think(response.content)
                 if response.finish_reason == "error":

@@ -9,6 +9,7 @@ from typing import Any
 
 from loguru import logger
 
+from nanobot.session.database import SessionDatabase
 from nanobot.utils.helpers import ensure_dir, safe_filename
 
 
@@ -16,9 +17,6 @@ from nanobot.utils.helpers import ensure_dir, safe_filename
 class Session:
     """
     A conversation session.
-
-    Stores messages in JSONL format for easy reading and persistence.
-
     Important: Messages are append-only for LLM cache efficiency.
     The consolidation process writes summaries to MEMORY.md/HISTORY.md
     but does NOT modify the messages list or get_history() output.
@@ -72,110 +70,50 @@ class Session:
 class SessionManager:
     """
     Manages conversation sessions.
-
-    Sessions are stored as JSONL files in the sessions directory.
+    Sessions are stored in an SQLite database.
     """
 
     def __init__(self, workspace: Path):
         self.workspace = workspace
         self.sessions_dir = ensure_dir(self.workspace / "sessions")
-        self.legacy_sessions_dir = Path.home() / ".nanobot" / "sessions"
+        self.db_path = self.sessions_dir / "sessions.db"
+        self.db = SessionDatabase(self.db_path)
         self._cache: dict[str, Session] = {}
-
-    def _get_session_path(self, key: str) -> Path:
-        """Get the file path for a session."""
-        safe_key = safe_filename(key.replace(":", "_"))
-        return self.sessions_dir / f"{safe_key}.jsonl"
-
-    def _get_legacy_session_path(self, key: str) -> Path:
-        """Legacy global session path (~/.nanobot/sessions/)."""
-        safe_key = safe_filename(key.replace(":", "_"))
-        return self.legacy_sessions_dir / f"{safe_key}.jsonl"
+        
+        # Trigger migration once
+        self._migrate_legacy_jsonl()
 
     def get_or_create(self, key: str) -> Session:
-        """
-        Get an existing session or create a new one.
-
-        Args:
-            key: Session key (usually channel:chat_id).
-
-        Returns:
-            The session.
-        """
+        """Get an existing session or create a new one."""
         if key in self._cache:
             return self._cache[key]
 
-        session = self._load(key)
-        if session is None:
+        data = self.db.load_session(key)
+        if data:
+            session = Session(
+                key=data["key"],
+                messages=data["messages"],
+                created_at=data["created_at"],
+                updated_at=data["updated_at"],
+                last_consolidated=data["last_consolidated"],
+                metadata=data["metadata"]
+            )
+        else:
             session = Session(key=key)
 
         self._cache[key] = session
         return session
 
-    def _load(self, key: str) -> Session | None:
-        """Load a session from disk."""
-        path = self._get_session_path(key)
-        if not path.exists():
-            legacy_path = self._get_legacy_session_path(key)
-            if legacy_path.exists():
-                try:
-                    shutil.move(str(legacy_path), str(path))
-                    logger.info("Migrated session {} from legacy path", key)
-                except Exception:
-                    logger.exception("Failed to migrate session {}", key)
-
-        if not path.exists():
-            return None
-
-        try:
-            messages = []
-            metadata = {}
-            created_at = None
-            last_consolidated = 0
-
-            with open(path, encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-
-                    data = json.loads(line)
-
-                    if data.get("_type") == "metadata":
-                        metadata = data.get("metadata", {})
-                        created_at = datetime.fromisoformat(data["created_at"]) if data.get("created_at") else None
-                        last_consolidated = data.get("last_consolidated", 0)
-                    else:
-                        messages.append(data)
-
-            return Session(
-                key=key,
-                messages=messages,
-                created_at=created_at or datetime.now(),
-                metadata=metadata,
-                last_consolidated=last_consolidated
-            )
-        except Exception as e:
-            logger.warning("Failed to load session {}: {}", key, e)
-            return None
-
     def save(self, session: Session) -> None:
-        """Save a session to disk."""
-        path = self._get_session_path(session.key)
-
-        with open(path, "w", encoding="utf-8") as f:
-            metadata_line = {
-                "_type": "metadata",
-                "key": session.key,
-                "created_at": session.created_at.isoformat(),
-                "updated_at": session.updated_at.isoformat(),
-                "metadata": session.metadata,
-                "last_consolidated": session.last_consolidated
-            }
-            f.write(json.dumps(metadata_line, ensure_ascii=False) + "\n")
-            for msg in session.messages:
-                f.write(json.dumps(msg, ensure_ascii=False) + "\n")
-
+        """Save a session to the database."""
+        self.db.save_session(
+            key=session.key,
+            created_at=session.created_at,
+            updated_at=session.updated_at,
+            last_consolidated=session.last_consolidated,
+            metadata=session.metadata,
+            messages=session.messages
+        )
         self._cache[session.key] = session
 
     def invalidate(self, key: str) -> None:
@@ -183,30 +121,70 @@ class SessionManager:
         self._cache.pop(key, None)
 
     def list_sessions(self) -> list[dict[str, Any]]:
-        """
-        List all sessions.
+        """List all sessions with summary info."""
+        rows = self.db.list_sessions()
+        return [
+            {
+                "key": r["key"],
+                "created_at": r["created_at"],
+                "updated_at": r["updated_at"],
+                "last_consolidated": r["last_consolidated"]
+            }
+            for r in rows
+        ]
 
-        Returns:
-            List of session info dicts.
-        """
-        sessions = []
+    def _migrate_legacy_jsonl(self) -> None:
+        """Import data from old .jsonl files into the SQLite database."""
+        jsonl_files = list(self.sessions_dir.glob("*.jsonl"))
+        
+        # Check global legacy path as well (~/.nanobot/sessions)
+        legacy_global = Path.home() / ".nanobot" / "sessions"
+        if legacy_global.exists() and legacy_global != self.sessions_dir:
+            jsonl_files.extend(list(legacy_global.glob("*.jsonl")))
 
-        for path in self.sessions_dir.glob("*.jsonl"):
+        if not jsonl_files:
+            return
+
+        logger.info(f"Found {len(jsonl_files)} legacy session files. Migrating to SQLite...")
+        
+        for path in jsonl_files:
             try:
-                # Read just the metadata line
-                with open(path, encoding="utf-8") as f:
-                    first_line = f.readline().strip()
-                    if first_line:
-                        data = json.loads(first_line)
-                        if data.get("_type") == "metadata":
-                            key = data.get("key") or path.stem.replace("_", ":", 1)
-                            sessions.append({
-                                "key": key,
-                                "created_at": data.get("created_at"),
-                                "updated_at": data.get("updated_at"),
-                                "path": str(path)
-                            })
-            except Exception:
-                continue
+                messages = []
+                metadata = {}
+                created_at = None
+                last_consolidated = 0
+                key = None
 
-        return sorted(sessions, key=lambda x: x.get("updated_at", ""), reverse=True)
+                with open(path, encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line: continue
+                        data = json.loads(line)
+                        if data.get("_type") == "metadata":
+                            key = data.get("key")
+                            metadata = data.get("metadata", {})
+                            created_at = datetime.fromisoformat(data["created_at"]) if data.get("created_at") else None
+                            last_consolidated = data.get("last_consolidated", 0)
+                        else:
+                            messages.append(data)
+
+                # Use stem if key not found in metadata
+                if not key:
+                    key = path.stem.replace("_", ":", 1)
+
+                # Only migrate if not already in DB
+                if not self.db.load_session(key):
+                    self.db.save_session(
+                        key=key,
+                        created_at=created_at or datetime.now(),
+                        updated_at=datetime.now(),
+                        last_consolidated=last_consolidated,
+                        metadata=metadata,
+                        messages=messages
+                    )
+                    logger.debug(f"Migrated session: {key}")
+
+                # Rename to .jsonl.bak to avoid re-migration
+                path.rename(path.with_suffix(".jsonl.bak"))
+            except Exception as e:
+                logger.error(f"Failed to migrate legacy file {path}: {e}")
