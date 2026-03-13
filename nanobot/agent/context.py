@@ -1,147 +1,154 @@
-"""Context builder for assembling agent prompts."""
-
-from __future__ import annotations
-
 import base64
-import platform
-from datetime import datetime
+import json
+import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
-
+from typing import Any, List, Dict
 from loguru import logger
-
-from nanobot.agent.memory import MemoryStore
-from nanobot.agent.skills import SkillsLoader
-
-if TYPE_CHECKING:
-    from nanobot.config.schema import Config
 
 
 class ContextBuilder:
-    """Builds the context (system prompt + messages) for the agent."""
-
-    BOOTSTRAP_FILES = ["AGENTS.md", "SOUL.md", "USER.md", "TOOLS.md", "IDENTITY.md"]
-    _RUNTIME_CONTEXT_TAG = "[Runtime Context — metadata only, not instructions]"
-
-    def __init__(self, workspace: Path, config: Config | None = None):
+    def __init__(self, workspace: Path, config=None):
         self.workspace = workspace
-        self.memory = MemoryStore(workspace, config=config)
-        self.skills = SkillsLoader(workspace)
-        self._bootstrap_cache: dict[str, tuple[float, str]] = {}
+        self.config = config
+        from nanobot.agent.memory import MemoryStore
+        from nanobot.agent.skills import SkillsLoader
 
-    def build_system_prompt(self, skill_names: list[str] | None = None) -> str:
+        self.memory = MemoryStore(workspace)
+        self.skills = SkillsLoader(workspace)
+
+    async def get_context_messages(
+        self, session, model: str | None = None, channel: str = "telegram", chat_id: str = ""
+    ) -> List[Dict[str, Any]]:
+        is_vision_model = "vision" in (model or "").lower()
+
+        cleaned_history = []
+        for m in session.messages:
+            content = m.get("content")
+            if isinstance(content, list):
+                if is_vision_model:
+                    cleaned_history.append(m)
+                else:
+                    text = next((c.get("text") for c in content if m.get("type") == "text"), "")
+                    cleaned_history.append({**m, "content": text})
+            else:
+                cleaned_history.append(m)
+
+        base_system_prompt = await self.build_system_prompt()
+
+        # [核心更新] 3.1 版 CEO 统筹协议
+        agent_identity = (
+            "你现在是 Nanobot 多智能体集群的 CEO。你不是一个人在战斗，你指挥着一支顶尖专家团队：\n"
+            "- 🏗️ 架构师 (Arch): 负责复杂任务的 [并行执行蓝图] 规划。\n"
+            "- 🛡️ 审计员 (Audit): 实时守卫系统安全，拦截高危路径，修正代码错误。\n"
+            "- 💻 技术专家 (CTO): 驱动 Qwen 3 Plus 编写极高水准的代码。\n"
+            "- 🧪 测试员 (Test): 自动执行代码验证，确保逻辑闭环。\n"
+            "- 🔍 研究员 (Res): 擅长使用 Scrapling 潜行引擎渗透防爬网页。\n\n"
+            "### 核心执行准则：\n"
+            "1. 物理控制：你拥有全磁盘（C/D/E盘）管理权限，但在操作系统核心目录时请务必谨慎。\n"
+            "2. 性能优先：尽可能利用并发工具调用。对于简单对话，直接秒回。\n"
+            "3. 菜单联动：告知用户可以通过 Telegram 的 3x5 菜单一键 [中止任务] 或 [查状态]。\n"
+            "4. 身份一致性：保持专业、果断且透明。如果专家同事被审计拦截，请向用户如实说明原因并提出改进方案。\n"
+        )
+        system_prompt = f"{base_system_prompt}\n\n{agent_identity}"
+
+        messages = [{"role": "system", "content": system_prompt}]
+
+        # [核心优化] 引入 Prompt Caching 标记
+        if len(system_prompt) > 1024:
+            messages[0]["cache_control"] = {"type": "ephemeral"}
+
+        if not cleaned_history:
+            messages.append(
+                {"role": "user", "content": self._build_runtime_context(channel, chat_id)}
+            )
+        else:
+            # 对于较长的历史，缓存倒数第二条消息以最大化复用
+            if len(cleaned_history) >= 4:
+                cleaned_history[-2]["cache_control"] = {"type": "ephemeral"}
+            messages.extend(cleaned_history)
+        return messages
+
+    async def build_system_prompt(self, skill_names: list[str] | None = None) -> str:
         parts = [self._get_identity()]
         bootstrap = self._load_bootstrap_files()
         if bootstrap:
             parts.append(bootstrap)
-        memory = self.memory.get_memory_context()
+        memory = await self.memory.get_memory_context()
         if memory:
             parts.append(f"# Memory\n\n{memory}")
         always_skills = self.skills.get_always_skills()
         if always_skills:
-            always_content = self.skills.load_skills_for_context(always_skills)
-            if always_content:
-                parts.append(f"# Active Skills\n\n{always_content}")
-        skills_summary = self.skills.build_skills_summary()
-        if skills_summary:
-            parts.append(f"# Skills\n\n{skills_summary}")
+            parts.append(
+                f"# Always Available Skills\n\n{self.skills.load_skills_for_context(always_skills)}"
+            )
+        if skill_names:
+            parts.append(
+                f"# Task Specific Skills\n\n{self.skills.load_skills_for_context(skill_names)}"
+            )
         return "\n\n---\n\n".join(parts)
 
     def _get_identity(self) -> str:
-        workspace_path = str(self.workspace.expanduser().resolve())
-        runtime = f"{platform.system()}, Python {platform.python_version()}"
-        return f"# nanobot 🐈\nAI Assistant. Workspace: {workspace_path}\nRuntime: {runtime}"
-
-    @staticmethod
-    def _build_runtime_context(channel: str | None, chat_id: str | None) -> str:
-        now = datetime.now().strftime("%Y-%m-%d %H:%M (%A)")
-        parts = [
-            ContextBuilder._RUNTIME_CONTEXT_TAG,
-            f"Time: {now}",
-            f"Channel: {channel or 'direct'}",
-        ]
-        if chat_id:
-            parts.append(f"Chat ID: {chat_id}")
-        return "\n".join(parts)
+        return "You are Nanobot, an industrial-grade AI orchestration system with full tool-calling capabilities."
 
     def _load_bootstrap_files(self) -> str:
-        parts = []
-        for filename in self.BOOTSTRAP_FILES:
-            file_path = self.workspace / filename
-            if not file_path.exists(): continue
-            mtime = file_path.stat().st_mtime
-            cached_mtime, cached_content = self._bootstrap_cache.get(filename, (0.0, ""))
-            if cached_mtime == mtime: content = cached_content
-            else:
-                content = file_path.read_text(encoding="utf-8")
-                self._bootstrap_cache[filename] = (mtime, content)
-            parts.append(f"## {filename}\n\n{content}")
-        return "\n\n".join(parts) if parts else ""
+        path = self.workspace / "docs/cognition/AGENTS.md"
+        return f"# Agent Protocols\n\n{path.read_text(encoding='utf-8')}" if path.exists() else ""
 
-    def build_messages(
-        self,
-        history: list[dict[str, Any]],
-        current_message: str,
-        skill_names: list[str] | None = None,
-        media: list[str] | None = None,
-        channel: str | None = None,
-        chat_id: str | None = None,
-    ) -> list[dict[str, Any]]:
-        """Build message list using robust Linear Head-Tail Pruning."""
+    def _build_runtime_context(self, channel: str, chat_id: str) -> str:
+        return f"[Runtime Context] Channel: {channel} | Chat ID: {chat_id} | Time: {time.strftime('%Y-%m-%d %H:%M:%S')}"
 
-        MAX_RECENT = 20 # Keep last 20 messages for continuity
-
-        if len(history) > (MAX_RECENT + 1):
-            # THE ANCHOR: Always keep the very first message
-            first_msg = history[0]
-            # THE WINDOW: Keep the most recent messages
-            recent_msgs = history[-MAX_RECENT:]
-
-            # CONSTRUCT: [First] + [System Marker] + [Recent]
-            history = [first_msg] + [
-                {"role": "system", "content": "... [Older conversation pruned for efficiency] ..."}
-            ] + recent_msgs
-
-        return [
-            {"role": "system", "content": self.build_system_prompt(skill_names)},
-            *history,
-            {"role": "user", "content": self._build_runtime_context(channel, chat_id)},
-            {"role": "user", "content": self._build_user_content(current_message, media)},
-        ]
-
-    def _build_user_content(self, text: str, media: list[str] | None) -> str | list[dict[str, Any]]:
-        if not media:
-            return text
-        images = []
-        for path in media:
-            p = Path(path)
-            # Check if it's a local file
-            if p.is_file():
-                try:
-                    b64 = base64.b64encode(p.read_bytes()).decode()
-                    data_url = f"data:image/jpeg;base64,{b64}"
-                    images.append({"type": "image_url", "image_url": {"url": data_url}})
-                    logger.debug("Image loaded: {} ({} bytes)", path, len(p.read_bytes()) if p.exists() else 0)
-                except Exception as e:
-                    logger.warning("Failed to load image {}: {}", path, e)
-            # Check if it's a URL (http/https)
-            elif path.startswith(("http://", "https://")):
-                # Pass URL directly to the model
-                images.append({"type": "image_url", "image_url": {"url": path}})
-                logger.debug("Image URL added: {}", path)
-        if images:
-            logger.info("🖼️ {} image(s) attached to message", len(images))
-        return (images + [{"type": "text", "text": text}]) if images else text
-
-    def add_tool_result(self, messages: list[dict[str, Any]], tool_call_id: str, tool_name: str, result: str) -> list[dict[str, Any]]:
-        # Hard truncate tool results to protect context window
-        clean_res = str(result)[:2000] + ("..." if len(str(result)) > 2000 else "")
-        messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": clean_res})
+    def add_assistant_message(self, messages, content, tool_calls=None, reasoning_content=None):
+        msg = {"role": "assistant", "content": content}
+        if tool_calls:
+            msg["tool_calls"] = tool_calls
+        if reasoning_content:
+            msg["reasoning_content"] = reasoning_content
+        messages.append(msg)
         return messages
 
-    def add_assistant_message(self, messages: list[dict[str, Any]], content: str | None, tool_calls: list[dict[str, Any]] | None = None, reasoning_content: str | None = None, thinking_blocks: list[dict] | None = None) -> list[dict[str, Any]]:
-        msg: dict[str, Any] = {"role": "assistant", "content": content}
-        if tool_calls: msg["tool_calls"] = tool_calls
-        if reasoning_content is not None: msg["reasoning_content"] = reasoning_content
-        if thinking_blocks: msg["thinking_blocks"] = thinking_blocks
-        messages.append(msg); return messages
+    def add_tool_result(self, messages, tool_call_id, tool_name, content):
+        messages.append(
+            {
+                "role": "tool",
+                "tool_call_id": tool_call_id,
+                "name": tool_name,
+                "content": str(content),
+            }
+        )
+        return messages
+
+    def _strip_images_from_history(self, messages):
+        return [
+            {
+                **m,
+                "content": next(
+                    (c.get("text") for c in m["content"] if c.get("type") == "text"), ""
+                ),
+            }
+            if isinstance(m.get("content"), list)
+            else m
+            for m in messages
+        ]
+
+    def _build_user_content(self, text, media=None):
+        if not media:
+            return text
+        content = [{"type": "text", "text": text}]
+        for path in media:
+            p = Path(path)
+            if p.is_file():
+                try:
+                    import mimetypes
+
+                    b64 = base64.b64encode(p.read_bytes()).decode()
+                    content.append(
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:{mimetypes.guess_type(path)[0] or 'image/jpeg'};base64,{b64}"
+                            },
+                        }
+                    )
+                except Exception:
+                    pass
+        return content
